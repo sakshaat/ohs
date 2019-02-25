@@ -1,4 +1,9 @@
-from common.app_creation import create_app
+import sys
+from pathlib import Path
+
+sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
+
+from common.app import create_app
 from common.networking import find_free_port
 from student_service.graphql_schema import schema
 

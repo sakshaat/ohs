@@ -34,9 +34,9 @@ test_instructor: ; pytest instructor_service/tests --cov=instructor_service
 
 test_common: ; pytest common/tests --cov=common
 
-debug_instructor: ; PYTHONPATH=. python instructor_service/run.py
+debug_instructor: ; python instructor_service/run.py
 
-debug_student: ; PYTHONPATH=. python student_service/run.py
+debug_student: ; python student_service/run.py
 
 production_instructor: ; gunicorn instructor_service.run:flask_app
 
