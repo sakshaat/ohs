@@ -18,7 +18,9 @@ help:
 
 format: ; black .
 
-lint: ; black --check .
+lint:
+	flake8
+	black --check .
 
 tests:
 	pytest student_service instructor_service common \
