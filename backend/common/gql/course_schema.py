@@ -17,19 +17,6 @@ class Course(graphene.ObjectType):
     course_code = graphene.String()
 
 
-class CourseQuery(graphene.ObjectType):
-    course = graphene.Field(Course, course_code=graphene.String(required=True))
-    courses = graphene.List(
-        Course, filters=graphene.String(required=False)
-    )  # TODO: Use an actual filter
-
-    def resolve_course(self, info, course_code):
-        pass
-
-    def resolve_courses(self, info, filters=None):
-        pass
-
-
 class Session(graphene.ObjectType):
     year = graphene.Int()
     semester = graphene.Field(Semester)

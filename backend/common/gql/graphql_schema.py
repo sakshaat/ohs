@@ -1,7 +1,5 @@
 import graphene
 
-from common.gql.course_schema import CourseQuery
-
 
 class Health(graphene.ObjectType):
     ok = graphene.Boolean(default_value=True)
@@ -14,5 +12,5 @@ class HealthQuery(graphene.ObjectType):
         return Health()
 
 
-class Query(HealthQuery, CourseQuery, graphene.ObjectType):
+class Query(HealthQuery, graphene.ObjectType):
     pass
