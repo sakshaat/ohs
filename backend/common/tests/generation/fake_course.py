@@ -10,7 +10,7 @@ def fake_course() -> Course:
 
 
 def fake_session() -> Session:
-    year = fake.year()
+    year = int(fake.year())
     semester = choice(list(Semester))
     return Session(year, semester)
 
