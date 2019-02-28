@@ -23,8 +23,8 @@ class TestCreateSection:
             course_api.create_section(
                 section.course,
                 section.session,
-                section.section_code,
                 section.num_students,
+                section.section_code,
             ).unwrap()
             == section
         )
@@ -39,8 +39,8 @@ class TestCreateSection:
             course_api.create_section(
                 section.course,
                 section.session,
-                section.section_code,
                 section.num_students,
+                section.section_code,
             )
             == err
         )

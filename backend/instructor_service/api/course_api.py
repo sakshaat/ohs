@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID, uuid4
 
 import attr
 from option import Option, Result
@@ -12,7 +13,11 @@ class CourseApi:
     course_presistence: CoursePresistence
 
     def create_section(
-        self, course: Course, session: Session, section_code: str, num_students: int = 0
+        self,
+        course: Course,
+        session: Session,
+        num_students: int = 0,
+        section_code: UUID = uuid4(),
     ) -> Result[Section, str]:
         """
         Create a new section in the system.
@@ -20,13 +25,13 @@ class CourseApi:
         Args:
             course: The course that the section belongs to
             session: The session that the section is in
-            section_code: The section code
             num_students: The number of students in that section
+            section_code: The section code for that section
 
         Returns:
             The new section created
         """
-        section = Section(course, session, section_code, num_students)
+        section = Section(course, session, num_students, section_code)
         return self.course_presistence.create_section(section)
 
     def create_course(self, course_code: str) -> Result[Course, str]:

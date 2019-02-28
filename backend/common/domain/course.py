@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from uuid import UUID, uuid4
 
 import attr
 
@@ -51,5 +52,5 @@ class Section:
 
     course: Course
     session: Session
-    section_code: str
     num_students: int = 0
+    section_code: UUID = uuid4()

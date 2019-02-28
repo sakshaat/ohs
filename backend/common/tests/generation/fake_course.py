@@ -1,4 +1,5 @@
 from random import choice
+from uuid import uuid4
 
 from common.domain.course import Course, Section, Semester, Session
 from common.tests.generation import fake
@@ -18,6 +19,6 @@ def fake_session() -> Session:
 def fake_section(course=None, session=None) -> Section:
     course = course or fake_course()
     session = session or fake_session()
-    section_code = fake.pystr()
+    section_code = uuid4()
     num_students = fake.pyint()
-    return Section(course, session, section_code, num_students)
+    return Section(course, session, num_students, section_code)

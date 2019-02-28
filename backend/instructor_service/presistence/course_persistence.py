@@ -1,4 +1,5 @@
 from typing import Dict, List
+from uuid import UUID
 
 import attr
 from option import Err, Ok, Option, Result, maybe
@@ -16,7 +17,7 @@ class CoursePresistence:
     # TODO: Use an actual DB
     """
 
-    course_db = attr.ib(factory=dict, type=Dict[str, Course])
+    course_db = attr.ib(factory=dict, type=Dict[UUID, Course])
     section_db = attr.ib(factory=dict, type=Dict[str, Section])
 
     def create_course(self, course: Course) -> Result[Course, str]:
@@ -37,7 +38,7 @@ class CoursePresistence:
     def get_course(self, course_code: str) -> Option[Course]:
         return maybe(self.course_db.get(course_code))
 
-    def get_section(self, section_code: str) -> Option[Section]:
+    def get_section(self, section_code: UUID) -> Option[Section]:
         return maybe(self.section_db.get(section_code))
 
     def query_courses(self, filters=None) -> List[Course]:

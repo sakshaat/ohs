@@ -11,7 +11,7 @@ def _course_api(info) -> CourseApi:
 class CourseQuery(graphene.ObjectType):
     course = graphene.Field(Course, course_code=graphene.String(required=True))
     courses = graphene.List(
-        Course, filters=graphene.String(required=False)
+        Course, filters=graphene.String()
     )  # TODO: Use an actual filter
 
     def resolve_course(self, info, course_code):
@@ -27,9 +27,9 @@ class CourseQuery(graphene.ObjectType):
 
 
 class SectionQuery(graphene.ObjectType):
-    section = graphene.Field(Section, section_code=graphene.String(required=True))
+    section = graphene.Field(Section, section_code=graphene.UUID(required=True))
     sections = graphene.List(
-        Section, filters=graphene.String(required=False)
+        Section, filters=graphene.String()
     )  # TODO: Use an actual filter
 
     def resolve_section(self, info, section_code):

@@ -60,6 +60,7 @@ class CourseQueryBehavious:
         result = schema.execute(
             self.query, variables=self.variables(code), context=self.mock_context
         )
+        assert not result.errors
         assert result.data == self.to_graphql(fake_domain)
         self.mock_get_method().assert_called_once_with(code)
 
@@ -71,6 +72,7 @@ class CourseQueryBehavious:
         result = schema.execute(
             self.query, variables=self.variables(code), context=self.mock_context
         )
+        assert not result.errors
         assert result.data == self.to_graphql(None)
         self.mock_get_method().assert_called_once_with(code)
 
@@ -141,7 +143,7 @@ class TestSectionQuery(CourseQueryBehavious):
     @property
     def query(self):
         return """
-query getSection($sectionCode: String!) {
+query getSection($sectionCode: UUID!) {
     section(sectionCode: $sectionCode) {
         course {
             courseCode
@@ -189,24 +191,21 @@ query querySections($filters: String) {
         return fake_domain.section_code
 
     def variables(self, code):
-        return {'sectionCode': code}
+        return {"sectionCode": str(code)}
 
     def _to_gql(self, section):
         session = section.session
         return {
-            'course': {'courseCode': section.course.course_code},
-            'session': {
-                'year': session.year,
-                'semester': session.semester.name
-            },
-            'sectionCode': section.section_code,
-            'numStudents': section.num_students
+            "course": {"courseCode": section.course.course_code},
+            "session": {"year": session.year, "semester": session.semester.name},
+            "sectionCode": str(section.section_code),
+            "numStudents": section.num_students,
         }
 
     def to_graphql(self, domain):
         if domain is None:
-            return {'section': None}
-        return {'section': self._to_gql(domain)}
+            return {"section": None}
+        return {"section": self._to_gql(domain)}
 
     def to_graphql_list(self, domain_list):
-        return {'sections': [self._to_gql(section) for section in domain_list]}
+        return {"sections": [self._to_gql(section) for section in domain_list]}
