@@ -1,0 +1,12 @@
+.office-hour {
+    background-color: gray;
+    width: 80vw;
+    height: 30vh;   
+}
+
+.container {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+    width: 100%;
+}
