@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
@@ -39,3 +39,9 @@ class CoursePresistence:
 
     def get_section(self, section_code: str) -> Option[Section]:
         return maybe(self.section_db.get(section_code))
+
+    def query_courses(self, filters=None) -> List[Course]:
+        return list(self.course_db.values())
+
+    def query_sections(self, filters=None) -> List[Section]:
+        return list(self.section_db.values())

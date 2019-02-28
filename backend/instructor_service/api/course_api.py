@@ -1,3 +1,5 @@
+from typing import List
+
 import attr
 from option import Result
 
@@ -39,3 +41,27 @@ class CourseApi:
         """
         course = Course(course_code)
         return self.course_presistence.create_course(course)
+
+    def query_courses(self, filters=None) -> List[Course]:
+        """
+        Query for courses is the system
+
+        Args:
+            filters: Filters to apply to the query
+
+        Returns:
+            List of courses returned by the query
+        """
+        return self.course_presistence.query_courses(filters)
+
+    def query_sections(self, filters=None) -> List[Section]:
+        """
+        Query for sections is the system
+
+        Args:
+            filters: Filters to apply to the query
+
+        Returns:
+            List of sections returned by the query
+        """
+        return self.course_presistence.query_sections(filters)

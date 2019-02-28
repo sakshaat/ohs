@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from option import Err, Ok
 
-from common.tests.generation import fake
+from common.tests.generation import fake, list_fakes
 from common.tests.generation.fake_course import fake_course, fake_section
 from instructor_service.api.course_api import CourseApi
 from instructor_service.presistence.course_persistence import CoursePresistence
@@ -62,3 +62,19 @@ class TestCreateCourse:
         mock_course_presistence.create_course = MagicMock(return_value=err)
         assert course_api.create_course(course.course_code) == err
         mock_course_presistence.create_course.assert_called_once_with(course)
+
+
+@pytest.mark.parametrize("filters,expected", [(None, list_fakes(fake_course, 5))])
+def test_query_courses(mock_course_presistence, filters, expected):
+    course_api = CourseApi(mock_course_presistence)
+    mock_course_presistence.query_courses = MagicMock(return_value=expected)
+    assert course_api.query_courses(filters) == expected
+    mock_course_presistence.query_courses.assert_called_once_with(filters)
+
+
+@pytest.mark.parametrize("filters,expected", [(None, list_fakes(fake_section, 5))])
+def test_query_sections(mock_course_presistence, filters, expected):
+    section_api = CourseApi(mock_course_presistence)
+    mock_course_presistence.query_sections = MagicMock(return_value=expected)
+    assert section_api.query_sections(filters) == expected
+    mock_course_presistence.query_sections.assert_called_once_with(filters)
