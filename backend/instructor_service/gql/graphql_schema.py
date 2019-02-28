@@ -1,6 +1,6 @@
 import graphene
 
-from common import graphql_schema
+from common.gql import graphql_schema
 
 
 class Query(graphql_schema.Query):

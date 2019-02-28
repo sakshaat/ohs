@@ -5,7 +5,7 @@ sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
 from common.app import create_app
 from common.networking import find_free_port
-from student_service.graphql_schema import schema
+from student_service.gql.graphql_schema import schema
 
 app = create_app(schema, "Student Service")
 flask_app = app.flask_app

@@ -5,7 +5,8 @@ from flask import Flask, Request
 from option import Result
 
 from common.app import App
-from common.graphql_controller import GraphqlController, GraphqlRequest
+from common.gql.graphql_controller import GraphqlController
+from common.gql.graphql_request import GraphqlRequest
 
 mock_gql_controller = MagicMock(GraphqlController)
 mock_flask_app = MagicMock(Flask)

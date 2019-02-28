@@ -2,7 +2,7 @@ import attr
 from graphene import Schema
 from option import Result
 
-from common.graphql_request import GraphqlRequest
+from common.gql.graphql_request import GraphqlRequest
 
 
 @attr.s(slots=True, auto_attribs=True)

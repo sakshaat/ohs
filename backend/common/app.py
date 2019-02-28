@@ -3,8 +3,8 @@ import flask
 from graphene import Schema
 from option import Result
 
-from common.graphql_controller import GraphqlController
-from common.graphql_request import parse_graphql_request
+from common.gql.graphql_controller import GraphqlController
+from common.gql.graphql_request import parse_graphql_request
 
 
 @attr.s(slots=True, auto_attribs=True)
