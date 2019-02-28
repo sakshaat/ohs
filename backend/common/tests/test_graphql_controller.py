@@ -20,11 +20,11 @@ class TestExecute:
             return_value=FakeGraphqlResult(data=expected_data)
         )
 
-        result = controller.execute(self.fake_request)
+        result = controller.execute(self.fake_request, None)
 
         assert result.unwrap() == {"data": expected_data}
         mock_schema.execute.assert_called_once_with(
-            self.fake_request.query, variables=self.fake_request.variables
+            self.fake_request.query, variables=self.fake_request.variables, context=None
         )
 
     def test_errors(self):
@@ -34,11 +34,11 @@ class TestExecute:
             return_value=FakeGraphqlResult(errors=expected_errors)
         )
 
-        result = controller.execute(self.fake_request)
+        result = controller.execute(self.fake_request, None)
 
         assert result.unwrap_err() == {"errors": [str(e) for e in expected_errors]}
         mock_schema.execute.assert_called_once_with(
-            self.fake_request.query, variables=self.fake_request.variables
+            self.fake_request.query, variables=self.fake_request.variables, context=None
         )
 
 

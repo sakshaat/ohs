@@ -11,7 +11,13 @@ from common.gql.graphql_request import GraphqlRequest
 mock_gql_controller = MagicMock(GraphqlController)
 mock_flask_app = MagicMock(Flask)
 
-app = App(mock_flask_app, mock_gql_controller)
+
+class FakeApp(App[None]):
+    def create_context(self, request):
+        return None
+
+
+app = FakeApp(mock_flask_app, mock_gql_controller)
 
 
 class TestExecuteGql:
@@ -28,7 +34,9 @@ class TestExecuteGql:
         mock_gql_controller.execute = MagicMock(return_value=Result.Ok(expected_data))
         result = app.execute_gql(request)
         assert result.unwrap() == expected_data
-        mock_gql_controller.execute.assert_called_once_with(gql_request)
+        mock_gql_controller.execute.assert_called_once_with(
+            gql_request, app.create_context(...)
+        )
 
     def test_post_parse_fail(self):
         request = MagicMock(Request)
