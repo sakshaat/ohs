@@ -1,7 +1,7 @@
 from typing import List
 
 import attr
-from option import Result
+from option import Option, Result
 
 from common.domain.course import Course, Section, Session
 from instructor_service.presistence.course_persistence import CoursePresistence
@@ -65,3 +65,27 @@ class CourseApi:
             List of sections returned by the query
         """
         return self.course_presistence.query_sections(filters)
+
+    def get_course(self, course_code: str) -> Option[Course]:
+        """
+        Get course by course code
+
+        Args:
+            course_code: The course code
+
+        Returns:
+            The course if found
+        """
+        return self.course_presistence.get_course(course_code)
+
+    def get_section(self, section_code: str) -> Option[Section]:
+        """
+        Get section by section code
+
+        Args:
+            section_code: The section code
+
+        Returns:
+            The section if found
+        """
+        return self.course_presistence.get_section(section_code)
