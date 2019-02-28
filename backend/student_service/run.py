@@ -7,7 +7,6 @@ from flask import Flask
 
 from common.app import App
 from common.gql.graphql_controller import GraphqlController
-from common.networking import find_free_port
 from student_service.gql.graphql_schema import schema
 
 
@@ -24,4 +23,8 @@ gql_controller = GraphqlController(schema)
 app = StudentService(flask_app, gql_controller)
 
 if __name__ == "__main__":
-    flask_app.run(debug=True, port=find_free_port())
+    try:
+        port = int(sys.argv[1])
+    except IndexError:
+        port = 8001
+    flask_app.run(debug=True, port=port)

@@ -12,7 +12,6 @@ from instructor_service.presistence.course_persistence import CoursePresistence
 
 from common.app import App
 from common.gql.graphql_controller import GraphqlController
-from common.networking import find_free_port
 from instructor_service.gql.graphql_schema import schema
 
 
@@ -31,4 +30,8 @@ ohs_instructor_api = OhsInstructorApi(CourseApi(CoursePresistence()))
 app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
 
 if __name__ == "__main__":
-    flask_app.run(debug=True, port=find_free_port())
+    try:
+        port = int(sys.argv[1])
+    except IndexError:
+        port = 8000
+    flask_app.run(debug=True, port=port)
