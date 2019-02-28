@@ -6,7 +6,7 @@ from option import Err, Ok
 from common.tests.generation import fake
 from common.tests.generation.fake_course import fake_course, fake_section
 from instructor_service.api.course_api import CourseApi
-from instructor_service.db.course_persistence import CoursePresistence
+from instructor_service.presistence.course_persistence import CoursePresistence
 
 
 @pytest.fixture()

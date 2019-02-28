@@ -2,7 +2,7 @@ import attr
 from option import Result
 
 from common.domain.course import Course, Section, Session
-from instructor_service.db.course_persistence import CoursePresistence
+from instructor_service.presistence.course_persistence import CoursePresistence
 
 
 @attr.s(auto_attribs=True)

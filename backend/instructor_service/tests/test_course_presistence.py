@@ -4,7 +4,7 @@ import pytest
 from option import Some
 
 from common.tests.generation.fake_course import fake_course, fake_section
-from instructor_service.db.course_persistence import CoursePresistence
+from instructor_service.presistence.course_persistence import CoursePresistence
 
 
 @pytest.fixture()
