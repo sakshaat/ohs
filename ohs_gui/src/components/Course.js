@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import './Course.css';
+import {Redirect} from "react-router-dom";
 import { Button, FormGroup, FormControl} from 'react-bootstrap';
 
 class Course extends Component {
@@ -16,9 +17,7 @@ class Course extends Component {
   createCourse() {
     let elem = ReactDOM.findDOMNode(this.refs.ccInput);
     let value = elem.value;
-
     // send request here
-
 
 
     // if succeed
@@ -26,6 +25,9 @@ class Course extends Component {
   }
 
   render() {
+    if(this.state.courseCreated) {
+      return (<Redirect to="/add_section"></Redirect>);
+    }
     return (
       <section className="container">
         <h1>Add a new Course</h1>
