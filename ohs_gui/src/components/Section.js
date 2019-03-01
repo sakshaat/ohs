@@ -22,8 +22,12 @@ class Section extends Component {
   }
 
   createSection() {
-    let elem = ReactDOM.findDOMNode(this.refs.lsInput);
-    let value = elem.value;
+    let lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
+    let yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
+    let semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
+    let snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
+
+    console.log({lsVal, yearVal, semesterVal, snumVal});
     // send request here
 
 
@@ -54,12 +58,37 @@ class Section extends Component {
             <div>
                 <h1>Add a new Section to {this.state.pickedCourse}</h1>
                 <FormGroup role="form">
+
                 <FormControl ref="lsInput"
-                    placeholder="LEC001"
-                    aria-label="LEC001"
+                    placeholder="Section"
+                    aria-label="Section"
                     aria-describedby="basic-addon2"
-                    id="course-code-input"
+                    type="number"
                 />
+
+                <FormControl ref="yearInput"
+                    placeholder="Year"
+                    aria-label="Year"
+                    aria-describedby="basic-addon2"
+                    type="number"
+                />
+
+                <FormControl ref="studentInput"
+                    placeholder="student"
+                    aria-label="student"
+                    aria-describedby="basic-addon2"
+                    type="number"
+                />
+
+                <select ref="semesterSelect" onChange={this.coursePicked}>
+                    <option value="WINTER">WINTER</option>
+                    <option value="FALL">FALL</option>
+                    <option value="SUMMER">SUMMER</option>
+                    <option value="FULL_YEAR">FULL_YEAR</option>
+                </select>
+
+                <br />
+
                 <Button variant="secondary" onClick={this.createSection}>Create a Section</Button>
                 </FormGroup>
             </div>
