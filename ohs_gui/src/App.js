@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import OfficeHours from "./components/OfficeHour"
 import Course from "./components/Course"
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 
 import './App.css';
 
@@ -10,21 +9,19 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <div className="nav">
+          <nav>
             <div className="links">
-              <Link to="/course">
-                COURSES
-            </Link>
-              <Link to="/">
-                HOME
-            </Link>
+              <div className="nav-item">
+                OHS
+              </div>
+              <div className="nav-item">
+                Logged In as Dr. Frankenstein 
+              </div>
             </div>
-          </div>
+
+          </nav>
           <header className="App-header">
-            <Switch>
-              <Route exact path="/" render={() => <OfficeHours slotNum={5}> </OfficeHours>} />
-              <Route exact path="/course" render={() => <Course />} />
-            </Switch>
+            <Course />
           </header>
         </div>
       </Router>
