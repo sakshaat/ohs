@@ -187,14 +187,14 @@ query querySections($filters: String) {
         return fake_domain.section_code
 
     def variables(self, code):
-        return {"sectionCode": str(code)}
+        return {"sectionCode": code}
 
     def _to_gql(self, section):
         return {
             "course": {"courseCode": section.course.course_code},
             "year": section.year, 
             "semester": section.semester.name,
-            "sectionCode": str(section.section_code),
+            "sectionCode": section.section_code,
             "numStudents": section.num_students,
         }
 

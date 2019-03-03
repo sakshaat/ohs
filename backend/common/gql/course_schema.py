@@ -6,7 +6,6 @@ from common.domain.course import (
     Semester
 )
 
-
 def semester_description(value):
     if value == Semester.FULL_YEAR:
         return "Full year long course"
