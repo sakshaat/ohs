@@ -3,51 +3,109 @@ import './Section.css';
 import ReactDOM from 'react-dom'
 import { Button, FormGroup, FormControl} from 'react-bootstrap';
 import {Redirect} from "react-router-dom";
+import ApolloClient from "apollo-boost";
+import gql from "graphql-tag";
+
+const client = new ApolloClient({
+  uri: "http://127.0.0.1:8000/graphql"
+});
+
+const ADD_SECTION = gql`
+    mutation addSection($sectionInput: SectionInput!) {
+        createSection(sectionInput: $sectionInput) {
+            sectionCode
+        }
+    }`;
+
+const GET_COURSES = gql`
+    query getAllCourses {
+        courses {
+        courseCode
+        }
+    }`;
 
 class Section extends Component {
   constructor(props){
     super(props);
     this.state = {
         pickedCourse : null,
-        sectionCreated: false
+        sectionCreated: false,
+        courseList: []
     }
 
     this.coursePicked = this.coursePicked.bind(this);
     this.createSection = this.createSection.bind(this);
+    this.updateCourseList = this.updateCourseList.bind(this);
+  }
+
+  updateCourseList(res) {
+    let courses = res.data.courses;
+    let lst = courses.map(elem => elem.courseCode);
+    this.setState({courseList: lst});
+  }
+
+  componentDidMount() {
+    client
+    .query({
+        query: GET_COURSES
+    })
+    .then(res => this.updateCourseList(res))
+    .catch(result => console.log(result));
   }
 
   coursePicked() {
-      let course = ReactDOM.findDOMNode(this.refs.selectedCourse).value;
-      this.setState({pickedCourse: course})
+    let course = ReactDOM.findDOMNode(this.refs.selectedCourse).value;
+
+    // update course if its not the same one we have or null
+    if(course && course !== this.state.pickedCourse) {
+        this.setState({pickedCourse: course})
+    }
+    
   }
 
   createSection() {
+    // TO DO
     let lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
+    
     let yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
     let semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
     let snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
 
-    console.log({lsVal, yearVal, semesterVal, snumVal});
-    // send request here
+    let sectionInput = 
+        {
+            course: 
+                {courseCode: this.state.pickedCourse},
+            session:  {
+                year: yearVal,
+                semester: semesterVal},
+            numStudents: snumVal
+        }
 
-
-    // if succeed
-    this.setState({sectionCreated: true});
+    // send request
+    client
+    .mutate({
+      mutation: ADD_SECTION,
+      variables: {
+        sectionInput: sectionInput,
+      },
+    })
+    .then(this.setState({sectionCreated: true}))
+    .catch(console.log("FAILED"));
   }
 
-
   render() {
-
     if(this.state.sectionCreated) {
         return (<Redirect to="/dashboard"></Redirect>)
     }
+
+    let courseItems = this.state.courseList
+        .map(elem => <option value={elem}>{elem}</option>);
 
     let courseComponent = (
         <div>
             <h1>Pick a course</h1>
             <select ref="selectedCourse" onChange={this.coursePicked}>
-                <option disabled selected value> -- select a course -- </option>
-                <option value="CSCXYZ">CSCXYZ</option>
+                {courseItems}
             </select>
         </div>
     )

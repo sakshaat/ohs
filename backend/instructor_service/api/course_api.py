@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 import attr
 from option import Option, Result
 
-from common.domain.course import Course, Section, Session
+from common.domain.course import Course, Section, Semester
 from instructor_service.presistence.course_persistence import CoursePresistence
 
 
@@ -15,23 +15,25 @@ class CourseApi:
     def create_section(
         self,
         course: Course,
-        session: Session,
+        year: int,
+        semester: Semester,
+        section_code: str,
         num_students: int = 0,
-        section_code: UUID = uuid4(),
     ) -> Result[Section, str]:
         """
         Create a new section in the system.
 
         Args:
             course: The course that the section belongs to
-            session: The session that the section is in
-            num_students: The number of students in that section
+            year: The year it is offered
+            semester: semester of offering
             section_code: The section code for that section
-
+            num_students: The number of students in that section
+            
         Returns:
             The new section created
         """
-        section = Section(course, session, num_students, section_code)
+        section = Section(course, year, semester, num_students, section_code)
         return self.course_presistence.create_section(section)
 
     def create_course(self, course_code: str) -> Result[Course, str]:

@@ -3,8 +3,7 @@ import graphene
 from common.domain.course import (
     Course as DomainCourse,
     Section as DomainSection,
-    Semester,
-    Session as DomainSession,
+    Semester
 )
 
 
@@ -14,9 +13,7 @@ def semester_description(value):
     elif value:
         return f"The {value.name.lower()} semester"
 
-
 Semester = graphene.Enum.from_enum(Semester, description=semester_description)
-
 
 class Course(graphene.ObjectType):
     course_code = graphene.String(required=True)
@@ -26,26 +23,19 @@ class Course(graphene.ObjectType):
         return cls(domain_course.course_code)
 
 
-class Session(graphene.ObjectType):
-    year = graphene.Int(required=True)
-    semester = graphene.Field(Semester, required=True)
-
-    @classmethod
-    def from_domain(cls, domain_session: DomainSession):
-        return cls(year=domain_session.year, semester=domain_session.semester)
-
-
 class Section(graphene.ObjectType):
     course = graphene.Field(Course, required=True)
-    session = graphene.Field(Session, required=True)
     num_students = graphene.Int(required=True)
-    section_code = graphene.UUID(required=True)
+    section_code = graphene.String(required=True)
+    year = graphene.Int(required=True)
+    semester = graphene.Field(Semester, required=True)
 
     @classmethod
     def from_domain(cls, domain_section: DomainSection):
         return cls(
             course=Course.from_domain(domain_section.course),
-            session=Session.from_domain(domain_section.session),
+            year=domain_section.year,
+            semester=domain_section.semester,
             num_students=domain_section.num_students,
             section_code=domain_section.section_code,
         )

@@ -1,13 +1,12 @@
 import graphene
 
-from common.domain.course import Course as DomainCourse, Session as DomainSession
+from common.domain.course import Course as DomainCourse
 from common.gql.course_schema import Course, Section, Semester
 from instructor_service.api.course_api import CourseApi
 
 
 def _course_api(info) -> CourseApi:
     return info.context.api.course_api
-
 
 class CourseQuery(graphene.ObjectType):
     course = graphene.Field(Course, course_code=graphene.String(required=True))
@@ -25,7 +24,6 @@ class CourseQuery(graphene.ObjectType):
             Course.from_domain(course)
             for course in _course_api(info).query_courses(filters)
         ]
-
 
 class SectionQuery(graphene.ObjectType):
     section = graphene.Field(Section, section_code=graphene.UUID(required=True))
@@ -46,15 +44,6 @@ class SectionQuery(graphene.ObjectType):
             for section in _course_api(info).query_sections(filters)
         ]
 
-
-class SessionInput(graphene.InputObjectType):
-    year = graphene.Int(required=True)
-    semester = graphene.Field(Semester, required=True)
-
-    def to_domain(self):
-        return DomainSession(year=self.year, semester=Semester.get(self.semester))
-
-
 class CourseInput(graphene.InputObjectType):
     course_code = graphene.String(required=True)
 
@@ -74,7 +63,9 @@ class CreateCourse(graphene.Mutation):
 
 class SectionInput(graphene.InputObjectType):
     course = CourseInput(required=True)
-    session = SessionInput(required=True)
+    year = graphene.Int(required=True)
+    semester = graphene.Field(Semester, required=True)
+    section_code = graphene.String(required=True)
     num_students = graphene.Int()
 
 
@@ -90,8 +81,10 @@ class CreateSection(graphene.Mutation):
             _course_api(info)
             .create_section(
                 section_input.course.to_domain(),
-                section_input.session.to_domain(),
-                num_students,
+                section_input.year,
+                section_input.semester,
+                section_input.section_code,
+                num_students
             )
             .unwrap()
         )

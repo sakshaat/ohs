@@ -11,6 +11,7 @@ graphene = "^2.1"
 option = "^0.3.0"
 gunicorn = "^19.9"
 attrs = "^18.2"
+flask-cors = "^3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.2"

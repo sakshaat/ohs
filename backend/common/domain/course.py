@@ -23,21 +23,6 @@ class Course:
 
     course_code: str
 
-
-@attr.s(slots=True, auto_attribs=True, frozen=True)
-class Session:
-    """
-    Represents a session in the university (e.g. winter 2019)
-
-    Args:
-        year: The year of the session
-        semester: The semester of the session
-    """
-
-    year: int
-    semester: Semester
-
-
 @attr.s(auto_attribs=True, slots=True, frozen=True)
 class Section:
     """
@@ -45,12 +30,14 @@ class Section:
 
     Args:
         course: The course of the section
-        session: The session the section is in
-        section_code: The section code
+        year: year
+        semester: semester of offering
         num_students: The number of students in the section
+        section_code: The section code
     """
 
     course: Course
-    session: Session
+    year: int
+    semester: Semester
     num_students: int = 0
     section_code: UUID = uuid4()

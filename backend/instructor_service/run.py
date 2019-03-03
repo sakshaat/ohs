@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
 from flask import Flask
+from flask_cors import CORS
 
 from instructor_service.api.course_api import CourseApi
 from instructor_service.api.ohs_instructor_api import OhsInstructorApi
@@ -25,9 +26,11 @@ class InstructorService(App[InstructorContext]):
 
 
 flask_app = Flask("Instructor Service")
+CORS(flask_app)
 gql_controller = GraphqlController(schema)
 ohs_instructor_api = OhsInstructorApi(CourseApi(CoursePresistence()))
 app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
+
 
 if __name__ == "__main__":
     try:
