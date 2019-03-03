@@ -1,5 +1,4 @@
 from typing import List
-from uuid import UUID, uuid4
 
 import attr
 from option import Option, Result
@@ -33,7 +32,7 @@ class CourseApi:
         Returns:
             The new section created
         """
-        section = Section(course, year, semester, num_students, section_code)
+        section = Section(course, year, semester, section_code, num_students)
         return self.course_presistence.create_section(section)
 
     def create_course(self, course_code: str) -> Result[Course, str]:

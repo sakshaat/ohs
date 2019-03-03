@@ -25,10 +25,10 @@ class Course(graphene.ObjectType):
 
 class Section(graphene.ObjectType):
     course = graphene.Field(Course, required=True)
-    num_students = graphene.Int(required=True)
-    section_code = graphene.String(required=True)
     year = graphene.Int(required=True)
     semester = graphene.Field(Semester, required=True)
+    section_code = graphene.String(required=True)
+    num_students = graphene.Int(required=True)
 
     @classmethod
     def from_domain(cls, domain_section: DomainSection):
@@ -36,6 +36,6 @@ class Section(graphene.ObjectType):
             course=Course.from_domain(domain_section.course),
             year=domain_section.year,
             semester=domain_section.semester,
-            num_students=domain_section.num_students,
             section_code=domain_section.section_code,
+            num_students=domain_section.num_students
         )

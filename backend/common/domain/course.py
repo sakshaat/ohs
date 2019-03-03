@@ -1,5 +1,4 @@
 from enum import Enum, auto
-from uuid import UUID, uuid4
 
 import attr
 
@@ -32,12 +31,13 @@ class Section:
         course: The course of the section
         year: year
         semester: semester of offering
-        num_students: The number of students in the section
         section_code: The section code
+        num_students: The number of students in the section
     """
 
     course: Course
     year: int
     semester: Semester
+    section_code: str
     num_students: int = 0
-    section_code: UUID = uuid4()
+    

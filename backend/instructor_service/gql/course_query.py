@@ -4,7 +4,6 @@ from common.domain.course import Course as DomainCourse
 from common.gql.course_schema import Course, Section, Semester
 from instructor_service.api.course_api import CourseApi
 
-
 def _course_api(info) -> CourseApi:
     return info.context.api.course_api
 
@@ -26,7 +25,7 @@ class CourseQuery(graphene.ObjectType):
         ]
 
 class SectionQuery(graphene.ObjectType):
-    section = graphene.Field(Section, section_code=graphene.UUID(required=True))
+    section = graphene.Field(Section, section_code=graphene.String(required=True))
     sections = graphene.List(
         Section, filters=graphene.String()
     )  # TODO: Use an actual filter

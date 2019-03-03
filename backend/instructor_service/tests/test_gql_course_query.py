@@ -143,15 +143,13 @@ class TestSectionQuery(CourseQueryBehavious):
     @property
     def query(self):
         return """
-query getSection($sectionCode: UUID!) {
+query getSection($sectionCode: String!) {
     section(sectionCode: $sectionCode) {
         course {
             courseCode
         }
-        session {
-            year
-            semester
-        }
+        year
+        semester
         sectionCode
         numStudents
     }
@@ -165,10 +163,8 @@ query querySections($filters: String) {
         course {
             courseCode
         }
-        session {
-            year
-            semester
-        }
+        year
+        semester
         sectionCode
         numStudents
     }
@@ -194,10 +190,10 @@ query querySections($filters: String) {
         return {"sectionCode": str(code)}
 
     def _to_gql(self, section):
-        session = section.session
         return {
             "course": {"courseCode": section.course.course_code},
-            "session": {"year": session.year, "semester": session.semester.name},
+            "year": section.year, 
+            "semester": section.semester.name,
             "sectionCode": str(section.section_code),
             "numStudents": section.num_students,
         }

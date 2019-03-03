@@ -64,10 +64,10 @@ mutation createSection($sectionInput: SectionInput!) {
         course {
             courseCode
         }
-        year,
-        semester,
-        numStudents,
+        year
+        semester
         sectionCode
+        numStudents
     }
 }"""
 

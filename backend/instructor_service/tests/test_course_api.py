@@ -13,7 +13,6 @@ from instructor_service.presistence.course_persistence import CoursePresistence
 def mock_course_presistence():
     return MagicMock(CoursePresistence)
 
-
 class TestCreateSection:
     def test_success(self, mock_course_presistence):
         course_api = CourseApi(mock_course_presistence)
@@ -22,7 +21,8 @@ class TestCreateSection:
         assert (
             course_api.create_section(
                 section.course,
-                section.session,
+                section.year,
+                section.semester,
                 section.num_students,
                 section.section_code,
             ).unwrap()
@@ -38,7 +38,8 @@ class TestCreateSection:
         assert (
             course_api.create_section(
                 section.course,
-                section.session,
+                section.year,
+                section.semester,
                 section.num_students,
                 section.section_code,
             )
