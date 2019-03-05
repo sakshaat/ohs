@@ -3,8 +3,10 @@ import graphene
 from common.domain.course import (
     Course as DomainCourse,
     Section as DomainSection,
-    Semester
+    SectionIdentity,
+    Semester,
 )
+
 
 def semester_description(value):
     if value == Semester.FULL_YEAR:
@@ -12,7 +14,9 @@ def semester_description(value):
     elif value:
         return f"The {value.name.lower()} semester"
 
+
 Semester = graphene.Enum.from_enum(Semester, description=semester_description)
+
 
 class Course(graphene.ObjectType):
     course_code = graphene.String(required=True)
@@ -20,6 +24,9 @@ class Course(graphene.ObjectType):
     @classmethod
     def from_domain(cls, domain_course: DomainCourse):
         return cls(domain_course.course_code)
+
+    def to_domain(self):
+        return DomainCourse(self.course_code)
 
 
 class Section(graphene.ObjectType):
@@ -36,5 +43,10 @@ class Section(graphene.ObjectType):
             year=domain_section.year,
             semester=domain_section.semester,
             section_code=domain_section.section_code,
-            num_students=domain_section.num_students
+            num_students=domain_section.num_students,
+        )
+
+    def identity(self):
+        return SectionIdentity(
+            self.course.to_domain(), self.year, self.semester, self.section_code
         )

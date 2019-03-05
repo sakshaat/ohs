@@ -40,10 +40,10 @@ class CourseQueryBehavious:
     def fake_domain(self):
         raise NotImplementedError()
 
-    def get_code(self, fake_domain):
+    def get_identity(self, fake_domain):
         raise NotImplementedError()
 
-    def variables(self, code):
+    def variables(self, identity):
         raise NotImplementedError()
 
     def to_graphql(self, domain):
@@ -55,26 +55,26 @@ class CourseQueryBehavious:
     def test_query_one(self):
         self.before_each()
         fake_domain = self.fake_domain()
-        code = self.get_code(fake_domain)
+        identity = self.get_identity(fake_domain)
         self.mock_get_method().return_value = Some(fake_domain)
         result = schema.execute(
-            self.query, variables=self.variables(code), context=self.mock_context
+            self.query, variables=self.variables(identity), context=self.mock_context
         )
         assert not result.errors
         assert result.data == self.to_graphql(fake_domain)
-        self.mock_get_method().assert_called_once_with(code)
+        self.mock_get_method().assert_called_once_with(identity)
 
     def test_query_one_empty(self):
         self.before_each()
         fake_domain = self.fake_domain()
-        code = self.get_code(fake_domain)
+        identity = self.get_identity(fake_domain)
         self.mock_get_method().return_value = NONE
         result = schema.execute(
-            self.query, variables=self.variables(code), context=self.mock_context
+            self.query, variables=self.variables(identity), context=self.mock_context
         )
         assert not result.errors
         assert result.data == self.to_graphql(None)
-        self.mock_get_method().assert_called_once_with(code)
+        self.mock_get_method().assert_called_once_with(identity)
 
     @pytest.mark.parametrize("num_objects", [0, 10])
     def test_listing(self, num_objects):
@@ -122,7 +122,7 @@ query queryCourses($filters: String) {
     def fake_domain(self):
         return fake_course()
 
-    def get_code(self, fake_domain):
+    def get_identity(self, fake_domain):
         return fake_domain.course_code
 
     def variables(self, code):
@@ -143,8 +143,8 @@ class TestSectionQuery(CourseQueryBehavious):
     @property
     def query(self):
         return """
-query getSection($sectionCode: String!) {
-    section(sectionCode: $sectionCode) {
+query getSection($course: CourseInput!, $year: Int!, $semester: Semester!, $sectionCode: String!) {
+    section(course: $course, year: $year, semester: $semester, sectionCode: $sectionCode) {
         course {
             courseCode
         }
@@ -183,16 +183,21 @@ query querySections($filters: String) {
     def fake_domain(self):
         return fake_section()
 
-    def get_code(self, fake_domain):
-        return fake_domain.section_code
+    def get_identity(self, fake_domain):
+        return fake_domain.identity
 
-    def variables(self, code):
-        return {"sectionCode": code}
+    def variables(self, identity):
+        return {
+            "course": {"courseCode": identity.course.course_code},
+            "year": identity.year,
+            "semester": identity.semester.name,
+            "sectionCode": identity.section_code,
+        }
 
     def _to_gql(self, section):
         return {
             "course": {"courseCode": section.course.course_code},
-            "year": section.year, 
+            "year": section.year,
             "semester": section.semester.name,
             "sectionCode": section.section_code,
             "numStudents": section.num_students,

@@ -8,8 +8,10 @@ from instructor_service.gql.course_query import (
     SectionQuery,
 )
 
+
 class Query(graphql_schema.Query, CourseQuery, SectionQuery):
     pass
+
 
 class Mutation(graphene.ObjectType):
     create_course = CreateCourse.Field()

@@ -32,7 +32,7 @@ class TestCreateSection:
         section = fake_section()
         course_presistence.get_course = MagicMock(return_value=Some(section.course))
         assert course_presistence.create_section(section).unwrap() == section
-        assert course_presistence.get_section(section.section_code).unwrap() == section
+        assert course_presistence.get_section(section.identity).unwrap() == section
 
     def test_invalid_course(self, course_presistence):
         section = fake_section()
@@ -40,7 +40,7 @@ class TestCreateSection:
             course_presistence.create_section(section).unwrap_err()
             == f"Course {section.course} does not exist"
         )
-        assert course_presistence.get_section(section.section_code).is_none
+        assert course_presistence.get_section(section.identity).is_none
 
     def test_duplicate(self, course_presistence):
         section = fake_section()

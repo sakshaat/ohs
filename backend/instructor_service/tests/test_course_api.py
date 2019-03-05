@@ -13,6 +13,7 @@ from instructor_service.presistence.course_persistence import CoursePresistence
 def mock_course_presistence():
     return MagicMock(CoursePresistence)
 
+
 class TestCreateSection:
     def test_success(self, mock_course_presistence):
         course_api = CourseApi(mock_course_presistence)
@@ -23,8 +24,8 @@ class TestCreateSection:
                 section.course,
                 section.year,
                 section.semester,
-                section.num_students,
                 section.section_code,
+                section.num_students,
             ).unwrap()
             == section
         )
@@ -40,8 +41,8 @@ class TestCreateSection:
                 section.course,
                 section.year,
                 section.semester,
-                section.num_students,
                 section.section_code,
+                section.num_students,
             )
             == err
         )
@@ -93,7 +94,7 @@ def test_get_course(mock_course_presistence, expected):
 @pytest.mark.parametrize("expected", [NONE, Some(fake_section())])
 def test_get_section(mock_course_presistence, expected):
     course_api = CourseApi(mock_course_presistence)
+    expected_identity = expected.map_or(lambda section: section.identity, None)
     mock_course_presistence.get_section = MagicMock(return_value=expected)
-    section_code = expected.map_or(lambda c: c.section_code, None)
-    assert course_api.get_section(section_code) == expected
-    mock_course_presistence.get_section.assert_called_once_with(section_code)
+    assert course_api.get_section(expected_identity) == expected
+    mock_course_presistence.get_section.assert_called_once_with(expected_identity)

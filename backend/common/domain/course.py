@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from typing import NamedTuple
 
 import attr
 
@@ -22,6 +23,7 @@ class Course:
 
     course_code: str
 
+
 @attr.s(auto_attribs=True, slots=True, frozen=True)
 class Section:
     """
@@ -29,7 +31,7 @@ class Section:
 
     Args:
         course: The course of the section
-        year: year
+        year: year of offering
         semester: semester of offering
         section_code: The section code
         num_students: The number of students in the section
@@ -40,4 +42,22 @@ class Section:
     semester: Semester
     section_code: str
     num_students: int = 0
-    
+
+    @property
+    def identity(self):
+        return SectionIdentity.from_section(self)
+
+
+class SectionIdentity(NamedTuple):
+    """
+    Uniquelly identifies a section
+    """
+
+    course: Course
+    year: int
+    semester: Semester
+    section_code: str
+
+    @classmethod
+    def from_section(cls, section: Section):
+        return cls(section.course, section.year, section.semester, section.section_code)

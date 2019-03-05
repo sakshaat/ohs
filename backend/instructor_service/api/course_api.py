@@ -3,7 +3,7 @@ from typing import List
 import attr
 from option import Option, Result
 
-from common.domain.course import Course, Section, Semester
+from common.domain.course import Course, Section, SectionIdentity, Semester
 from instructor_service.presistence.course_persistence import CoursePresistence
 
 
@@ -28,7 +28,7 @@ class CourseApi:
             semester: semester of offering
             section_code: The section code for that section
             num_students: The number of students in that section
-            
+
         Returns:
             The new section created
         """
@@ -84,14 +84,14 @@ class CourseApi:
         """
         return self.course_presistence.get_course(course_code)
 
-    def get_section(self, section_code: str) -> Option[Section]:
+    def get_section(self, section_identity: SectionIdentity) -> Option[Section]:
         """
         Get section by section code
 
         Args:
-            section_code: The section code
+            section_identity: The identity of the section
 
         Returns:
             The section if found
         """
-        return self.course_presistence.get_section(section_code)
+        return self.course_presistence.get_section(section_identity)

@@ -102,7 +102,11 @@ def test_create_section(mock_context, create_section_query):
         }
     }
     course_api.create_section.assert_called_once_with(
-        section.course, section.year, section.semester, section.section_code, section.num_students
+        section.course,
+        section.year,
+        section.semester,
+        section.section_code,
+        section.num_students,
     )
 
 
@@ -116,5 +120,9 @@ def test_create_section_fail(mock_context, create_section_query):
     )
     assert error in str(result.errors[0])
     course_api.create_section.assert_called_once_with(
-        section.course, section.year, section.semester, section.section_code, section.num_students
+        section.course,
+        section.year,
+        section.semester,
+        section.section_code,
+        section.num_students,
     )
