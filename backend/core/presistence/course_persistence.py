@@ -1,9 +1,8 @@
-from typing import Dict, List
-import sqlite3
+from typing import Dict, List, Callable
 
 import attr
+import flask
 from option import Err, Ok, Option, Result, maybe
-import os
 
 from core.domain.course import Course, Section, SectionIdentity
 
@@ -19,26 +18,20 @@ class CoursePresistence:
     """
 
     # table courses(code text)
+    get_connection = attr.ib(type=Callable)
     section_db = attr.ib(factory=dict, type=Dict[tuple, Section])
 
-    def __init__(self, connection):
-        self.conn = connection
-    
-    def connect(self):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        print(os.listdir())
-        self.conn = sqlite3.connect("common/main.db")
-    
-    def close(self):
-        self.conn.close()
+    @property
+    def connection(self):
+        return self.get_connection()
 
     def create_course(self, course: Course) -> Result[Course, str]:
         if self.get_course(course.course_code):
             return Err(f"Course {course} already exists")
-        c = self.conn.cursor()
+        c = self.connection.cursor()
         term = (course.course_code,)
-        c.execute('INSERT INTO courses VALUES (?)', term)
-        self.conn.commit()
+        c.execute("INSERT INTO courses VALUES (?)", term)
+        self.connection.commit()
         return Ok(course)
 
     def create_section(self, section: Section) -> Result[Section, str]:
@@ -51,9 +44,9 @@ class CoursePresistence:
             return Ok(section)
 
     def get_course(self, course_code: str) -> Option[Course]:
-        c = self.conn.cursor()
-        term = (course_code, )
-        c.execute('SELECT * FROM courses WHERE code=?', term)
+        c = self.connection.cursor()
+        term = (course_code,)
+        c.execute("SELECT * FROM courses WHERE code=?", term)
         course = None
         res = c.fetchone()
         if res:
@@ -64,11 +57,11 @@ class CoursePresistence:
         return maybe(self.section_db.get(section_identity))
 
     def query_courses(self, filters=None) -> List[Course]:
-        c = self.conn.cursor()
-        c.execute('SELECT * FROM courses')
+        c = self.connection.cursor()
+        c.execute("SELECT * FROM courses")
         courses = c.fetchall()
         if len(courses) > 0:
-            courses = map(lambda x: x[0], courses)
+            courses = map(lambda x: Course(x[0]), courses)
         return list(courses)
 
     def query_sections(self, filters=None) -> List[Section]:
