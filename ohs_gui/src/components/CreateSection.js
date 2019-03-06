@@ -165,5 +165,4 @@ class CreateSection extends Component {
     }
   }
 
-
 export default CreateSection;
