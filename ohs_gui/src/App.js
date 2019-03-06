@@ -9,6 +9,14 @@ import './App.css';
 
 
 class App extends Component {
+  componentDidMount() {
+    fetch('/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({"query": "query myQuery { courses { courseCode } }"}),
+    }).then(res => console.log(res)) 
+  }
+
   render() {
     return (
         <Router>
