@@ -3,8 +3,8 @@ import graphene
 from common.domain.course import (
     Course as DomainCourse,
     Section as DomainSection,
+    SectionIdentity,
     Semester,
-    Session as DomainSession,
 )
 
 
@@ -25,27 +25,28 @@ class Course(graphene.ObjectType):
     def from_domain(cls, domain_course: DomainCourse):
         return cls(domain_course.course_code)
 
-
-class Session(graphene.ObjectType):
-    year = graphene.Int(required=True)
-    semester = graphene.Field(Semester, required=True)
-
-    @classmethod
-    def from_domain(cls, domain_session: DomainSession):
-        return cls(year=domain_session.year, semester=domain_session.semester)
+    def to_domain(self):
+        return DomainCourse(self.course_code)
 
 
 class Section(graphene.ObjectType):
     course = graphene.Field(Course, required=True)
-    session = graphene.Field(Session, required=True)
+    year = graphene.Int(required=True)
+    semester = graphene.Field(Semester, required=True)
+    section_code = graphene.String(required=True)
     num_students = graphene.Int(required=True)
-    section_code = graphene.UUID(required=True)
 
     @classmethod
     def from_domain(cls, domain_section: DomainSection):
         return cls(
             course=Course.from_domain(domain_section.course),
-            session=Session.from_domain(domain_section.session),
-            num_students=domain_section.num_students,
+            year=domain_section.year,
+            semester=domain_section.semester,
             section_code=domain_section.section_code,
+            num_students=domain_section.num_students,
+        )
+
+    def identity(self):
+        return SectionIdentity(
+            self.course.to_domain(), self.year, self.semester, self.section_code
         )

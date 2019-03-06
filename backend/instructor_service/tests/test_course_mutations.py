@@ -64,12 +64,10 @@ mutation createSection($sectionInput: SectionInput!) {
         course {
             courseCode
         }
-        session {
-            year
-            semester
-        }
-        numStudents
+        year
+        semester
         sectionCode
+        numStudents
     }
 }"""
 
@@ -78,11 +76,10 @@ def section_input(section):
     return {
         "sectionInput": {
             "course": {"courseCode": section.course.course_code},
-            "session": {
-                "year": section.session.year,
-                "semester": section.session.semester.name,
-            },
+            "year": section.year,
+            "semester": section.semester.name,
             "numStudents": section.num_students,
+            "sectionCode": section.section_code,
         }
     }
 
@@ -98,16 +95,18 @@ def test_create_section(mock_context, create_section_query):
     assert result.data == {
         "createSection": {
             "course": {"courseCode": section.course.course_code},
-            "session": {
-                "year": section.session.year,
-                "semester": section.session.semester.name,
-            },
+            "year": section.year,
+            "semester": section.semester.name,
             "numStudents": section.num_students,
-            "sectionCode": str(section.section_code),
+            "sectionCode": section.section_code,
         }
     }
     course_api.create_section.assert_called_once_with(
-        section.course, section.session, section.num_students
+        section.course,
+        section.year,
+        section.semester,
+        section.section_code,
+        section.num_students,
     )
 
 
@@ -121,5 +120,9 @@ def test_create_section_fail(mock_context, create_section_query):
     )
     assert error in str(result.errors[0])
     course_api.create_section.assert_called_once_with(
-        section.course, section.session, section.num_students
+        section.course,
+        section.year,
+        section.semester,
+        section.section_code,
+        section.num_students,
     )

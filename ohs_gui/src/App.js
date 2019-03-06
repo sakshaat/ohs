@@ -9,28 +9,28 @@ import Dashboard from './components/Dashboard';
 class App extends Component {
   render() {
     return (
-      <Router>
-        <div className="App">
-          <nav>
-            <div className="links">
-              <div className="nav-item">
-                OHS
+        <Router>
+          <div className="App">
+            <nav>
+              <div className="links">
+                <div className="nav-item">
+                  OHS
+                </div>
+                <div className="nav-item">
+                  Logged In as Dr. Frankenstein 
+                </div>
               </div>
-              <div className="nav-item">
-                Logged In as Dr. Frankenstein 
-              </div>
-            </div>
-          </nav>
-          <header className="App-header">
-          <Switch>
-              <Route exact path="/" render={() => <Redirect to='/add_course' />} />
-              <Route exact path="/add_course" render={() => <Course />} />
-              <Route exact path="/add_section" render={() => <Section />} />
-              <Route exact path="/dashboard" render={() => <Dashboard />} />
-          </Switch>
-          </header>
-        </div>
-      </Router>
+            </nav>
+            <header className="App-header">
+            <Switch>
+                <Route exact path="/" render={() => <Redirect to='/add_course' />} />
+                <Route exact path="/add_course" render={() => <Course />} />
+                <Route exact path="/add_section" render={() => <Section />} />
+                <Route exact path="/dashboard" render={() => <Dashboard />} />
+            </Switch>
+            </header>
+          </div>
+        </Router>
     );
   }
 }

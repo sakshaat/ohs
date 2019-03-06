@@ -4,6 +4,20 @@ import './Course.css';
 import {Redirect} from "react-router-dom";
 import { Button, FormGroup, FormControl} from 'react-bootstrap';
 
+import ApolloClient from "apollo-boost";
+import gql from "graphql-tag";
+
+const client = new ApolloClient({
+  uri: "http://127.0.0.1:8000/graphql"
+});
+
+const ADD_COURSE = gql`
+  mutation addCourse($courseInput: CourseInput!){
+    createCourse(courseInput: $courseInput) {
+      courseCode
+    }
+  }`;
+
 class Course extends Component {
   constructor(props) {
     super(props);
@@ -17,11 +31,17 @@ class Course extends Component {
   createCourse() {
     let elem = ReactDOM.findDOMNode(this.refs.ccInput);
     let value = elem.value;
-    // send request here
-
-
-    // if succeed
-    this.setState({courseCreated: true});
+    
+    // send request
+    client
+    .mutate({
+      mutation: ADD_COURSE,
+      variables: {
+        courseInput: {"courseCode": value},
+      },
+    })
+    .then(this.setState({courseCreated: true}))
+    .catch(console.log("FAILED"));
   }
 
   render() {

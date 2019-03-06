@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from uuid import UUID, uuid4
+from typing import NamedTuple
 
 import attr
 
@@ -24,20 +24,6 @@ class Course:
     course_code: str
 
 
-@attr.s(slots=True, auto_attribs=True, frozen=True)
-class Session:
-    """
-    Represents a session in the university (e.g. winter 2019)
-
-    Args:
-        year: The year of the session
-        semester: The semester of the session
-    """
-
-    year: int
-    semester: Semester
-
-
 @attr.s(auto_attribs=True, slots=True, frozen=True)
 class Section:
     """
@@ -45,12 +31,33 @@ class Section:
 
     Args:
         course: The course of the section
-        session: The session the section is in
+        year: year of offering
+        semester: semester of offering
         section_code: The section code
         num_students: The number of students in the section
     """
 
     course: Course
-    session: Session
+    year: int
+    semester: Semester
+    section_code: str
     num_students: int = 0
-    section_code: UUID = uuid4()
+
+    @property
+    def identity(self):
+        return SectionIdentity.from_section(self)
+
+
+class SectionIdentity(NamedTuple):
+    """
+    Uniquelly identifies a section
+    """
+
+    course: Course
+    year: int
+    semester: Semester
+    section_code: str
+
+    @classmethod
+    def from_section(cls, section: Section):
+        return cls(section.course, section.year, section.semester, section.section_code)

@@ -1,12 +1,23 @@
 import graphene
 
-from common.domain.course import Course as DomainCourse, Session as DomainSession
+from common.domain.course import (
+    Course as DomainCourse,
+    SectionIdentity,
+    Semester as DomainSemester,
+)
 from common.gql.course_schema import Course, Section, Semester
 from instructor_service.api.course_api import CourseApi
 
 
 def _course_api(info) -> CourseApi:
     return info.context.api.course_api
+
+
+class CourseInput(graphene.InputObjectType):
+    course_code = graphene.String(required=True)
+
+    def to_domain(self):
+        return DomainCourse(self.course_code)
 
 
 class CourseQuery(graphene.ObjectType):
@@ -28,15 +39,25 @@ class CourseQuery(graphene.ObjectType):
 
 
 class SectionQuery(graphene.ObjectType):
-    section = graphene.Field(Section, section_code=graphene.UUID(required=True))
+    section = graphene.Field(
+        Section,
+        course=CourseInput(required=True),
+        year=graphene.Int(required=True),
+        semester=graphene.Argument(Semester, required=True),
+        section_code=graphene.String(required=True),
+    )
     sections = graphene.List(
         Section, filters=graphene.String()
     )  # TODO: Use an actual filter
 
-    def resolve_section(self, info, section_code):
+    def resolve_section(self, info, course, year, semester, section_code):
         return (
             _course_api(info)
-            .get_section(section_code)
+            .get_section(
+                SectionIdentity(
+                    course.to_domain(), year, DomainSemester(semester), section_code
+                )
+            )
             .map_or(Section.from_domain, None)
         )
 
@@ -45,21 +66,6 @@ class SectionQuery(graphene.ObjectType):
             Section.from_domain(section)
             for section in _course_api(info).query_sections(filters)
         ]
-
-
-class SessionInput(graphene.InputObjectType):
-    year = graphene.Int(required=True)
-    semester = graphene.Field(Semester, required=True)
-
-    def to_domain(self):
-        return DomainSession(year=self.year, semester=Semester.get(self.semester))
-
-
-class CourseInput(graphene.InputObjectType):
-    course_code = graphene.String(required=True)
-
-    def to_domain(self):
-        return DomainCourse(self.course_code)
 
 
 class CreateCourse(graphene.Mutation):
@@ -74,7 +80,9 @@ class CreateCourse(graphene.Mutation):
 
 class SectionInput(graphene.InputObjectType):
     course = CourseInput(required=True)
-    session = SessionInput(required=True)
+    year = graphene.Int(required=True)
+    semester = graphene.Field(Semester, required=True)
+    section_code = graphene.String(required=True)
     num_students = graphene.Int()
 
 
@@ -90,7 +98,9 @@ class CreateSection(graphene.Mutation):
             _course_api(info)
             .create_section(
                 section_input.course.to_domain(),
-                section_input.session.to_domain(),
+                section_input.year,
+                DomainSemester(section_input.semester),
+                section_input.section_code,
                 num_students,
             )
             .unwrap()

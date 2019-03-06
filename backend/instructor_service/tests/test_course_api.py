@@ -22,9 +22,10 @@ class TestCreateSection:
         assert (
             course_api.create_section(
                 section.course,
-                section.session,
-                section.num_students,
+                section.year,
+                section.semester,
                 section.section_code,
+                section.num_students,
             ).unwrap()
             == section
         )
@@ -38,9 +39,10 @@ class TestCreateSection:
         assert (
             course_api.create_section(
                 section.course,
-                section.session,
-                section.num_students,
+                section.year,
+                section.semester,
                 section.section_code,
+                section.num_students,
             )
             == err
         )
@@ -92,7 +94,7 @@ def test_get_course(mock_course_presistence, expected):
 @pytest.mark.parametrize("expected", [NONE, Some(fake_section())])
 def test_get_section(mock_course_presistence, expected):
     course_api = CourseApi(mock_course_presistence)
+    expected_identity = expected.map_or(lambda section: section.identity, None)
     mock_course_presistence.get_section = MagicMock(return_value=expected)
-    section_code = expected.map_or(lambda c: c.section_code, None)
-    assert course_api.get_section(section_code) == expected
-    mock_course_presistence.get_section.assert_called_once_with(section_code)
+    assert course_api.get_section(expected_identity) == expected
+    mock_course_presistence.get_section.assert_called_once_with(expected_identity)
