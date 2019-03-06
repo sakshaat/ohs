@@ -99,7 +99,7 @@ class Section extends Component {
     }
 
     let courseItems = this.state.courseList
-        .map(elem => <option value={elem}>{elem}</option>);
+        .map(elem => <option key={elem} value={elem}>{elem}</option>);
 
     let courseComponent = (
         <div>
