@@ -1,3 +1,5 @@
+import contextlib
+import sqlite3
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
 
@@ -15,6 +17,7 @@ Context = TypeVar("Context")
 class App(Generic[Context], metaclass=ABCMeta):
     flask_app: flask.Flask
     graphql_controller: GraphqlController[Context]
+    dadabase_path: str
 
     def __attrs_post_init__(self):
         self.setup_routes()
@@ -22,13 +25,15 @@ class App(Generic[Context], metaclass=ABCMeta):
     def setup_routes(self):
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
         def graphql():
-            result = self.execute_gql(flask.request)
-            if result.is_err:
-                response = flask.jsonify(result.unwrap_err())
-                response.status_code = 400
-            else:
-                response = flask.jsonify(result.unwrap())
-            return response
+            with contextlib.closing(sqlite3.connect(self.dadabase_path)) as conn:
+                flask.g.connection = conn
+                result = self.execute_gql(flask.request)
+                if result.is_err:
+                    response = flask.jsonify(result.unwrap_err())
+                    response.status_code = 400
+                else:
+                    response = flask.jsonify(result.unwrap())
+                return response
 
         @self.flask_app.route("/")
         def home():

@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
-from contextlib import closing
-import sqlite3
+
+import flask
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
@@ -19,9 +19,9 @@ from instructor_service.gql.graphql_schema import schema
 
 
 class InstructorService(App[InstructorContext]):
-    def __init__(self, flask_app_, graphql_controller, api):
+    def __init__(self, flask_app_, graphql_controller, database_path, api):
         self.api = api
-        super().__init__(flask_app_, graphql_controller)
+        super().__init__(flask_app_, graphql_controller, database_path)
 
     def create_context(self, request) -> InstructorContext:
         return InstructorContext(self.api)
@@ -30,14 +30,14 @@ class InstructorService(App[InstructorContext]):
 flask_app = Flask("Instructor Service")
 CORS(flask_app)
 gql_controller = GraphqlController(schema)
-
+course_presistence = CoursePresistence(lambda: flask.g.connection)
+ohs_instructor_api = OhsInstructorApi(CourseApi(course_presistence))
+db_path = str(Path(__file__).parent.parent / Path("common", "main.db"))
+app = InstructorService(flask_app, gql_controller, db_path, ohs_instructor_api)
 
 if __name__ == "__main__":
     try:
         port = int(sys.argv[1])
     except IndexError:
         port = 8000
-    with closing(sqlite3.connect("../common/main.db")) as conn:
-        ohs_instructor_api = OhsInstructorApi(CourseApi(CoursePresistence(conn)))
-        app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
-        flask_app.run(debug=True, port=port)
+    flask_app.run(debug=True, port=port)
