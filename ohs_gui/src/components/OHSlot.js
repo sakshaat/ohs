@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Slot.css';
+import './OHSlot.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faPlus)
 
-class Slot extends Component {
+class OHSlot extends Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -31,4 +31,4 @@ class Slot extends Component {
   }
 }
 
-export default Slot;
+export default OHSlot;

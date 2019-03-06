@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import './OfficeHour.css';
-import Slot from "./Slot"
+import './OHContainer.css';
+import OHSlot from "./OHSlot"
+import shortid from 'shortid';
 
-class OfficeHour extends Component {
+class OHContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -24,15 +25,12 @@ class OfficeHour extends Component {
     this.setState({bookedSlots: lst});
   }
 
-
   render() {
     const slots = this.state.bookedSlots.map((d, i) => 
-      <Slot key={i} id={i} toggleBooking={this.toggleBooking} booked={this.state.bookedSlots[i]}>{d} </Slot>);
-    
-      console.log(this.state.bookedSlots);
+      <OHSlot key={shortid.generate()} id={i} toggleBooking={this.toggleBooking} booked={this.state.bookedSlots[i]}>{d} </OHSlot>);
 
     return (
-      <div className="office-hour">
+      <div className="office-hour-cont">
         <div className="container">
             {slots}
         </div>
@@ -41,4 +39,4 @@ class OfficeHour extends Component {
   }
 }
 
-export default OfficeHour;
+export default OHContainer;
