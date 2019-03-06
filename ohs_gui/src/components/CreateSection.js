@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import './Section.css';
 import ReactDOM from 'react-dom'
-import { Button, FormGroup, FormControl} from 'react-bootstrap';
 import {Redirect} from "react-router-dom";
+
 import ApolloClient from "apollo-boost";
 import gql from "graphql-tag";
+
+import shortid from 'shortid';
+import { Button, FormGroup, FormControl} from 'react-bootstrap';
+
+import './CreateSection.css';
 
 const client = new ApolloClient({
   uri: "http://127.0.0.1:8000/graphql"
@@ -24,7 +28,7 @@ const GET_COURSES = gql`
         }
     }`;
 
-class Section extends Component {
+class CreateSection extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -64,20 +68,19 @@ class Section extends Component {
   }
 
   createSection() {
-    // TO DO
     let lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
-    
     let yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
     let semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
     let snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
 
+    // variable
     let sectionInput = 
         {
             course: 
                 {courseCode: this.state.pickedCourse},
-            session:  {
-                year: yearVal,
-                semester: semesterVal},
+            year: yearVal,
+            semester: semesterVal,
+            sectionCode: lsVal,
             numStudents: snumVal
         }
 
@@ -90,21 +93,22 @@ class Section extends Component {
       },
     })
     .then(this.setState({sectionCreated: true}))
-    .catch(console.log("FAILED"));
+    .catch(res => console.log(res));
   }
 
   render() {
     if(this.state.sectionCreated) {
-        return (<Redirect to="/dashboard"></Redirect>)
+        return (<Redirect to="/"></Redirect>)
     }
 
     let courseItems = this.state.courseList
-        .map(elem => <option value={elem}>{elem}</option>);
+        .map(elem => <option key={shortid.generate()} value={elem}>{elem}</option>);
 
     let courseComponent = (
         <div>
             <h1>Pick a course</h1>
             <select ref="selectedCourse" onChange={this.coursePicked}>
+                <option style={{display:"none"}}></option>
                 {courseItems}
             </select>
         </div>
@@ -121,7 +125,6 @@ class Section extends Component {
                     placeholder="Section"
                     aria-label="Section"
                     aria-describedby="basic-addon2"
-                    type="number"
                 />
 
                 <FormControl ref="yearInput"
@@ -153,11 +156,6 @@ class Section extends Component {
         )
     }
 
-
-
-
-
-
     return (
         <section className="container">
             {courseComponent}
@@ -168,4 +166,4 @@ class Section extends Component {
   }
 
 
-export default Section;
+export default CreateSection;

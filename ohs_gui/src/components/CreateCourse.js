@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
-import './Course.css';
+
 import {Redirect} from "react-router-dom";
 import { Button, FormGroup, FormControl} from 'react-bootstrap';
 
 import ApolloClient from "apollo-boost";
 import gql from "graphql-tag";
+
+import './CreateCourse.css';
 
 const client = new ApolloClient({
   uri: "http://127.0.0.1:8000/graphql"
@@ -18,7 +20,7 @@ const ADD_COURSE = gql`
     }
   }`;
 
-class Course extends Component {
+class CreateCourse extends Component {
   constructor(props) {
     super(props);
     this.state = { 
@@ -41,7 +43,7 @@ class Course extends Component {
       },
     })
     .then(this.setState({courseCreated: true}))
-    .catch(console.log("FAILED"));
+    .catch(res => console.log(res));
   }
 
   render() {
@@ -65,4 +67,4 @@ class Course extends Component {
   }
 }
 
-export default Course;
+export default CreateCourse;
