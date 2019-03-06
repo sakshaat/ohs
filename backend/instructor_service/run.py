@@ -1,5 +1,7 @@
 import sys
 from pathlib import Path
+from contextlib import closing
+import sqlite3
 
 from flask import Flask
 from flask_cors import CORS
@@ -44,4 +46,7 @@ if __name__ == "__main__":
         port = int(sys.argv[1])
     except IndexError:
         port = 8000
-    flask_app.run(debug=True, port=port)
+    with closing(sqlite3.connect("../common/main.db")) as conn:
+        ohs_instructor_api = OhsInstructorApi(CourseApi(CoursePresistence(conn)))
+        app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
+        flask_app.run(debug=True, port=port)
