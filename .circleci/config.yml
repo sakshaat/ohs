@@ -64,6 +64,11 @@ jobs:
             cd ohs_gui
             npm install
 
+      - save_cache:
+          paths:
+            - ./ohs_gui/node_modules
+          key: v1-dependencies-{{ checksum "ohs_gui/package-lock.json" }}
+
       - run:
           name: run tests
           command: |
