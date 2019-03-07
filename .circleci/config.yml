@@ -36,3 +36,11 @@ jobs:
             . venv/bin/activate
             make tests
 
+      - run:
+          name: upload coverage
+          command: | 
+            cd backend
+            . venv/bin/activate
+            pip install codecov
+            codecov
+
