@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  build-backend:
     docker:
       - image: circleci/python:3.7.2
 
@@ -43,4 +43,38 @@ jobs:
             . venv/bin/activate
             pip install codecov
             codecov
+
+  build-frontend:
+    docker: 
+      - image: circleci/node:11.10
+
+    working_directory: ~/ohs
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys: 
+            - v1-dependencies-{{ checksum "ohs_gui/package-lock.json" }}
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            cd ohs_gui
+            npm install
+
+      - run:
+          name: run tests
+          command: |
+            cd ohs_gui
+            npm test -- --ci
+
+
+workflows:
+ version: 2
+ full-build:
+   jobs:
+     - build-backend
+     - build-frontend
 
