@@ -1,6 +1,7 @@
-# proj-RustyBois
-CSC302 Project - OHS
+# OHS
+[![CircleCI](https://circleci.com/gh/office-hour-scheduler/ohs.svg?style=svg)](https://circleci.com/gh/office-hour-scheduler/ohs)
 
+OHS - Office hour scheduler
 
 ## GraphQL documentation
 To generate GraphQL schema documentation, install
