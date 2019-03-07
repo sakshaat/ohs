@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.2
+
+    working_directory: ~/ohs
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "backend/poetry.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            cd backend
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -U pip setuptools poetry
+            poetry install
+
+      - save_cache:
+          paths:
+            - ./backend/venv
+          key: v1-dependencies-{{ checksum "backend/poetry.lock" }}
+
+      - run:
+          name: run tests
+          command: |
+            cd backend
+            . venv/bin/activate
+            make tests
+
