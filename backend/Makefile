@@ -16,11 +16,11 @@ help:
 	@echo "    production_instructor - Run instructor service in production"
 	@echo "    production_student    - Run student service in production"
 
-format: ; black .
+format: ; black . --exclude venv
 
 lint:
 	flake8
-	black --check .
+	black --check . --exclude venv
 
 tests:
 	pytest student_service instructor_service common \
