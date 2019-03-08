@@ -1,0 +1,17 @@
+FROM node:11-alpine
+
+LABEL name="ohs_gui"
+
+ADD ohs_gui /app
+
+WORKDIR /app
+
+RUN npm install
+
+RUN npm run build
+
+RUN npm install -g serve
+
+EXPOSE 5000
+
+CMD ["serve", "-s", "build"]

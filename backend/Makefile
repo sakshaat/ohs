@@ -40,6 +40,3 @@ debug_instructor: ; python instructor_service/run.py
 
 debug_student: ; python student_service/run.py
 
-production_instructor: ; gunicorn instructor_service.run:flask_app
-
-production_student: ; gunicorn student_service.run:flask_app
