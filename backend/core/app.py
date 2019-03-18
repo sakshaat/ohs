@@ -30,6 +30,7 @@ class App(Generic[Context], metaclass=ABCMeta):
                 db_params = " ".join(f.readlines()[1:])
                 f.close()
                 return db_params
+
             with contextlib.closing(psycopg2.connect(db_string())) as conn:
                 flask.g.connection = conn
                 result = self.execute_gql(flask.request)
