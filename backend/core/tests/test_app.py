@@ -63,3 +63,4 @@ class TestExecuteGql:
 
         assert result == expected_result
         mock_gql_controller.introspect.assert_called_once_with()
+
