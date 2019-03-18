@@ -38,7 +38,7 @@ CORS(flask_app)
 gql_controller = GraphqlController(schema)
 course_presistence = CoursePresistence(lambda: flask.g.connection)
 ohs_instructor_api = OhsInstructorApi(CourseApi(course_presistence))
-db_path = str(Path(__file__).parent.parent / Path("common", "main.db"))
+db_path = str(Path(__file__).parent.parent / Path("common", "database.ini"))
 app = InstructorService(flask_app, gql_controller, db_path, ohs_instructor_api)
 
 if __name__ == "__main__":

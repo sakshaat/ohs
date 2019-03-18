@@ -1,5 +1,5 @@
 import contextlib
-import sqlite3
+import psycopg2
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
 
@@ -17,7 +17,7 @@ Context = TypeVar("Context")
 class App(Generic[Context], metaclass=ABCMeta):
     flask_app: flask.Flask
     graphql_controller: GraphqlController[Context]
-    dadabase_path: str
+    database_path: str
 
     def __attrs_post_init__(self):
         self.setup_routes()
@@ -25,7 +25,12 @@ class App(Generic[Context], metaclass=ABCMeta):
     def setup_routes(self):
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
         def graphql():
-            with contextlib.closing(sqlite3.connect(self.dadabase_path)) as conn:
+            def db_string():
+                f = open(self.database_path, "r")
+                db_params = " ".join(f.readlines()[1:])
+                f.close()
+                return db_params
+            with contextlib.closing(psycopg2.connect(db_string())) as conn:
                 flask.g.connection = conn
                 result = self.execute_gql(flask.request)
                 if result.is_err:

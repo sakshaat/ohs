@@ -30,7 +30,7 @@ class CoursePresistence:
             return Err(f"Course {course} already exists")
         c = self.connection.cursor()
         term = (course.course_code,)
-        c.execute("INSERT INTO courses VALUES (?)", term)
+        c.execute("INSERT INTO courses VALUES (%s)", term)
         self.connection.commit()
         return Ok(course)
 
@@ -46,7 +46,7 @@ class CoursePresistence:
     def get_course(self, course_code: str) -> Option[Course]:
         c = self.connection.cursor()
         term = (course_code,)
-        c.execute("SELECT * FROM courses WHERE code=?", term)
+        c.execute("SELECT * FROM courses WHERE code=%s", term)
         course = None
         res = c.fetchone()
         if res:
