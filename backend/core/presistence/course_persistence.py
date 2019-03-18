@@ -45,7 +45,7 @@ class CoursePresistence:
     def get_course(self, course_code: str) -> Option[Course]:
         c = self.connection.cursor()
         term = (course_code,)
-        c.execute("SELECT * FROM courses WHERE code=%s", term)
+        c.execute("SELECT * FROM courses WHERE course_code=%s", term)
         course = None
         res = c.fetchone()
         if res:
