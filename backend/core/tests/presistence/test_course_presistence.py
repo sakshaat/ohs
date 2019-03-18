@@ -2,6 +2,8 @@ from unittest.mock import MagicMock
 
 import pytest
 from option import Some
+from pathlib import Path
+import psycopg2
 
 from core.tests.generation.fake_course import fake_course, fake_section
 from core.presistence.course_persistence import CoursePresistence
@@ -9,7 +11,15 @@ from core.presistence.course_persistence import CoursePresistence
 
 @pytest.fixture()
 def course_presistence() -> CoursePresistence:
-    return CoursePresistence()
+    def db_string():
+        database_path = str(Path(__file__).parent.parent.parent / Path("common", "database.ini"))
+        f = open(database_path, "r")
+        db_params = " ".join(f.readlines()[1:])
+        f.close()
+        return db_params
+    conn = psycopg2.connect(db_string())
+    yield CoursePresistence(lambda: conn)
+    conn.close()
 
 
 class TestCreateCourse:
@@ -23,8 +33,7 @@ class TestCreateCourse:
         course_presistence.get_course = MagicMock(return_value=Some(course))
         assert (
             course_presistence.create_course(course).unwrap_err()
-            == f"Course {course} already exists"
-        )
+            == f"Course {course} already exists")
 
 
 class TestCreateSection:
