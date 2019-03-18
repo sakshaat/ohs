@@ -1,7 +1,6 @@
 from typing import Dict, List, Callable
 
 import attr
-import flask
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.course import Course, Section, SectionIdentity
