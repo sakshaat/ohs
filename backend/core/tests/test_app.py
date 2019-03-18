@@ -17,6 +17,7 @@ class FakeApp(App[None]):
     def create_context(self, request):
         return None
 
+
 db_path = str(Path(__file__).parent.parent / Path("common", "database.ini"))
 app = FakeApp(mock_flask_app, mock_gql_controller, db_path)
 
@@ -63,4 +64,3 @@ class TestExecuteGql:
 
         assert result == expected_result
         mock_gql_controller.introspect.assert_called_once_with()
-
