@@ -31,7 +31,7 @@ class App(Generic[Context], metaclass=ABCMeta):
                     host=os.getenv("OHS_DBHOST"),
                     dbname=os.getenv("OHS_DBNAME"),
                     user=os.getenv("OHS_USER"),
-                    password=os.getenv("OHS_PASSWORD")
+                    password=os.getenv("OHS_PASSWORD"),
                 )
             ) as conn:
                 flask.g.connection = conn

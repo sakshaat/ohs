@@ -15,7 +15,7 @@ def course_presistence() -> CoursePresistence:
         host=os.getenv("OHS_DBHOST"),
         dbname=os.getenv("OHS_DBNAME"),
         user=os.getenv("OHS_USER"),
-        password=os.getenv("OHS_PASSWORD")
+        password=os.getenv("OHS_PASSWORD"),
     )
     yield CoursePresistence(lambda: conn)
     conn.close()
