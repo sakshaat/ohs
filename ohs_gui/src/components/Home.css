@@ -2,7 +2,7 @@
     position: relative;
 }
 
-#sections {
+#sections, #courses {
     box-sizing: border-box;
     width: calc(100% - 400px);
     min-height: calc(100vh - 30px);
@@ -33,7 +33,7 @@
     border-radius: 10px;
 }
 
-.lecture-section {
+.lecture-section, .course {
     background-color: #cee2f7;
     padding-top: 60px;
 }

@@ -73,13 +73,17 @@ class Home extends Component {
         time: "2019-11-17T17:15:00.000Z",
         room: "BA1234",
         courseCode: "CSC302H1S"
+      }, {
+        time: "2019-11-18T17:15:00.000Z",
+        room: "BA1234",
+        courseCode: "CSC302H1S"
       }
     ]
     this.setState({ meetings: meetings })
   }
 
   render() {
-    const { sections, meetings } = this.state;
+    const { courses, sections, meetings } = this.state;
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
 
     const studentView = (
@@ -99,7 +103,22 @@ class Home extends Component {
       </div>
     );
 
-    const profView = (<div id="dashboard">PROFESSOR</div>);
+    const profView = (
+      <div id="dashboard">
+        <div id="courses">
+          <h2>Current Courses</h2>
+          {courses.map(c => (
+            <Course course={c} key={c.name} />
+          ))}
+        </div>
+        <div id="meetings">
+          <h2>Upcoming Meetings</h2>
+          {meetings.map(m => (
+            <Meeting meeting={m} key={m.courseCode + m.time} />
+          ))}
+        </div>
+      </div>
+    );
 
     return isProf ? profView : studentView;
   }

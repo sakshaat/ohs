@@ -46,15 +46,17 @@ class App extends Component {
               </div>
             </div>
           </nav>
-          <div className="App-body">
-            <Switch>
-              <Route exact path="/" render={() => <Home user={this.state.user} />} />
+          {this.state.user &&
+            <div className="App-body">
+              <Switch>
+                <Route exact path="/" render={() => <Home user={this.state.user} />} />
 
-              {/* TODO: remove */}
-              <Route exact path="/add_course" render={() => <CreateCourse />} />
-              <Route exact path="/add_section" render={() => <CreateSection />} />
-            </Switch>
-          </div>
+                {/* TODO: remove */}
+                <Route exact path="/add_course" render={() => <CreateCourse />} />
+                <Route exact path="/add_section" render={() => <CreateSection />} />
+              </Switch>
+            </div>
+          }
         </div>
       </Router>
     );
