@@ -1,5 +1,4 @@
 from abc import ABC
-from uuid import UUID
 
 import attr
 
@@ -10,7 +9,6 @@ class User(ABC):
     An abstract user in the system
     """
 
-    id: UUID
     first_name: str
     last_name: str
     password_hash: str
@@ -21,6 +19,8 @@ class Instructor(User):
     """
     An instructor in the system
     """
+
+    user_name: str
 
 
 @attr.s(slots=True, frozen=True, auto_attribs=True)

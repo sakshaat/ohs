@@ -72,7 +72,7 @@ mutation createSection($sectionInput: SectionInput!) {
         semester
         sectionCode
         taughtBy {
-            id
+            userName
             firstName
             lastName
         }
@@ -106,7 +106,7 @@ def test_create_section(mock_context, create_section_query, supply_instructor):
     course_api.create_section = MagicMock(return_value=Ok(section))
     variables = section_input(section)
     if supply_instructor:
-        variables["sectionInput"]["taughtBy"] = str(section.taught_by.id)
+        variables["sectionInput"]["taughtBy"] = section.taught_by.user_name
     result = schema.execute(create_section_query, variables=variables, context=context)
     assert not result.errors
     assert result.data == {
@@ -115,7 +115,7 @@ def test_create_section(mock_context, create_section_query, supply_instructor):
             "year": section.year,
             "semester": section.semester.name,
             "taughtBy": {
-                "id": str(section.taught_by.id),
+                "userName": section.taught_by.user_name,
                 "firstName": section.taught_by.first_name,
                 "lastName": section.taught_by.last_name,
             },

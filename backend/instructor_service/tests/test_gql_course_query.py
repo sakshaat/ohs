@@ -152,7 +152,7 @@ query getSection($course: CourseInput!, $year: Int!, $semester: Semester!, $sect
         semester
         sectionCode
         taughtBy {
-            id
+            userName
             firstName
             lastName
         }
@@ -172,7 +172,7 @@ query querySections($filters: String) {
         semester
         sectionCode
         taughtBy {
-            id
+            userName
             firstName
             lastName
         }
@@ -211,7 +211,7 @@ query querySections($filters: String) {
             "semester": section.semester.name,
             "sectionCode": section.section_code,
             "taughtBy": {
-                "id": str(section.taught_by.id),
+                "userName": section.taught_by.user_name,
                 "firstName": section.taught_by.first_name,
                 "lastName": section.taught_by.last_name,
             },

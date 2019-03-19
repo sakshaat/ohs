@@ -77,7 +77,7 @@ class SectionInput(graphene.InputObjectType):
     year = graphene.Int(required=True)
     semester = graphene.Field(Semester, required=True)
     section_code = graphene.String(required=True)
-    taught_by = graphene.UUID()
+    taught_by = graphene.String()
     num_students = graphene.Int()
 
 
@@ -93,7 +93,7 @@ class CreateSection(graphene.Mutation):
         instructor = (
             instructor_api(info)
             .get_instructor(taught_by)
-            .expect(f"Instructor with ID {taught_by} does not exist.")
+            .expect(f"Instructor with username {taught_by} does not exist.")
             if taught_by
             else info.context.instructor
         )
