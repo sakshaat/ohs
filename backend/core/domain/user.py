@@ -11,7 +11,6 @@ class User(ABC):
 
     first_name: str
     last_name: str
-    password_hash: str
 
 
 @attr.s(slots=True, frozen=True, auto_attribs=True)
