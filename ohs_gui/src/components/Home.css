@@ -1,0 +1,45 @@
+#dashboard {
+    position: relative;
+}
+
+#sections {
+    box-sizing: border-box;
+    width: calc(100% - 400px);
+    min-height: calc(100vh - 30px);
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    left: 400px;
+}
+
+#meetings {
+    box-sizing: border-box;
+    width: 400px;
+    min-height: calc(100vh - 30px);
+    padding: 20px;
+    background-color: #282c34;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-element {
+    display: inline-block;
+    height: 150px;
+    width: 300px;
+    margin: 0 10px 20px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.lecture-section {
+    background-color: #cee2f7;
+    padding-top: 60px;
+}
+
+.meeting {
+    background-color: white;
+    color: black;
+    padding-top: 40px;
+}
