@@ -32,6 +32,15 @@ class CoursePresistence:
         self.connection.commit()
         return Ok(course)
 
+    def delete_course(self, course: Course) -> Result[Course, str]:
+        if not self.get_course(course.course_code):
+            return Err(f"Course {course} does not exist")
+        c = self.connection.cursor()
+        term = (course.course_code,)
+        c.execute("DELETE FROM courses WHERE course_code=%s", term)
+        self.connection.commit()
+        return Ok(course)
+
     def create_section(self, section: Section) -> Result[Section, str]:
         if self.get_section(section.identity):
             return Err(f"Section {section} already exists")
