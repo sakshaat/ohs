@@ -39,7 +39,10 @@ class TestCreateCourse:
 class TestCreateSection:
     def test_success(self, course_presistence):
         section = fake_section()
-        course_presistence.get_course = MagicMock(return_value=Some(section.course))
+        assert (
+            course_presistence.create_course(section.course).unwrap() == section.course
+        )
+        # course_presistence.get_course = MagicMock(return_value=Some(section.course))
         assert course_presistence.create_section(section).unwrap() == section
         assert course_presistence.get_section(section.identity).unwrap() == section
 
