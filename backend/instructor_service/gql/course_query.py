@@ -1,11 +1,11 @@
 import graphene
 
-from common.domain.course import (
+from core.domain.course import (
     Course as DomainCourse,
     SectionIdentity,
     Semester as DomainSemester,
 )
-from common.gql.course_schema import Course, Section, Semester
+from core.gql.course_schema import Course, Section, Semester
 from instructor_service.gql.context import course_api, instructor_api
 
 

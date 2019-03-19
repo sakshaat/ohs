@@ -1,6 +1,6 @@
 import graphene
 
-from common.gql import graphql_schema
+from core.gql import graphql_schema
 from instructor_service.gql.course_query import (
     CourseQuery,
     CreateCourse,

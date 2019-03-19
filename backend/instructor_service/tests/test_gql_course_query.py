@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 from option import NONE, Some
 
-from common.tests.generation import fake, list_fakes
-from common.tests.generation.fake_course import fake_course, fake_section
+from core.tests.generation import fake, list_fakes
+from core.tests.generation.fake_course import fake_course, fake_section
 from instructor_service.api.course_api import CourseApi
 from instructor_service.gql.context import InstructorContext
 from instructor_service.gql.graphql_schema import schema

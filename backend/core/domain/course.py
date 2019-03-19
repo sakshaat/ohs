@@ -3,7 +3,7 @@ from typing import NamedTuple
 
 import attr
 
-from common.domain.user import Instructor
+from core.domain.user import Instructor
 
 
 class Semester(Enum):

@@ -4,7 +4,7 @@ import attr
 from graphene import Schema
 from option import Result
 
-from common.gql.graphql_request import GraphqlRequest
+from core.gql.graphql_request import GraphqlRequest
 
 Context = TypeVar("Context")
 

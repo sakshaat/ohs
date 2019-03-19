@@ -5,8 +5,8 @@ sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
 from flask import Flask
 
-from common.app import App
-from common.gql.graphql_controller import GraphqlController
+from core.app import App
+from core.gql.graphql_controller import GraphqlController
 from student_service.gql.graphql_schema import schema
 
 

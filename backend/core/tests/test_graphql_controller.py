@@ -2,9 +2,9 @@ from unittest.mock import MagicMock
 
 from graphene import Schema
 
-from common.gql.graphql_controller import GraphqlController
-from common.gql.graphql_request import GraphqlRequest
-from common.tests import FakeGraphqlResult
+from core.gql.graphql_controller import GraphqlController
+from core.gql.graphql_request import GraphqlRequest
+from core.tests import FakeGraphqlResult
 
 mock_schema = MagicMock(Schema)
 controller = GraphqlController(mock_schema)

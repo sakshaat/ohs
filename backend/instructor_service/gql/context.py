@@ -1,6 +1,6 @@
 import attr
 
-from common.domain.user import Instructor
+from core.domain.user import Instructor
 from instructor_service.api.course_api import CourseApi
 from instructor_service.api.instructor_api import InstructorApi
 from instructor_service.api.ohs_instructor_api import OhsInstructorApi

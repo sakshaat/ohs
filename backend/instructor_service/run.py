@@ -14,9 +14,9 @@ from instructor_service.api.ohs_instructor_api import OhsInstructorApi
 from instructor_service.gql.context import InstructorContext
 from instructor_service.presistence.course_persistence import CoursePresistence
 
-from common.app import App
-from common.gql.graphql_controller import GraphqlController
-from common.domain.user import Instructor
+from core.app import App
+from core.gql.graphql_controller import GraphqlController
+from core.domain.user import Instructor
 from instructor_service.gql.graphql_schema import schema
 
 

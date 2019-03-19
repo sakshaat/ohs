@@ -1,8 +1,8 @@
 from random import choice
 
-from common.domain.course import Course, Section, Semester
-from common.tests.generation import fake
-from common.tests.generation.fake_user import fake_instructor
+from core.domain.course import Course, Section, Semester
+from core.tests.generation import fake
+from core.tests.generation.fake_user import fake_instructor
 
 
 def fake_course() -> Course:

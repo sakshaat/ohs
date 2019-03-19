@@ -5,8 +5,8 @@ import attr
 import flask
 from option import Result
 
-from common.gql.graphql_controller import GraphqlController
-from common.gql.graphql_request import parse_graphql_request
+from core.gql.graphql_controller import GraphqlController
+from core.gql.graphql_request import parse_graphql_request
 
 Context = TypeVar("Context")
 

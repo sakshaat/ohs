@@ -1,5 +1,5 @@
-from common.domain.user import Instructor, Student
-from common.tests.generation import fake
+from core.domain.user import Instructor, Student
+from core.tests.generation import fake
 
 
 def fake_instructor() -> Instructor:

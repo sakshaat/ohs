@@ -1,12 +1,12 @@
 import graphene
 
-from common.domain.course import (
+from core.domain.course import (
     Course as DomainCourse,
     Section as DomainSection,
     SectionIdentity,
     Semester,
 )
-from common.gql.user_schema import Instructor
+from core.gql.user_schema import Instructor
 
 
 def semester_description(value):

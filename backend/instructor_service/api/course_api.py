@@ -3,8 +3,8 @@ from typing import List
 import attr
 from option import Option, Result
 
-from common.domain.course import Course, Section, SectionIdentity, Semester
-from common.domain.user import Instructor
+from core.domain.course import Course, Section, SectionIdentity, Semester
+from core.domain.user import Instructor
 from instructor_service.presistence.course_persistence import CoursePresistence
 
 

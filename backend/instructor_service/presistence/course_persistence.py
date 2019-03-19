@@ -3,7 +3,7 @@ from typing import Dict, List
 import attr
 from option import Err, Ok, Option, Result, maybe
 
-from common.domain.course import Course, Section, SectionIdentity
+from core.domain.course import Course, Section, SectionIdentity
 
 
 @attr.s

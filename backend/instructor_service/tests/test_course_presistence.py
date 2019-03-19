@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from option import Some
 
-from common.tests.generation.fake_course import fake_course, fake_section
+from core.tests.generation.fake_course import fake_course, fake_section
 from instructor_service.presistence.course_persistence import CoursePresistence
 
 

@@ -4,9 +4,9 @@ import pytest
 from flask import Flask, Request
 from option import Result
 
-from common.app import App
-from common.gql.graphql_controller import GraphqlController
-from common.gql.graphql_request import GraphqlRequest
+from core.app import App
+from core.gql.graphql_controller import GraphqlController
+from core.gql.graphql_request import GraphqlRequest
 
 mock_gql_controller = MagicMock(GraphqlController)
 mock_flask_app = MagicMock(Flask)
