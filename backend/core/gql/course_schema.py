@@ -53,3 +53,19 @@ class Section(graphene.ObjectType):
         return SectionIdentity(
             self.course.to_domain(), self.year, self.semester, self.section_code
         )
+
+
+class CourseInput(graphene.InputObjectType):
+    course_code = graphene.String(required=True)
+
+    def to_domain(self):
+        return DomainCourse(self.course_code)
+
+
+class SectionInput(graphene.InputObjectType):
+    course = CourseInput(required=True)
+    year = graphene.Int(required=True)
+    semester = graphene.Field(Semester, required=True)
+    section_code = graphene.String(required=True)
+    taught_by = graphene.String()
+    num_students = graphene.Int()

@@ -5,13 +5,12 @@ from option import NONE, Some
 
 from core.tests.generation import fake, list_fakes
 from core.tests.generation.fake_course import fake_course, fake_section
-from instructor_service.api.course_api import CourseApi
-from instructor_service.gql.context import InstructorContext
-from instructor_service.gql.graphql_schema import schema
+from core.api.course_api import CourseApi
+from core.gql.context import Context
 
 
 class CourseQueryBehavious:
-    mock_context = MagicMock(InstructorContext)
+    mock_context = MagicMock(Context)
     mock_course_api = MagicMock(CourseApi)
     mock_context.api.course_api = mock_course_api
 
@@ -52,7 +51,7 @@ class CourseQueryBehavious:
     def to_graphql_list(self, domain_list):
         raise NotImplementedError()
 
-    def test_query_one(self):
+    def test_query_one(self, schema):
         self.before_each()
         fake_domain = self.fake_domain()
         identity = self.get_identity(fake_domain)
@@ -64,7 +63,7 @@ class CourseQueryBehavious:
         assert result.data == self.to_graphql(fake_domain)
         self.mock_get_method().assert_called_once_with(identity)
 
-    def test_query_one_empty(self):
+    def test_query_one_empty(self, schema):
         self.before_each()
         fake_domain = self.fake_domain()
         identity = self.get_identity(fake_domain)
@@ -77,7 +76,7 @@ class CourseQueryBehavious:
         self.mock_get_method().assert_called_once_with(identity)
 
     @pytest.mark.parametrize("num_objects", [0, 10])
-    def test_listing(self, num_objects):
+    def test_listing(self, num_objects, schema):
         for filters in self.filters_list:
             self.before_each()
             fake_domains = list_fakes(self.fake_domain, num_objects)

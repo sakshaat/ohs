@@ -3,22 +3,21 @@ from unittest.mock import MagicMock
 import pytest
 from option import Err, Ok, Some
 
+from core.api.course_api import CourseApi
+from core.api.instructor_api import InstructorApi
+from core.gql.context import Context
 from core.tests.generation import fake
 from core.tests.generation.fake_course import fake_course, fake_section
-from instructor_service.api.course_api import CourseApi
-from instructor_service.api.instructor_api import InstructorApi
-from instructor_service.gql.context import InstructorContext
-from instructor_service.gql.graphql_schema import schema
 
 
 @pytest.fixture()
 def mock_context():
-    context = MagicMock(InstructorContext)
+    context = MagicMock(Context)
     course_api = MagicMock(CourseApi)
     instructor_api = MagicMock(InstructorApi)
     context.api.course_api = course_api
     context.api.instructor_api = instructor_api
-    context.instructor = None
+    context.user = None
     return context, course_api, instructor_api
 
 
@@ -32,7 +31,7 @@ mutation createCourse($courseCode: String!) {
 }"""
 
 
-def test_create_course(mock_context, create_course_query):
+def test_create_course(schema, mock_context, create_course_query):
     context, course_api, instructor_api = mock_context
     course = fake_course()
     course_api.create_course = MagicMock(return_value=Ok(course))
@@ -46,7 +45,7 @@ def test_create_course(mock_context, create_course_query):
     course_api.create_course.assert_called_once_with(course.course_code)
 
 
-def test_create_course_fail(mock_context, create_course_query):
+def test_create_course_fail(schema, mock_context, create_course_query):
     context, course_api, instructor_api = mock_context
     course = fake_course()
     error = fake.pystr()
@@ -94,14 +93,14 @@ def section_input(section):
 
 
 @pytest.mark.parametrize("supply_instructor", [True, False])
-def test_create_section(mock_context, create_section_query, supply_instructor):
+def test_create_section(schema, mock_context, create_section_query, supply_instructor):
     context, course_api, instructor_api = mock_context
     section = fake_section()
 
     if supply_instructor:
         instructor_api.get_instructor = MagicMock(return_value=Some(section.taught_by))
     else:
-        context.instructor = section.taught_by
+        context.user = section.taught_by
 
     course_api.create_section = MagicMock(return_value=Ok(section))
     variables = section_input(section)
@@ -133,10 +132,10 @@ def test_create_section(mock_context, create_section_query, supply_instructor):
     )
 
 
-def test_create_section_fail(mock_context, create_section_query):
+def test_create_section_fail(schema, mock_context, create_section_query):
     context, course_api, instructor_api = mock_context
     section = fake_section()
-    context.instructor = section.taught_by
+    context.user = section.taught_by
     error = fake.pystr()
     course_api.create_section = MagicMock(return_value=Err(error))
     result = schema.execute(

@@ -5,7 +5,7 @@ from option import Option, Result
 
 from core.domain.course import Course, Section, SectionIdentity, Semester
 from core.domain.user import Instructor
-from instructor_service.presistence.course_persistence import CoursePresistence
+from core.presistence.course_persistence import CoursePresistence
 
 
 @attr.s(auto_attribs=True)
