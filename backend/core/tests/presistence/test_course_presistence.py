@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from option import Some
-from pathlib import Path
+import os
 import psycopg2
 
 from core.tests.generation.fake_course import fake_course, fake_section
@@ -11,16 +11,12 @@ from core.presistence.course_persistence import CoursePresistence
 
 @pytest.fixture()
 def course_presistence() -> CoursePresistence:
-    def db_string():
-        database_path = str(
-            Path(__file__).parent.parent.parent / Path("common", "database.ini")
-        )
-        f = open(database_path, "r")
-        db_params = " ".join(f.readlines()[1:])
-        f.close()
-        return db_params
-
-    conn = psycopg2.connect(db_string())
+    conn = psycopg2.connect(
+        host=os.getenv("POSTGRES_DBHOST"),
+        dbname=os.getenv("POSTGRES_DBNAME"),
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+    )
     yield CoursePresistence(lambda: conn)
     conn.close()
 

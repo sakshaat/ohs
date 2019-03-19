@@ -2,6 +2,7 @@ import contextlib
 import psycopg2
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
+import os
 
 import attr
 import flask
@@ -25,13 +26,14 @@ class App(Generic[Context], metaclass=ABCMeta):
     def setup_routes(self):
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
         def graphql():
-            def db_string():
-                f = open(self.database_path, "r")
-                db_params = " ".join(f.readlines()[1:])
-                f.close()
-                return db_params
-
-            with contextlib.closing(psycopg2.connect(db_string())) as conn:
+            with contextlib.closing(
+                psycopg2.connect(
+                    host=os.getenv("POSTGRES_DBHOST"),
+                    dbname=os.getenv("POSTGRES_DBNAME"),
+                    user=os.getenv("POSTGRES_USER"),
+                    password=os.getenv("POSTGRES_PASSWORD"),
+                )
+            ) as conn:
                 flask.g.connection = conn
                 result = self.execute_gql(flask.request)
                 if result.is_err:
