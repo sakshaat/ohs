@@ -151,6 +151,11 @@ query getSection($course: CourseInput!, $year: Int!, $semester: Semester!, $sect
         year
         semester
         sectionCode
+        taughtBy {
+            id
+            firstName
+            lastName
+        }
         numStudents
     }
 }"""
@@ -166,6 +171,11 @@ query querySections($filters: String) {
         year
         semester
         sectionCode
+        taughtBy {
+            id
+            firstName
+            lastName
+        }
         numStudents
     }
 }"""
@@ -200,6 +210,11 @@ query querySections($filters: String) {
             "year": section.year,
             "semester": section.semester.name,
             "sectionCode": section.section_code,
+            "taughtBy": {
+                "id": str(section.taught_by.id),
+                "firstName": section.taught_by.first_name,
+                "lastName": section.taught_by.last_name,
+            },
             "numStudents": section.num_students,
         }
 

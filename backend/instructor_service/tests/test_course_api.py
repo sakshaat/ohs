@@ -25,6 +25,7 @@ class TestCreateSection:
                 section.year,
                 section.semester,
                 section.section_code,
+                section.taught_by,
                 section.num_students,
             ).unwrap()
             == section
@@ -42,6 +43,7 @@ class TestCreateSection:
                 section.year,
                 section.semester,
                 section.section_code,
+                section.taught_by,
                 section.num_students,
             )
             == err

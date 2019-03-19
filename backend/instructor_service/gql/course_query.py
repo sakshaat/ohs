@@ -6,11 +6,7 @@ from common.domain.course import (
     Semester as DomainSemester,
 )
 from common.gql.course_schema import Course, Section, Semester
-from instructor_service.api.course_api import CourseApi
-
-
-def _course_api(info) -> CourseApi:
-    return info.context.api.course_api
+from instructor_service.gql.context import course_api, instructor_api
 
 
 class CourseInput(graphene.InputObjectType):
@@ -27,14 +23,12 @@ class CourseQuery(graphene.ObjectType):
     )  # TODO: Use an actual filter
 
     def resolve_course(self, info, course_code):
-        return (
-            _course_api(info).get_course(course_code).map_or(Course.from_domain, None)
-        )
+        return course_api(info).get_course(course_code).map_or(Course.from_domain, None)
 
     def resolve_courses(self, info, filters=None):
         return [
             Course.from_domain(course)
-            for course in _course_api(info).query_courses(filters)
+            for course in course_api(info).query_courses(filters)
         ]
 
 
@@ -52,7 +46,7 @@ class SectionQuery(graphene.ObjectType):
 
     def resolve_section(self, info, course, year, semester, section_code):
         return (
-            _course_api(info)
+            course_api(info)
             .get_section(
                 SectionIdentity(
                     course.to_domain(), year, DomainSemester(semester), section_code
@@ -64,7 +58,7 @@ class SectionQuery(graphene.ObjectType):
     def resolve_sections(self, info, filters=None):
         return [
             Section.from_domain(section)
-            for section in _course_api(info).query_sections(filters)
+            for section in course_api(info).query_sections(filters)
         ]
 
 
@@ -75,7 +69,7 @@ class CreateCourse(graphene.Mutation):
     Output = Course
 
     def mutate(self, info, course_input):
-        return _course_api(info).create_course(course_input.course_code).unwrap()
+        return course_api(info).create_course(course_input.course_code).unwrap()
 
 
 class SectionInput(graphene.InputObjectType):
@@ -83,6 +77,7 @@ class SectionInput(graphene.InputObjectType):
     year = graphene.Int(required=True)
     semester = graphene.Field(Semester, required=True)
     section_code = graphene.String(required=True)
+    taught_by = graphene.UUID()
     num_students = graphene.Int()
 
 
@@ -94,13 +89,23 @@ class CreateSection(graphene.Mutation):
 
     def mutate(self, info, section_input):
         num_students = section_input.num_students or 0
+        taught_by = section_input.taught_by
+        instructor = (
+            instructor_api(info)
+            .get_instructor(taught_by)
+            .expect(f"Instructor with ID {taught_by} does not exist.")
+            if taught_by
+            else info.context.instructor
+        )
+
         return (
-            _course_api(info)
+            course_api(info)
             .create_section(
                 section_input.course.to_domain(),
                 section_input.year,
                 DomainSemester(section_input.semester),
                 section_input.section_code,
+                instructor,
                 num_students,
             )
             .unwrap()

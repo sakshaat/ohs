@@ -2,6 +2,7 @@ from random import choice
 
 from common.domain.course import Course, Section, Semester
 from common.tests.generation import fake
+from common.tests.generation.fake_user import fake_instructor
 
 
 def fake_course() -> Course:
@@ -14,5 +15,6 @@ def fake_section(course=None, year=None, semester=None) -> Section:
     year = year or int(fake.year())
     semester = semester or choice(list(Semester))
     section_code = fake.pystr()
+    instructor = fake_instructor()
     num_students = fake.pyint()
-    return Section(course, year, semester, section_code, num_students)
+    return Section(course, year, semester, section_code, instructor, num_students)

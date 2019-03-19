@@ -3,6 +3,8 @@ from typing import NamedTuple
 
 import attr
 
+from common.domain.user import Instructor
+
 
 class Semester(Enum):
     WINTER = auto()
@@ -34,6 +36,7 @@ class Section:
         year: year of offering
         semester: semester of offering
         section_code: The section code
+        taught_by: The instructor for this section
         num_students: The number of students in the section
     """
 
@@ -41,6 +44,7 @@ class Section:
     year: int
     semester: Semester
     section_code: str
+    taught_by: Instructor
     num_students: int = 0
 
     @property

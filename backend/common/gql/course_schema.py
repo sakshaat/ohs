@@ -6,6 +6,7 @@ from common.domain.course import (
     SectionIdentity,
     Semester,
 )
+from common.gql.user_schema import Instructor
 
 
 def semester_description(value):
@@ -34,6 +35,7 @@ class Section(graphene.ObjectType):
     year = graphene.Int(required=True)
     semester = graphene.Field(Semester, required=True)
     section_code = graphene.String(required=True)
+    taught_by = graphene.Field(Instructor, required=True)
     num_students = graphene.Int(required=True)
 
     @classmethod
@@ -43,6 +45,7 @@ class Section(graphene.ObjectType):
             year=domain_section.year,
             semester=domain_section.semester,
             section_code=domain_section.section_code,
+            taught_by=Instructor.from_domain(domain_section.taught_by),
             num_students=domain_section.num_students,
         )
 

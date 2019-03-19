@@ -4,6 +4,7 @@ import attr
 from option import Option, Result
 
 from common.domain.course import Course, Section, SectionIdentity, Semester
+from common.domain.user import Instructor
 from instructor_service.presistence.course_persistence import CoursePresistence
 
 
@@ -17,6 +18,7 @@ class CourseApi:
         year: int,
         semester: Semester,
         section_code: str,
+        taught_by: Instructor,
         num_students: int = 0,
     ) -> Result[Section, str]:
         """
@@ -27,12 +29,13 @@ class CourseApi:
             year: The year it is offered
             semester: semester of offering
             section_code: The section code for that section
+            taught_by: The instructor for that section
             num_students: The number of students in that section
 
         Returns:
             The new section created
         """
-        section = Section(course, year, semester, section_code, num_students)
+        section = Section(course, year, semester, section_code, taught_by, num_students)
         return self.course_presistence.create_section(section)
 
     def create_course(self, course_code: str) -> Result[Course, str]:
