@@ -28,10 +28,10 @@ class App(Generic[Context], metaclass=ABCMeta):
         def graphql():
             with contextlib.closing(
                 psycopg2.connect(
-                    host=os.getenv("POSTGRES_DBHOST"),
-                    dbname=os.getenv("POSTGRES_DBNAME"),
-                    user=os.getenv("POSTGRES_USER"),
-                    password=os.getenv("POSTGRES_PASSWORD"),
+                    host=os.getenv("OHS_DBHOST"),
+                    dbname=os.getenv("OHS_DBNAME"),
+                    user=os.getenv("OHS_USER"),
+                    password=os.getenv("OHS_PASSWORD")
                 )
             ) as conn:
                 flask.g.connection = conn
