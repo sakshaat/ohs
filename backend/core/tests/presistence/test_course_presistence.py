@@ -7,7 +7,7 @@ import psycopg2
 
 from core.tests.generation.fake_course import fake_course, fake_section
 from core.presistence.course_persistence import CoursePresistence
-from instructor_service.presistence.instructor_persistence import InstructorPersistence
+from core.presistence.instructor_persistence import InstructorPersistence
 
 
 @pytest.fixture()

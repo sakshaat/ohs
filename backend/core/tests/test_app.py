@@ -17,8 +17,7 @@ class FakeApp(App[None]):
         return None
 
 
-db_path = str(Path(__file__).parent.parent / Path("common", "database.ini"))
-app = FakeApp(mock_flask_app, mock_gql_controller, db_path)
+app = FakeApp(mock_flask_app, mock_gql_controller)
 
 
 class TestExecuteGql:

@@ -2,7 +2,6 @@ import sys
 from pathlib import Path
 
 import flask
-
 from flask import Flask
 from flask_cors import CORS
 from option import Ok, Result
@@ -20,10 +19,10 @@ from core.gql.schema_registry import SchemaRestriction, build_schema
 from core.presistence.course_persistence import CoursePresistence
 
 
-class InstructorService(App[InstructorContext]):
-    def __init__(self, flask_app_, graphql_controller, database_path, api):
+class InstructorService(App[Context]):
+    def __init__(self, flask_app_, graphql_controller, api):
         self.api = api
-        super().__init__(flask_app_, graphql_controller, database_path)
+        super().__init__(flask_app_, graphql_controller)
 
     def create_context(self, request) -> Context:
         return Context(self.api, self.authenticate_instructor(request).unwrap())
@@ -35,11 +34,12 @@ class InstructorService(App[InstructorContext]):
 
 flask_app = Flask("Instructor Service")
 CORS(flask_app)
-gql_controller = GraphqlController(schema)
+gql_controller = GraphqlController(
+    build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
+)
 course_presistence = CoursePresistence(lambda: flask.g.connection)
-ohs_instructor_api = OhsInstructorApi(CourseApi(course_presistence))
-db_path = str(Path(__file__).parent.parent / Path("common", "database.ini"))
-app = InstructorService(flask_app, gql_controller, db_path, ohs_instructor_api)
+ohs_instructor_api = OhsApi(CourseApi(course_presistence), InstructorApi())
+app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
 
 if __name__ == "__main__":
     try:

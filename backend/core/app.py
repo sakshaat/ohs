@@ -1,11 +1,11 @@
 import contextlib
-import psycopg2
+import os
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
-import os
 
 import attr
 import flask
+import psycopg2
 from option import Result
 
 from core.gql.graphql_controller import GraphqlController
@@ -18,7 +18,6 @@ Context = TypeVar("Context")
 class App(Generic[Context], metaclass=ABCMeta):
     flask_app: flask.Flask
     graphql_controller: GraphqlController[Context]
-    database_path: str
 
     def __attrs_post_init__(self):
         self.setup_routes()
