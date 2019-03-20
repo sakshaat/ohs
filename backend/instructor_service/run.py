@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+import flask
 from flask import Flask
 from flask_cors import CORS
 from option import Ok, Result
@@ -36,7 +37,8 @@ CORS(flask_app)
 gql_controller = GraphqlController(
     build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
 )
-ohs_instructor_api = OhsApi(CourseApi(CoursePresistence()), InstructorApi())
+course_presistence = CoursePresistence(lambda: flask.g.connection)
+ohs_instructor_api = OhsApi(CourseApi(course_presistence), InstructorApi())
 app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
 
 if __name__ == "__main__":
