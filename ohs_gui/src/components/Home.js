@@ -1,80 +1,29 @@
 import React, { Component } from 'react';
-import CourseCard from "./dashboard/CourseCard"
-import LectureSectionCard from "./dashboard/LectureSectionCard"
 import MeetingCard from "./dashboard/MeetingCard"
-import { Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import CreateCourse from "./CreateCourse"
+import CreateSection from './CreateSection';
+import LectureSection from './LectureSection';
+import Meeting from './Meeting';
+import Course from './Course';
+import Dashboard from './Dashboard';
 
 import "./Home.css"
 
-
+/* A wrapper which provides the meetings sidebar */
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      courses: [],
-      sections: [],
       meetings: []
     }
 
-    this.getCourses = this.getCourses.bind(this);
-    this.getSections = this.getSections.bind(this);
     this.getMeetings = this.getMeetings.bind(this);
   }
 
   componentDidMount() {
-    if (this.props.user && this.props.user.role === "PROFESSOR") {
-      this.getCourses();
-    }
-    else {
-      this.getSections();
-    }
     this.getMeetings();
-  }
-
-  getCourses() {
-    // TODO: dummy json
-    const courses = [
-      {
-        name: "CSC302",
-        id: 1
-      }, {
-        name: "CSC309",
-        id: 2
-      }, {
-        name: "CSC367",
-        id: 3
-      }, {
-        name: "CSC258",
-        id: 4
-      }, {
-        name: "CSC384",
-        id: 5
-      }
-    ]
-    this.setState({ courses: courses })
-  }
-
-  getSections() {
-    // TODO: dummy json
-    const sections = [
-      {
-        courseCode: "CSC302H1S",
-        id: 6
-      }, {
-        courseCode: "CSC309H1S",
-        id: 7
-      }, {
-        courseCode: "CSC367H1S",
-        id: 8
-      }, {
-        courseCode: "CSC258H1S",
-        id: 9
-      }, {
-        courseCode: "CSC384H1S",
-        id: 10
-      }
-    ]
-    this.setState({ sections: sections });
   }
 
   getMeetings() {
@@ -96,49 +45,30 @@ class Home extends Component {
   }
 
   render() {
-    const { courses, sections, meetings } = this.state;
-    const isProf = this.props.user && this.props.user.role === "PROFESSOR";
+    const { meetings } = this.state;
 
-    const studentView = (
-      <div id="dashboard">
-        <div id="sections">
-          <h2>Current Courses</h2>
-          {sections.map(s => (
-            <LectureSectionCard section={s} key={s.id} />
-          ))}
+    return (
+      <Router>
+        <div id="dashboard">
+          <div id="meetings">
+            <h2>Upcoming Meetings</h2>
+            {meetings.map(m => (
+              <MeetingCard meeting={m} key={m.id} />
+            ))}
+          </div>
+          <div id="main">
+            <Switch>
+              <Route exact path="/" render={() => <Dashboard user={this.props.user} />} />
+              <Route exact path="/meeting/:id" render={(props) => <Meeting user={this.props.user} {...props} />} />
+              <Route exact path="/course/:id" render={(props) => <Course user={this.props.user} {...props} />} />
+              <Route exact path="/lectureSection/:id" render={(props) => <LectureSection user={this.props.user} {...props} />} />
+              <Route exact path="/addCourse" render={() => <CreateCourse user={this.props.user} />} />
+              <Route exact path="/course/:id/addSection" render={(props) => <CreateSection user={this.props.user} {...props} />} />
+            </Switch>
+          </div>
         </div>
-        <div id="meetings">
-          <h2>Upcoming Meetings</h2>
-          {meetings.map(m => (
-            <MeetingCard meeting={m} key={m.id} />
-          ))}
-        </div>
-      </div>
+      </Router>
     );
-
-    const profView = (
-      <div id="dashboard">
-        <div id="courses">
-          <h2>Current Courses</h2>
-          {courses.map(c => (
-            <CourseCard course={c} key={c.id} />
-          ))}
-          <Link to={'/addCourse'}>
-            <div className="add-course card-element">
-              <span className="fa fa-plus"></span>
-            </div>
-          </Link>
-        </div>
-        <div id="meetings">
-          <h2>Upcoming Meetings</h2>
-          {meetings.map(m => (
-            <MeetingCard meeting={m} key={m.id} />
-          ))}
-        </div>
-      </div>
-    );
-
-    return isProf ? profView : studentView;
   }
 }
 

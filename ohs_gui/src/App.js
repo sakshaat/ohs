@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
-import CreateCourse from "./components/CreateCourse"
-import CreateSection from './components/CreateSection';
-import LectureSection from './components/LectureSection';
-import Meeting from './components/Meeting';
-import Course from './components/Course';
-
 import Home from "./components/Home";
 
 import './App.css';
 
+/* A wrapper which keeps track of the current logged in user, and provides the nav bar */
 class App extends Component {
   constructor(props) {
     super(props);
@@ -53,14 +47,7 @@ class App extends Component {
           {this.state.user &&
             <div className="App-body">
               <Switch>
-                <Route exact path="/" render={() => <Home user={this.state.user} />} />
-                <Route exact path="/meeting/:id" render={(props) => <Meeting user={this.state.user} {...props} />} />
-                <Route exact path="/course/:id" render={(props) => <Course user={this.state.user} {...props} />} />
-                <Route exact path="/lectureSection/:id" render={(props) => <LectureSection user={this.state.user} {...props} />} />
-                <Route exact path="/addCourse" render={() => <CreateCourse />} />
-
-                {/* TODO: remove */}
-                <Route exact path="/add_section" render={() => <CreateSection />} />
+                <Route path="/" render={() => <Home user={this.state.user} />} />
               </Switch>
             </div>
           }

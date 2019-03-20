@@ -2,7 +2,7 @@
     position: relative;
 }
 
-#sections, #courses {
+#main {
     box-sizing: border-box;
     width: calc(100% - 400px);
     min-height: calc(100vh - 30px);
@@ -31,6 +31,7 @@
     margin: 0 10px 20px 10px;
     border: 1px solid black;
     border-radius: 10px;
+    vertical-align: bottom;
 }
 
 .lecture-section, .course {
@@ -38,7 +39,12 @@
     padding-top: 60px;
 }
 
-.add-course {
+.lecture-section-verbose {
+    background-color: #cee2f7;
+    padding-top: 40px;
+}
+
+.add-course, .add-section {
     padding-top: 60px;
 }
 
