@@ -85,7 +85,6 @@ class CoursePresistence:
             self.connection.commit()
             return Ok(section)
 
-
     def get_section(self, section_identity: SectionIdentity) -> Option[Section]:
         c = self.connection.cursor()
         term = (
@@ -101,14 +100,23 @@ class CoursePresistence:
         section = None
         res = c.fetchone()
         if res:
+
             def get_inst(user_name):
-                c.execute("SELECT * FROM instructors WHERE user_name=%s", (str(user_name), ))
+                c.execute(
+                    "SELECT * FROM instructors WHERE user_name=%s", (str(user_name),)
+                )
                 res = c.fetchone()
                 if res:
                     return Instructor(res[0], res[1], res[3])
                 return None
+
             section = Section(
-                Course(res[0]), res[1], Semester(int(res[2])), res[3], get_inst(res[4]), res[5]
+                Course(res[0]),
+                res[1],
+                Semester(int(res[2])),
+                res[3],
+                get_inst(res[4]),
+                res[5],
             )
         return maybe(section)
 
@@ -118,15 +126,22 @@ class CoursePresistence:
         c.execute("SELECT * FROM sections")
         sections = c.fetchall()
         if len(sections) > 0:
+
             def get_inst(user_name):
                 c.execute("SELECT * FROM instructors WHERE user_name=%s", (user_name))
                 res = c.fetchone()
                 if res:
                     return Instructor(res[0], res[1], res[3])
                 return None
+
             sections = map(
                 lambda res: Section(
-                    Section(res[0]), res[1], Semester(int(res[2])), res[3], get_inst(res[4]), res[5]
+                    Section(res[0]),
+                    res[1],
+                    Semester(int(res[2])),
+                    res[3],
+                    get_inst(res[4]),
+                    res[5],
                 ),
                 sections,
             )
@@ -142,6 +157,9 @@ class CoursePresistence:
             str(section_identity.semester.value),
             section_identity.section_code,
         )
-        c.execute("DELETE FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s", term)
+        c.execute(
+            "DELETE FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s",
+            term,
+        )
         self.connection.commit()
         return Ok(section_identity)

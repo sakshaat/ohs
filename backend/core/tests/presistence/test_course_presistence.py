@@ -21,6 +21,7 @@ def course_presistence() -> CoursePresistence:
     yield CoursePresistence(lambda: conn)
     conn.close()
 
+
 @pytest.fixture()
 def instructor_presistance() -> InstructorPersistence:
     conn = psycopg2.connect(
