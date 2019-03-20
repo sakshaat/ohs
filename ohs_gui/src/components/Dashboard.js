@@ -71,7 +71,7 @@ class Dashboard extends Component {
       <div id="sections">
         <h1>Current Courses</h1>
         {sections.map(s => (
-          <LectureSectionCard section={s} />
+          <LectureSectionCard section={s} key={s.course} />
         ))}
       </div>
     );
@@ -80,7 +80,7 @@ class Dashboard extends Component {
       <div id="courses">
         <h1>Current Courses</h1>
         {courses.map(c => (
-          <CourseCard course={c} />
+          <CourseCard course={c} key={c.course_code} />
         ))}
         <Link to={'/addCourse'}>
           <div className="add-course card-element">
