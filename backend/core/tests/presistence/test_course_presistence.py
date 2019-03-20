@@ -25,10 +25,10 @@ def course_presistence() -> CoursePresistence:
 @pytest.fixture()
 def instructor_presistance() -> InstructorPersistence:
     conn = psycopg2.connect(
-        host=os.getenv("OHS_DBHOST"),
-        dbname=os.getenv("OHS_DBNAME"),
-        user=os.getenv("OHS_USER"),
-        password=os.getenv("OHS_PASSWORD"),
+        host=os.getenv("OHS_DB_HOST"),
+        dbname=os.getenv("OHS_DB_NAME"),
+        user=os.getenv("OHS_DB_USER"),
+        password=os.getenv("OHS_DB_PASSWORD"),
     )
     yield InstructorPersistence(lambda: conn)
     conn.close()
