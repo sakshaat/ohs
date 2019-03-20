@@ -7,6 +7,7 @@ import psycopg2
 
 from core.tests.generation.fake_course import fake_course, fake_section
 from core.presistence.course_persistence import CoursePresistence
+from instructor_service.presistence.instructor_persistence import InstructorPersistence
 
 
 @pytest.fixture()
@@ -18,6 +19,17 @@ def course_presistence() -> CoursePresistence:
         password=os.getenv("OHS_PASSWORD"),
     )
     yield CoursePresistence(lambda: conn)
+    conn.close()
+
+@pytest.fixture()
+def instructor_presistance() -> InstructorPersistence:
+    conn = psycopg2.connect(
+        host=os.getenv("OHS_DBHOST"),
+        dbname=os.getenv("OHS_DBNAME"),
+        user=os.getenv("OHS_USER"),
+        password=os.getenv("OHS_PASSWORD"),
+    )
+    yield InstructorPersistence(lambda: conn)
     conn.close()
 
 
@@ -37,12 +49,15 @@ class TestCreateCourse:
 
 
 class TestCreateSection:
-    def test_success(self, course_presistence):
+    def test_success(self, course_presistence, instructor_presistance):
         section = fake_section()
         course_presistence.create_course(section.course)
+        instructor_presistance.create_instructor(section.taught_by, "aaaaa")
         assert course_presistence.create_section(section).unwrap() == section
         assert course_presistence.get_section(section.identity).unwrap() == section
+        course_presistence.delete_section(section.identity)
         course_presistence.delete_course(section.course)
+        instructor_presistance.delete_instructor(section.taught_by)
 
     def test_invalid_course(self, course_presistence):
         section = fake_section()

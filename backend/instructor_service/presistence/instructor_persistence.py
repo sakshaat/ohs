@@ -61,7 +61,7 @@ class InstructorPersistence(AuthenticationPresistence):
         instructor = None
         res = c.fetchone()
         if res:
-            instructor = Instructor(res[0])
+            instructor = Instructor(res[0], res[1], res[3])
         return maybe(instructor)
 
     def query_instructor(self, filters=None) -> List[Instructor]:

@@ -3,7 +3,9 @@ from typing import Dict, List, Callable
 import attr
 from option import Err, Ok, Option, Result, maybe
 
-from core.domain.course import Course, Section, SectionIdentity
+from core.domain.course import Course, Section, SectionIdentity, Semester
+from core.domain.user import Instructor
+from instructor_service.presistence.instructor_persistence import InstructorPersistence
 
 
 @attr.s
@@ -41,6 +43,25 @@ class CoursePresistence:
         self.connection.commit()
         return Ok(course)
 
+    def get_course(self, course_code: str) -> Option[Course]:
+        c = self.connection.cursor()
+        term = (course_code,)
+        c.execute("SELECT * FROM courses WHERE course_code=%s", term)
+        course = None
+        res = c.fetchone()
+        if res:
+            course = Course(res[0])
+        return maybe(course)
+
+    def query_courses(self, filters=None) -> List[Course]:
+        c = self.connection.cursor()
+        # TODO: filters
+        c.execute("SELECT * FROM courses")
+        courses = c.fetchall()
+        if len(courses) > 0:
+            courses = map(lambda x: Course(x[0]), courses)
+        return list(courses)
+
     def create_section(self, section: Section) -> Result[Section, str]:
         if self.get_section(section.identity):
             return Err(f"Section {section} already exists")
@@ -64,15 +85,6 @@ class CoursePresistence:
             self.connection.commit()
             return Ok(section)
 
-    def get_course(self, course_code: str) -> Option[Course]:
-        c = self.connection.cursor()
-        term = (course_code,)
-        c.execute("SELECT * FROM courses WHERE course_code=%s", term)
-        course = None
-        res = c.fetchone()
-        if res:
-            course = Course(res[0])
-        return maybe(course)
 
     def get_section(self, section_identity: SectionIdentity) -> Option[Section]:
         c = self.connection.cursor()
@@ -89,20 +101,16 @@ class CoursePresistence:
         section = None
         res = c.fetchone()
         if res:
-            # TODO: get actual instructor object
+            def get_inst(user_name):
+                c.execute("SELECT * FROM instructors WHERE user_name=%s", (str(user_name), ))
+                res = c.fetchone()
+                if res:
+                    return Instructor(res[0], res[1], res[3])
+                return None
             section = Section(
-                Course(res[0]), res[1], Semester(int(res[2])), res[3], None, res[5]
+                Course(res[0]), res[1], Semester(int(res[2])), res[3], get_inst(res[4]), res[5]
             )
         return maybe(section)
-
-    def query_courses(self, filters=None) -> List[Course]:
-        c = self.connection.cursor()
-        # TODO: filters
-        c.execute("SELECT * FROM courses")
-        courses = c.fetchall()
-        if len(courses) > 0:
-            courses = map(lambda x: Course(x[0]), courses)
-        return list(courses)
 
     def query_sections(self, filters=None) -> List[Section]:
         c = self.connection.cursor()
@@ -110,11 +118,30 @@ class CoursePresistence:
         c.execute("SELECT * FROM sections")
         sections = c.fetchall()
         if len(sections) > 0:
-            # TODO: get actual instructor object
+            def get_inst(user_name):
+                c.execute("SELECT * FROM instructors WHERE user_name=%s", (user_name))
+                res = c.fetchone()
+                if res:
+                    return Instructor(res[0], res[1], res[3])
+                return None
             sections = map(
                 lambda res: Section(
-                    Section(res[0]), res[1], Semester(int(res[2])), res[3], None, res[5]
+                    Section(res[0]), res[1], Semester(int(res[2])), res[3], get_inst(res[4]), res[5]
                 ),
                 sections,
             )
         return list(sections)
+
+    def delete_section(self, section_identity: Section) -> Result[Section, str]:
+        if not self.get_section(section_identity):
+            return Err(f"Section {section} does not exist")
+        c = self.connection.cursor()
+        term = (
+            section_identity.course.course_code,
+            section_identity.year,
+            str(section_identity.semester.value),
+            section_identity.section_code,
+        )
+        c.execute("DELETE FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s", term)
+        self.connection.commit()
+        return Ok(section_identity)
