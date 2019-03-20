@@ -27,7 +27,7 @@ class App extends Component {
   getUser() {
     // TODO: dummy json
     const user = {
-      role: "STUDENT"
+      role: "PROFESSOR"
     }
     this.setState({ user: user });
   }

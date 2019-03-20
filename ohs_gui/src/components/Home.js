@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Course from "./dashboard/Course"
 import LectureSection from "./dashboard/LectureSection"
 import Meeting from "./dashboard/Meeting"
+import { Link } from 'react-router-dom'
 
 import "./Home.css"
 
@@ -122,6 +123,11 @@ class Home extends Component {
           {courses.map(c => (
             <Course course={c} key={c.id} />
           ))}
+          <Link to={'/addCourse'}>
+            <div className="add-course card-element">
+              <span className="fa fa-plus"></span>
+            </div>
+          </Link>
         </div>
         <div id="meetings">
           <h2>Upcoming Meetings</h2>
