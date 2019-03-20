@@ -19,6 +19,7 @@ class Meeting extends Component {
     this.getNotes = this.getNotes.bind(this);
     this.getComments = this.getComments.bind(this);
     this.createComment = this.createComment.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
   componentDidMount() {
@@ -29,6 +30,11 @@ class Meeting extends Component {
     if (isProf) {
       this.getNotes();
     }
+    setTimeout(this.scrollToBottom, 0);
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
   }
 
   getMeeting() {
@@ -106,6 +112,10 @@ class Meeting extends Component {
     ReactDOM.findDOMNode(this.refs.commentInput).value = "";
   }
 
+  scrollToBottom() {
+    this.bottom.scrollIntoView({ behavior: 'smooth' });
+  }
+
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
 
@@ -120,6 +130,7 @@ class Meeting extends Component {
             {this.state.comments.map(c => (
               <MeetingComment comment={c} user={this.props.user} />
             ))}
+            <div ref={bottom => { this.bottom = bottom; }} />
           </div>
           <div className="new-comment">
             <FormGroup role="form">
