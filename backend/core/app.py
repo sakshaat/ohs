@@ -1,8 +1,11 @@
+import contextlib
+import os
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
 
 import attr
 import flask
+import psycopg2
 from option import Result
 
 from core.gql.graphql_controller import GraphqlController
@@ -22,13 +25,22 @@ class App(Generic[Context], metaclass=ABCMeta):
     def setup_routes(self):
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
         def graphql():
-            result = self.execute_gql(flask.request)
-            if result.is_err:
-                response = flask.jsonify(result.unwrap_err())
-                response.status_code = 400
-            else:
-                response = flask.jsonify(result.unwrap())
-            return response
+            with contextlib.closing(
+                psycopg2.connect(
+                    host=os.getenv("OHS_DB_HOST"),
+                    dbname=os.getenv("OHS_DB_NAME"),
+                    user=os.getenv("OHS_DB_USER"),
+                    password=os.getenv("OHS_DB_PASSWORD"),
+                )
+            ) as conn:
+                flask.g.connection = conn
+                result = self.execute_gql(flask.request)
+                if result.is_err:
+                    response = flask.jsonify(result.unwrap_err())
+                    response.status_code = 400
+                else:
+                    response = flask.jsonify(result.unwrap())
+                return response
 
         @self.flask_app.route("/")
         def home():
