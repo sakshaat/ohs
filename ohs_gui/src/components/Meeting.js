@@ -24,6 +24,7 @@ class Meeting extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.addNote = this.addNote.bind(this);
+    this.removeNote = this.removeNote.bind(this);
   }
 
   componentDidMount() {
@@ -142,19 +143,43 @@ class Meeting extends Component {
     this.setState({ show: false });
   }
 
+  removeNote(time) {
+    return () => {
+      if (window.confirm("Are you sure you want to delete this note?")) {
+        // TODO: remove note from backend
+        let notes = this.state.notes;
+        notes = notes.filter(n => n.time !== time);
+        this.setState({ notes: notes })
+      }
+    }
+  }
+
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
+    const { meeting, notes, comments, show } = this.state;
+    const dateFormat = require("dateformat")
 
     return (
       <>
         <div className="meeting-main">
           <div className="meeting-info">
             <h2>Meeting Info</h2>
+            {meeting &&
+              <>
+                Booked at {dateFormat(new Date(meeting.time), "mmmm dS, yyyy, h:MM TT")}
+                <br />
+                Room {meeting.room}
+                <br />
+                Course {meeting.courseCode}
+                <br />
+                Booked by {meeting.bookedBy}
+              </>
+            }
           </div>
           <div className="meeting-comments">
             <h2>Comments</h2>
-            {this.state.comments.map(c => (
-              <MeetingComment comment={c} user={this.props.user} />
+            {comments.map(c => (
+              <MeetingComment key={c.time + c.author} comment={c} user={this.props.user} />
             ))}
             <div ref={bottom => { this.bottom = bottom; }} />
           </div>
@@ -172,20 +197,20 @@ class Meeting extends Component {
         {isProf &&
           <div className="meeting-notes">
             <h2>Notes</h2>
-            {this.state.notes.map(n => (
-              <MeetingNote note={n} />
+            {notes.map(n => (
+              <MeetingNote key={n.time} note={n} removeNote={this.removeNote} />
             ))}
             <Button variant="primary" onClick={this.handleShow}>
               Add Note
             </Button>
           </div>
         }
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal show={show} onHide={this.handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Add Note</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <textarea class="note-input" ref="noteInput"></textarea>
+            <textarea className="note-input" ref="noteInput"></textarea>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>

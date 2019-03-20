@@ -19,6 +19,17 @@
     margin: 20px;
 }
 
+.note-delete {
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    font-size: 12px;
+}
+
+.note-delete:hover {
+    cursor: pointer;
+}
+
 .note-date {
     position: absolute;
     top: 5px;
@@ -66,6 +77,10 @@
     border-radius: 10px;
     max-width: 100%;
     word-wrap: break-word;
+}
+
+.comment-box {
+    text-align: left;
 }
 
 .meeting-comment.mine {

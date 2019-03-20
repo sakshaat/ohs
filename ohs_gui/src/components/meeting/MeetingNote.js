@@ -6,6 +6,7 @@ class MeetingNote extends Component {
 
     return (
       <div className="meeting-note">
+        <span className="note-delete" onClick={this.props.removeNote(this.props.note.time)}>&#10006;</span>
         <p className="note-date">
           {dateFormat(new Date(this.props.note.time), "mmmm dS, yyyy, h:MM TT")}
         </p>
