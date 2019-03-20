@@ -5,7 +5,6 @@ from option import Err, Ok, Option, Result, maybe
 
 from core.domain.course import Course, Section, SectionIdentity, Semester
 from core.domain.user import Instructor
-from instructor_service.presistence.instructor_persistence import InstructorPersistence
 
 
 @attr.s
@@ -147,19 +146,19 @@ class CoursePresistence:
             )
         return list(sections)
 
-    def delete_section(self, section_identity: Section) -> Result[Section, str]:
-        if not self.get_section(section_identity):
+    def delete_section(self, section: Section) -> Result[Section, str]:
+        if not self.get_section(section):
             return Err(f"Section {section} does not exist")
         c = self.connection.cursor()
         term = (
-            section_identity.course.course_code,
-            section_identity.year,
-            str(section_identity.semester.value),
-            section_identity.section_code,
+            section.course.course_code,
+            section.year,
+            str(section.semester.value),
+            section.section_code,
         )
         c.execute(
             "DELETE FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s",
             term,
         )
         self.connection.commit()
-        return Ok(section_identity)
+        return Ok(section)

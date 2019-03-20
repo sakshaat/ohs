@@ -1,9 +1,9 @@
-from typing import Dict, List, Callable
+from typing import List, Callable
 
 import attr
 from option import Err, Ok, Option, Result, maybe
 
-from core.domain.user import User, Instructor
+from core.domain.user import Instructor
 from core.presistence.authentication_presistence import AuthenticationPresistence
 
 
@@ -84,7 +84,7 @@ class InstructorPersistence(AuthenticationPresistence):
         if res:
             pass_hash = res[2]
         else:
-            return Err(f"Instructor {instructor} does not exist")
+            return Err(f"Instructor {user_identity} does not exist")
         return maybe(pass_hash)
 
     def update_password_hash(
@@ -92,6 +92,6 @@ class InstructorPersistence(AuthenticationPresistence):
     ) -> Result[None, str]:
         c = self.connection.cursor()
         term = (new_hash, user_identity)
-        c.execute("UPDATE instructors SET password_hash=%s WHERE user_name=%s")
+        c.execute("UPDATE instructors SET password_hash=%s WHERE user_name=%s", term)
         self.connection.commit()
         return Ok(None)
