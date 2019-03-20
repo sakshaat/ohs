@@ -111,9 +111,9 @@ class CoursePresistence:
         sections = c.fetchall()
         if len(sections) > 0:
             # TODO: get actual instructor object
-            courses = map(
+            sections = map(
                 lambda res: Section(
-                    Course(res[0]), res[1], Semester(int(res[2])), res[3], None, res[5]
+                    Section(res[0]), res[1], Semester(int(res[2])), res[3], None, res[5]
                 ),
                 sections,
             )
