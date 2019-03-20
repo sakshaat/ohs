@@ -55,7 +55,7 @@ class Course extends Component {
     const { course, sections } = this.state;
     return (
       <div id="sections">
-        {course && <h2>{course.name} Lecture Sections</h2>}
+        {course && <h1>{course.name} Lecture Sections</h1>}
         {sections.map(s => (
           <LectureSectionCard verbose section={s} key={s.id} />
         ))}

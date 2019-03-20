@@ -24,6 +24,10 @@
     left: 0;
 }
 
+#meetings h2 {
+    margin-bottom: calc(9.6px + 0.5rem)
+}
+
 .card-element {
     display: inline-block;
     height: 150px;
