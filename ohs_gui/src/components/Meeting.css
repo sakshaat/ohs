@@ -1,0 +1,69 @@
+.meeting-notes {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 400px;
+    height: calc(100vh - 30px);
+    overflow-y: scroll;
+    padding: 20px;
+    background-color: #282c34;
+    color: white;
+}
+
+.meeting-main {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 400px);
+}
+
+.meeting-info {
+    height: 200px;
+    border: 1px solid black;
+    padding: 20px;
+}
+
+.meeting-comments {
+    position: relative;
+    height: calc(100vh - 268px);
+    overflow-y: scroll;
+    padding: 20px;
+}
+
+.comment-box {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.meeting-comment.mine {
+    text-align: right;
+}
+
+.meeting-comment.mine .comment-box {
+    background-color: blue;
+    color: white;
+}
+
+.meeting-comment.theirs {
+    text-align: left;
+}
+
+.meeting-comment.theirs .comment-box {
+    background-color: lightgray;
+    color: black;
+}
+
+.comment-date {
+    font-size: 10px;
+    margin-bottom: 0;
+}
+
+.new-comment .form-group {
+    display: flex;
+    margin: 0;
+}
+
+.new-comment button {
+    border-radius: 0;
+}

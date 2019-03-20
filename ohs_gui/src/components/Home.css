@@ -6,7 +6,6 @@
     box-sizing: border-box;
     width: calc(100% - 400px);
     min-height: calc(100vh - 30px);
-    padding: 20px;
     position: absolute;
     top: 0;
     left: 400px;
@@ -15,7 +14,8 @@
 #meetings {
     box-sizing: border-box;
     width: 400px;
-    min-height: calc(100vh - 30px);
+    height: calc(100vh - 30px);
+    overflow-y: scroll;
     padding: 20px;
     background-color: #282c34;
     color: white;
