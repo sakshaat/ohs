@@ -30,8 +30,10 @@ nav .links {
 
 nav .links a {
   margin: 10px;
+  color: black;
 }
 
+/*
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -41,6 +43,11 @@ nav .links a {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+*/
+
+.App-body {
+  margin-top: 30px;
 }
 
 

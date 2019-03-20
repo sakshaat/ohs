@@ -1,0 +1,21 @@
+version: "3"
+services:
+  instructor_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.instructor
+    image: instructor_service
+    container_name: instructor_service
+    environment:
+      OHS_INSTRUCTOR_SERVICE_SECRET:
+  ohs_gui:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: ohs_gui
+    container_name: ohs_gui
+    ports:
+      - 5000:5000
+    depends_on:
+      - instructor_service
+

@@ -1,0 +1,18 @@
+FROM python:3.7-alpine
+
+LABEL name="instructor_service"
+
+ENV PYTHONBUFFERED 1
+
+ADD backend /app
+
+WORKDIR /app
+
+RUN pip install -U pip setuptools poetry
+
+RUN poetry install -n --no-dev
+
+EXPOSE 8000
+
+CMD ["poetry", "run", "gunicorn", "instructor_service.run:flask_app", "-b", "0.0.0.0:8000"]
+

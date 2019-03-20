@@ -1,13 +1,13 @@
 import sys
 from pathlib import Path
 
-sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
-
 from flask import Flask
 
-from common.app import App
-from common.gql.graphql_controller import GraphqlController
-from student_service.gql.graphql_schema import schema
+sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
+
+from core.app import App
+from core.gql.graphql_controller import GraphqlController
+from core.gql.schema_registry import SchemaRestriction, build_schema
 
 
 class StudentService(App):
@@ -19,7 +19,9 @@ class StudentService(App):
 
 
 flask_app = Flask("Student Service")
-gql_controller = GraphqlController(schema)
+gql_controller = GraphqlController(
+    build_schema([SchemaRestriction.ALL, SchemaRestriction.STUDENT])
+)
 app = StudentService(flask_app, gql_controller)
 
 if __name__ == "__main__":

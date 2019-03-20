@@ -48,7 +48,7 @@ class CreateCourse extends Component {
 
   render() {
     if(this.state.courseCreated) {
-      return (<Redirect to="/add_section"></Redirect>);
+      return (<Redirect to="/"></Redirect>);
     }
     return (
       <section className="container">
