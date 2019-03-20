@@ -68,7 +68,7 @@ class CreateSection extends Component {
 
   render() {
     if (this.state.sectionCreated) {
-      return (<Redirect to={"/course/" + this.props.match.params.id}></Redirect>)
+      return (<Redirect to={"/course/" + this.props.match.params.course_code}></Redirect>)
     }
 
     let sectionComponent = null;

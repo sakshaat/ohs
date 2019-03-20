@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 class CourseCard extends Component {
   render() {
     return (
-      <Link to={`/course/${this.props.course.id}`}>
+      <Link to={`/course/${this.props.course.course_code}`}>
         <div className="course card-element">
-          {this.props.course.name}
+          {this.props.course.course_code}
         </div>
       </Link>
     );

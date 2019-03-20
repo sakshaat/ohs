@@ -60,10 +60,10 @@ class Home extends Component {
             <Switch>
               <Route exact path="/" render={() => <Dashboard user={this.props.user} />} />
               <Route exact path="/meeting/:id" render={(props) => <Meeting user={this.props.user} {...props} />} />
-              <Route exact path="/course/:id" render={(props) => <Course user={this.props.user} {...props} />} />
-              <Route exact path="/lectureSection/:id" render={(props) => <LectureSection user={this.props.user} {...props} />} />
+              <Route exact path="/course/:course_code" render={(props) => <Course user={this.props.user} {...props} />} />
+              <Route exact path="/lectureSection" render={(props) => <LectureSection user={this.props.user} {...props} />} />
               <Route exact path="/addCourse" render={() => <CreateCourse user={this.props.user} />} />
-              <Route exact path="/course/:id/addSection" render={(props) => <CreateSection user={this.props.user} {...props} />} />
+              <Route exact path="/course/:course_code/addSection" render={(props) => <CreateSection user={this.props.user} {...props} />} />
             </Switch>
           </div>
         </div>

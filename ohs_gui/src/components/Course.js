@@ -6,16 +6,13 @@ class Course extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      course: null,
       sections: []
     }
 
     this.getSections = this.getSections.bind(this);
-    this.getCourse = this.getCourse.bind(this);
   }
 
   componentDidMount() {
-    this.getCourse();
     this.getSections();
   }
 
@@ -23,43 +20,38 @@ class Course extends Component {
     // TODO: dummy json
     const sections = [
       {
+        course: "CSC302",
         year: 2019,
         semester: "Winter",
-        numStudents: 200,
-        id: 6
+        section_code: "H1S",
+        num_students: 200
       }, {
+        course: "CSC302",
         year: 2019,
         semester: "Summer",
-        numStudents: 200,
-        id: 7
+        section_code: "H1S",
+        num_students: 200
       }, {
+        course: "CSC302",
         year: 2019,
         semester: "Fall",
-        numStudents: 200,
-        id: 8
+        section_code: "H1S",
+        num_students: 200
       }
     ]
     this.setState({ sections: sections });
   }
 
-  getCourse() {
-    // TODO: dummy json
-    const course = {
-      name: "CSC302",
-      id: this.props.match.params.id
-    }
-    this.setState({ course: course });
-  }
-
   render() {
-    const { course, sections } = this.state;
+    const { sections } = this.state;
+    const course = this.props.match.params.course_code;
     return (
       <div id="sections">
-        {course && <h1>{course.name} Lecture Sections</h1>}
+        {course && <h1>{course} Lecture Sections</h1>}
         {sections.map(s => (
-          <LectureSectionCard verbose section={s} key={s.id} />
+          <LectureSectionCard verbose section={s} />
         ))}
-        {course && <Link to={`/course/${course.id}/addSection`}>
+        {course && <Link to={`/course/${course}/addSection`}>
           <div className="add-section card-element">
             <span className="fa fa-plus"></span>
           </div>

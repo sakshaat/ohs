@@ -31,20 +31,15 @@ class Dashboard extends Component {
     // TODO: dummy json
     const courses = [
       {
-        name: "CSC302",
-        id: 1
+        course_code: "CSC302"
       }, {
-        name: "CSC309",
-        id: 2
+        course_code: "CSC309"
       }, {
-        name: "CSC367",
-        id: 3
+        course_code: "CSC367"
       }, {
-        name: "CSC258",
-        id: 4
+        course_code: "CSC258"
       }, {
-        name: "CSC384",
-        id: 5
+        course_code: "CSC384"
       }
     ]
     this.setState({ courses: courses })
@@ -54,20 +49,15 @@ class Dashboard extends Component {
     // TODO: dummy json
     const sections = [
       {
-        courseCode: "CSC302H1S",
-        id: 6
+        course: "CSC302"
       }, {
-        courseCode: "CSC309H1S",
-        id: 7
+        course: "CSC309"
       }, {
-        courseCode: "CSC367H1S",
-        id: 8
+        course: "CSC367"
       }, {
-        courseCode: "CSC258H1S",
-        id: 9
+        course: "CSC258"
       }, {
-        courseCode: "CSC384H1S",
-        id: 10
+        course: "CSC384"
       }
     ]
     this.setState({ sections: sections });
@@ -81,7 +71,7 @@ class Dashboard extends Component {
       <div id="sections">
         <h2>Current Courses</h2>
         {sections.map(s => (
-          <LectureSectionCard section={s} key={s.id} />
+          <LectureSectionCard section={s} />
         ))}
       </div>
     );
@@ -90,7 +80,7 @@ class Dashboard extends Component {
       <div id="courses">
         <h2>Current Courses</h2>
         {courses.map(c => (
-          <CourseCard course={c} key={c.id} />
+          <CourseCard course={c} />
         ))}
         <Link to={'/addCourse'}>
           <div className="add-course card-element">
