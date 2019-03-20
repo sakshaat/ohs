@@ -1,34 +1,30 @@
 import sys
 from pathlib import Path
 
+from flask import Flask
+from flask_cors import CORS
 from option import Ok, Result
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
-from flask import Flask
-from flask_cors import CORS
-
-from instructor_service.api.course_api import CourseApi
-from instructor_service.api.instructor_api import InstructorApi
-from instructor_service.api.ohs_instructor_api import OhsInstructorApi
-from instructor_service.gql.context import InstructorContext
-from instructor_service.presistence.course_persistence import CoursePresistence
-
-from common.app import App
-from common.gql.graphql_controller import GraphqlController
-from common.domain.user import Instructor
-from instructor_service.gql.graphql_schema import schema
+from core.api.course_api import CourseApi
+from core.api.instructor_api import InstructorApi
+from core.api.ohs_api import OhsApi
+from core.app import App
+from core.domain.user import Instructor
+from core.gql.context import Context
+from core.gql.graphql_controller import GraphqlController
+from core.gql.schema_registry import SchemaRestriction, build_schema
+from core.presistence.course_persistence import CoursePresistence
 
 
-class InstructorService(App[InstructorContext]):
+class InstructorService(App[Context]):
     def __init__(self, flask_app_, graphql_controller, api):
         self.api = api
         super().__init__(flask_app_, graphql_controller)
 
-    def create_context(self, request) -> InstructorContext:
-        return InstructorContext(
-            self.api, self.authenticate_instructor(request).unwrap()
-        )
+    def create_context(self, request) -> Context:
+        return Context(self.api, self.authenticate_instructor(request).unwrap())
 
     def authenticate_instructor(self, request) -> Result[Instructor, str]:
         # TODO: implement authentication
@@ -37,8 +33,10 @@ class InstructorService(App[InstructorContext]):
 
 flask_app = Flask("Instructor Service")
 CORS(flask_app)
-gql_controller = GraphqlController(schema)
-ohs_instructor_api = OhsInstructorApi(CourseApi(CoursePresistence()), InstructorApi())
+gql_controller = GraphqlController(
+    build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
+)
+ohs_instructor_api = OhsApi(CourseApi(CoursePresistence()), InstructorApi())
 app = InstructorService(flask_app, gql_controller, ohs_instructor_api)
 
 if __name__ == "__main__":
