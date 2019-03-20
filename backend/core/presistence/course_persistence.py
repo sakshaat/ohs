@@ -127,6 +127,7 @@ class CoursePresistence:
         c.execute("SELECT * FROM sections")
         sections = c.fetchall()
         if len(sections) > 0:
+
             def get_inst(user_name):
                 c.execute("SELECT * FROM instructors WHERE user_name=%s", (user_name))
                 res = c.fetchone()
