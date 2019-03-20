@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 import pytest
 from flask import Flask, Request
 from option import Result
-from pathlib import Path
 
 from core.app import App
 from core.gql.graphql_controller import GraphqlController

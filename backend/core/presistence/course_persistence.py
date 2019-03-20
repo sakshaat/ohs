@@ -1,4 +1,4 @@
-from typing import Dict, List, Callable
+from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
@@ -77,7 +77,8 @@ class CoursePresistence:
                 section.num_students,
             )
             c.execute(
-                "INSERT INTO sections(course, year, semester, section_code, taught_by, num_students) VALUES (%s, %s, %s, %s, %s, %s)",
+                "INSERT INTO sections(course, year, semester, section_code, taught_by, "
+                "num_students) VALUES (%s, %s, %s, %s, %s, %s)",
                 term,
             )
 
@@ -93,7 +94,8 @@ class CoursePresistence:
             section_identity.section_code,
         )
         c.execute(
-            "SELECT * FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s",
+            "SELECT * FROM sections WHERE course=%s AND year=%s AND semester=%s AND "
+            "section_code=%s",
             term,
         )
         section = None
@@ -125,7 +127,6 @@ class CoursePresistence:
         c.execute("SELECT * FROM sections")
         sections = c.fetchall()
         if len(sections) > 0:
-
             def get_inst(user_name):
                 c.execute("SELECT * FROM instructors WHERE user_name=%s", (user_name))
                 res = c.fetchone()
