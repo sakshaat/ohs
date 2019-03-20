@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class LectureSection extends Component {
   render() {
     return (
-      <div className="lecture-section card-element">
-        {this.props.section.courseCode}
-      </div>
+      <Link to={`/lectureSection/${this.props.section.id}`}>
+        <div className="lecture-section card-element">
+          {this.props.section.courseCode}
+        </div>
+      </Link>
     );
   }
 }
