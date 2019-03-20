@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MeetingNote from './meeting/MeetingNote';
 import MeetingComment from './meeting/MeetingComment';
 import ReactDOM from 'react-dom'
-import { Button, FormGroup, FormControl } from 'react-bootstrap';
+import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 
 import "./Meeting.css"
 
@@ -12,7 +12,8 @@ class Meeting extends Component {
     this.state = {
       meeting: null,
       notes: [],
-      comments: []
+      comments: [],
+      show: false
     }
 
     this.getMeeting = this.getMeeting.bind(this);
@@ -20,6 +21,9 @@ class Meeting extends Component {
     this.getComments = this.getComments.bind(this);
     this.createComment = this.createComment.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.addNote = this.addNote.bind(this);
   }
 
   componentDidMount() {
@@ -99,31 +103,53 @@ class Meeting extends Component {
 
   createComment() {
     // TODO: add comment to backend
+    if (ReactDOM.findDOMNode(this.refs.commentInput).value === "") {
+      return;
+    }
     const comment = {
       time: new Date().toISOString(),
       contents: ReactDOM.findDOMNode(this.refs.commentInput).value,
       author: this.props.user.first_name + this.props.user.last_name
     }
-    console.log(comment)
     const comments = this.state.comments;
     comments.push(comment)
-    console.log(comments)
     this.setState({ comments: comments })
     ReactDOM.findDOMNode(this.refs.commentInput).value = "";
+  }
+
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  handleShow() {
+    this.setState({ show: true });
   }
 
   scrollToBottom() {
     this.bottom.scrollIntoView({ behavior: 'smooth' });
   }
 
+  addNote() {
+    // TODO: add note to backend
+    const note = {
+      time: new Date().toISOString(),
+      contents: ReactDOM.findDOMNode(this.refs.noteInput).value
+    }
+    const notes = this.state.notes;
+    notes.push(note)
+    this.setState({ notes: notes })
+    ReactDOM.findDOMNode(this.refs.noteInput).value = "";
+    this.setState({ show: false });
+  }
+
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
 
     return (
-      <div>
+      <>
         <div className="meeting-main">
           <div className="meeting-info">
-            <h2>Meeting Info:</h2>
+            <h2>Meeting Info</h2>
           </div>
           <div className="meeting-comments">
             <h2>Comments</h2>
@@ -134,13 +160,11 @@ class Meeting extends Component {
           </div>
           <div className="new-comment">
             <FormGroup role="form">
-
               <FormControl ref="commentInput"
                 placeholder="New comment"
                 aria-label="Comment"
                 aria-describedby="basic-addon2"
               />
-
               <Button variant="primary" onClick={this.createComment}>Submit</Button>
             </FormGroup>
           </div>
@@ -151,9 +175,28 @@ class Meeting extends Component {
             {this.state.notes.map(n => (
               <MeetingNote note={n} />
             ))}
+            <Button variant="primary" onClick={this.handleShow}>
+              Add Note
+            </Button>
           </div>
         }
-      </div>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Note</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <textarea class="note-input" ref="noteInput"></textarea>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={this.addNote}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
     );
   }
 }

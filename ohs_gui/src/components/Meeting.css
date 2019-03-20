@@ -10,6 +10,31 @@
     color: white;
 }
 
+.meeting-note {
+    position: relative;
+    background-color: #feff9c;
+    color: black;
+    width: 300px;
+    padding: 20px;
+    margin: 20px;
+}
+
+.note-date {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-size: 12px;
+}
+
+.note-content {
+    margin-top: 20px;
+}
+
+.note-input {
+    width: 100%;
+    height: 200px;
+}
+
 .meeting-main {
     position: relative;
     display: inline-block;
@@ -19,8 +44,9 @@
 
 .meeting-info {
     height: 200px;
-    border: 1px solid black;
     padding: 20px;
+    background-color: rgb(41, 74, 102);
+    color: white;
 }
 
 .meeting-comments {
@@ -38,6 +64,8 @@
     display: inline-block;
     padding: 10px;
     border-radius: 10px;
+    max-width: 100%;
+    word-wrap: break-word;
 }
 
 .meeting-comment.mine {

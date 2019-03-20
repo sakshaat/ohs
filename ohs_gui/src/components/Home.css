@@ -11,6 +11,10 @@
     left: 400px;
 }
 
+#main h1 {
+    margin-top: 20px;
+}
+
 #meetings {
     box-sizing: border-box;
     width: 400px;
