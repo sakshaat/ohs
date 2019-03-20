@@ -69,7 +69,7 @@ class Dashboard extends Component {
 
     const studentView = (
       <div id="sections">
-        <h2>Current Courses</h2>
+        <h1>Current Courses</h1>
         {sections.map(s => (
           <LectureSectionCard section={s} />
         ))}
@@ -78,7 +78,7 @@ class Dashboard extends Component {
 
     const profView = (
       <div id="courses">
-        <h2>Current Courses</h2>
+        <h1>Current Courses</h1>
         {courses.map(c => (
           <CourseCard course={c} />
         ))}

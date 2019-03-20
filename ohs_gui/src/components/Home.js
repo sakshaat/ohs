@@ -33,11 +33,13 @@ class Home extends Component {
         time: "2019-11-17T17:15:00.000Z",
         room: "BA1234",
         courseCode: "CSC302H1S",
+        bookedBy: "Alec Gibson",
         id: 11
       }, {
         time: "2019-11-18T17:15:00.000Z",
         room: "BA1234",
         courseCode: "CSC302H1S",
+        bookedBy: "Alec Gibson",
         id: 12
       }
     ]
@@ -46,6 +48,7 @@ class Home extends Component {
 
   render() {
     const { meetings } = this.state;
+    const isProf = this.props.user && this.props.user.role === "PROFESSOR";
 
     return (
       <Router>
@@ -53,7 +56,10 @@ class Home extends Component {
           <div id="meetings">
             <h2>Upcoming Meetings</h2>
             {meetings.map(m => (
-              <MeetingCard meeting={m} key={m.id} />
+              isProf ?
+                <MeetingCard verbose meeting={m} key={m.id} />
+                :
+                <MeetingCard meeting={m} key={m.id} />
             ))}
           </div>
           <div id="main">

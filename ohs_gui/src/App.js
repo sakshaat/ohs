@@ -37,7 +37,9 @@ class App extends Component {
           <nav>
             <div className="links">
               <div className="nav-item">
-                OHS
+                <a href="/">
+                  OHS
+                </a>
               </div>
               <div className="nav-item">
                 Logged In as Dr. Frankenstein

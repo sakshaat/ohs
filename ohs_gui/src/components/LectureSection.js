@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-/* NOTE: this.props.match.params.info will be the course for student, concatenation of course, year, semester, and section_code for professor */
 class LectureSection extends Component {
   render() {
     let params = new URLSearchParams(this.props.location.search);
