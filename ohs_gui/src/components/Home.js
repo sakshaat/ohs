@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Course from "./dashboard/Course"
-import LectureSection from "./dashboard/LectureSection"
-import Meeting from "./dashboard/Meeting"
+import CourseCard from "./dashboard/CourseCard"
+import LectureSectionCard from "./dashboard/LectureSectionCard"
+import MeetingCard from "./dashboard/MeetingCard"
 import { Link } from 'react-router-dom'
 
 import "./Home.css"
@@ -104,13 +104,13 @@ class Home extends Component {
         <div id="sections">
           <h2>Current Courses</h2>
           {sections.map(s => (
-            <LectureSection section={s} key={s.id} />
+            <LectureSectionCard section={s} key={s.id} />
           ))}
         </div>
         <div id="meetings">
           <h2>Upcoming Meetings</h2>
           {meetings.map(m => (
-            <Meeting meeting={m} key={m.id} />
+            <MeetingCard meeting={m} key={m.id} />
           ))}
         </div>
       </div>
@@ -121,7 +121,7 @@ class Home extends Component {
         <div id="courses">
           <h2>Current Courses</h2>
           {courses.map(c => (
-            <Course course={c} key={c.id} />
+            <CourseCard course={c} key={c.id} />
           ))}
           <Link to={'/addCourse'}>
             <div className="add-course card-element">
@@ -132,7 +132,7 @@ class Home extends Component {
         <div id="meetings">
           <h2>Upcoming Meetings</h2>
           {meetings.map(m => (
-            <Meeting meeting={m} key={m.id} />
+            <MeetingCard meeting={m} key={m.id} />
           ))}
         </div>
       </div>

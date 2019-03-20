@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-class Meeting extends Component {
+class MeetingCard extends Component {
   render() {
     const dateFormat = require("dateformat")
     return (
@@ -18,4 +18,4 @@ class Meeting extends Component {
   }
 }
 
-export default Meeting;
+export default MeetingCard;

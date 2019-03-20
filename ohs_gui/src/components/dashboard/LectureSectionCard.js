@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-class LectureSection extends Component {
+class LectureSectionCard extends Component {
   render() {
     return (
       <Link to={`/lectureSection/${this.props.section.id}`}>
@@ -13,4 +13,4 @@ class LectureSection extends Component {
   }
 }
 
-export default LectureSection;
+export default LectureSectionCard;
