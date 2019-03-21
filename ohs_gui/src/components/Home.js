@@ -33,13 +33,15 @@ class Home extends Component {
         time: "2019-11-17T17:15:00.000Z",
         room: "BA1234",
         courseCode: "CSC302H1S",
-        bookedBy: "Alec Gibson",
+        student: "Pika Chu",
+        professor: "Alec Gibson",
         id: 11
       }, {
         time: "2019-11-18T17:15:00.000Z",
         room: "BA1234",
         courseCode: "CSC302H1S",
-        bookedBy: "Alec Gibson",
+        student: "Pika Chu",
+        professor: "Alec Gibson",
         id: 12
       }
     ]
@@ -56,10 +58,7 @@ class Home extends Component {
           <div id="meetings">
             <h2>Upcoming Meetings</h2>
             {meetings.map(m => (
-              isProf ?
-                <MeetingCard verbose meeting={m} key={m.id} />
-                :
-                <MeetingCard meeting={m} key={m.id} />
+                <MeetingCard isProf={isProf} meeting={m} key={m.id} />
             ))}
           </div>
           <div id="main">
