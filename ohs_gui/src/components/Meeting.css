@@ -58,6 +58,19 @@
     padding: 20px;
     background-color: rgb(41, 74, 102);
     color: white;
+    position: relative;
+}
+
+.postpone-meeting {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;  
+}
+
+.cancel-meeting {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
 
 .meeting-comments {

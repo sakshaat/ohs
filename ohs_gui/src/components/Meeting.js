@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import MeetingNote from './meeting/MeetingNote';
 import MeetingComment from './meeting/MeetingComment';
-import ReactDOM from 'react-dom'
+import MeetingInfo from './meeting/MeetingInfo';
+import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router-dom';
 import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 
 import "./Meeting.css"
@@ -26,6 +28,8 @@ class Meeting extends Component {
     this.handleShow = this.handleShow.bind(this);
     this.addNote = this.addNote.bind(this);
     this.removeNote = this.removeNote.bind(this);
+    this.cancelMeeting = this.cancelMeeting.bind(this);
+    this.postponeMeeting = this.postponeMeeting.bind(this);
   }
 
   componentDidMount() {
@@ -156,6 +160,24 @@ class Meeting extends Component {
     }
   }
 
+  cancelMeeting() {
+    // TODO: remove meeting from backend
+    if (window.confirm("Are you sure you want to cancel this meeting?")) {
+      this.props.history.push("/")
+    }
+  }
+
+  postponeMeeting() {
+    // TODO: delay meeting in backend
+    if (window.confirm("Are you sure you want to postpone this meeting?")) {
+      const meeting = this.state.meeting;
+      const time = new Date(meeting.time);
+      time.setTime(time.getTime() + 1000 * 60 * 60);
+      meeting.time = time.toISOString();
+      this.setState({meeting: meeting})
+    }
+  }
+
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
     const { meeting, notes, comments, show, showNotes } = this.state;
@@ -164,18 +186,7 @@ class Meeting extends Component {
     return (
       <>
         <div className={showNotes ? "meeting-main" : "meeting-main-full"}>
-          <div className="meeting-info">
-            {meeting &&
-              <>
-                <h2>Meeting With {isProf ? meeting.student : meeting.professor}</h2>
-                Course: {meeting.courseCode}
-                <br />
-                {dateFormat(new Date(meeting.time), "mmmm dS, yyyy, h:MM TT")}
-                <br />
-                {meeting.room}
-              </>
-            }
-          </div>
+          <MeetingInfo meeting={meeting} isProf={isProf} cancelMeeting={this.cancelMeeting} postponeMeeting={this.postponeMeeting} />
           <div className="meeting-comments">
             <h2>Comments</h2>
             {comments.map(c => (
@@ -226,4 +237,4 @@ class Meeting extends Component {
   }
 }
 
-export default Meeting;
+export default withRouter(Meeting);
