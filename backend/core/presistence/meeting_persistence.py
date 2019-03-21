@@ -158,7 +158,7 @@ class MeetingPresistence:
                 term,
             )
             self.connection.commit()
-            return Ok(comment)
+            return Ok(meeting)
 
     def _res_to_meeting(self, res):
         c = self.connection.cursor()
@@ -183,8 +183,8 @@ class MeetingPresistence:
             res[0],
             get_inst(res[1]),
             get_stud(res[2]),
-            self.get_notes_of_meeting(meeting_id),
-            self.get_comments_of_meeting(meeting_id),
+            self.get_notes_of_meeting(res[0]),
+            self.get_comments_of_meeting(res[0]),
             res[3],
             res[4],
         )
