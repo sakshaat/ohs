@@ -11,10 +11,6 @@ from core.presistence.authentication_presistence import AuthenticationPresistenc
 class InstructorPersistence(AuthenticationPresistence):
     """
     Presistence layer implementation for instructor related things.
-
-    Dummy implementation for now, using Python dicts as the database.
-
-    # TODO: Use an actual DB
     """
 
     get_connection = attr.ib(type=Callable)

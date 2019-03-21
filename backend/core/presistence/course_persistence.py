@@ -11,10 +11,6 @@ from core.domain.user import Instructor
 class CoursePresistence:
     """
     Presistence layer implementation for course related things.
-
-    Dummy implementation for now, using Python dicts as the database.
-
-    # TODO: Use an actual DB
     """
 
     # table courses(code text)
