@@ -10,6 +10,24 @@
     color: white;
 }
 
+.meeting-notes .minimize-notes {
+    position: absolute;
+    font-size: 30px;
+    top: calc(50% - 15px);
+    left: 5px;
+}
+
+#main .expand-notes {
+    background-color: darkgrey;
+    opacity: 0.7;
+    position: absolute;
+    height: 50px;
+    font-size: 30px;
+    top: calc(50% - 25px);
+    right: 0px;
+    padding: 10px 5px;
+}
+
 .meeting-note {
     position: relative;
     background-color: #feff9c;

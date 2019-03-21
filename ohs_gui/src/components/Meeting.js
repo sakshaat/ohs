@@ -30,6 +30,8 @@ class Meeting extends Component {
     this.removeNote = this.removeNote.bind(this);
     this.cancelMeeting = this.cancelMeeting.bind(this);
     this.postponeMeeting = this.postponeMeeting.bind(this);
+    this.minimizeNotes = this.minimizeNotes.bind(this);
+    this.expandNotes = this.expandNotes.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +47,22 @@ class Meeting extends Component {
 
   componentDidUpdate() {
     this.scrollToBottom();
+    if (this.state.expandingNotes) {
+      let elem = this.refs.notes;
+      if (elem) {
+        let pos = 400
+        elem.style.left = "400px"
+        let id = setInterval(function () {
+          if (pos == 0) {
+            clearInterval(id);
+            this.setState({ expandingNotes: false })
+          } else {
+            pos -= 20;
+            elem.style.left = pos + 'px';
+          }
+        }.bind(this), 5)
+      }
+    }
   }
 
   getMeeting() {
@@ -174,14 +192,31 @@ class Meeting extends Component {
       const time = new Date(meeting.time);
       time.setTime(time.getTime() + 1000 * 60 * 60);
       meeting.time = time.toISOString();
-      this.setState({meeting: meeting})
+      this.setState({ meeting: meeting })
     }
+  }
+
+  minimizeNotes() {
+    let elem = this.refs.notes;
+    let pos = 0;
+    let id = setInterval(function () {
+      if (pos == 400) {
+        clearInterval(id);
+        this.setState({ showNotes: false })
+      } else {
+        pos += 20;
+        elem.style.left = pos + 'px';
+      }
+    }.bind(this), 5);
+  }
+
+  expandNotes() {
+    this.setState({ showNotes: true, expandingNotes: true })
   }
 
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
     const { meeting, notes, comments, show, showNotes } = this.state;
-    const dateFormat = require("dateformat")
 
     return (
       <>
@@ -206,8 +241,9 @@ class Meeting extends Component {
           </div>
         </div>
         {isProf && showNotes &&
-          <div className="meeting-notes">
+          <div className="meeting-notes" ref="notes">
             <h2>Notes</h2>
+            <span className="minimize-notes fa fa-chevron-right" onClick={this.minimizeNotes}></span>
             {notes.map(n => (
               <MeetingNote key={n.time} note={n} removeNote={this.removeNote} />
             ))}
@@ -215,6 +251,9 @@ class Meeting extends Component {
               Add Note
             </Button>
           </div>
+        }
+        {isProf && !showNotes &&
+          <div className="expand-notes fa fa-chevron-left" onClick={this.expandNotes}></div>
         }
         <Modal show={show} onHide={this.handleClose}>
           <Modal.Header closeButton>
