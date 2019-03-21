@@ -14,7 +14,7 @@ class StudentService(App):
     def __init__(self, flask_app_, graphql_controller):
         super().__init__(flask_app_, graphql_controller)
 
-    def create_context(self, request):
+    def create_secure_context(self, request):
         pass
 
 
