@@ -24,12 +24,19 @@ def instructor_presistance() -> InstructorPersistence:
 class TestCreateInstructor:
     def test_success(self, instructor_presistance):
         instructor = fake_instructor()
-        assert instructor_presistance.create_instructor(instructor, "aaaa").unwrap() == instructor
-        assert instructor_presistance.get_instructor(instructor.user_name).unwrap() == instructor
-        assert instructor_presistance.get_password_hash(
-            instructor.user_name).unwrap() == "aaaa"
+        assert (
+            instructor_presistance.create_instructor(instructor, "aaaa").unwrap()
+            == instructor
+        )
+        assert (
+            instructor_presistance.get_instructor(instructor.user_name).unwrap()
+            == instructor
+        )
+        assert (
+            instructor_presistance.get_password_hash(instructor.user_name).unwrap()
+            == "aaaa"
+        )
         instructor_presistance.delete_instructor(instructor)
-
 
     def test_duplicate(self, instructor_presistance):
         instructor = fake_instructor()
@@ -42,10 +49,18 @@ class TestCreateInstructor:
     def test_update_hash(self, instructor_presistance):
         instructor = fake_instructor()
         instructor_presistance.create_instructor(instructor, "aaaa")
-        assert instructor_presistance.get_password_hash(
-            instructor.user_name).unwrap() == "aaaa"
-        assert instructor_presistance.update_password_hash(
-            instructor.user_name, "bbbb").unwrap() is None
-        assert instructor_presistance.get_password_hash(
-            instructor.user_name).unwrap() == "bbbb"
+        assert (
+            instructor_presistance.get_password_hash(instructor.user_name).unwrap()
+            == "aaaa"
+        )
+        assert (
+            instructor_presistance.update_password_hash(
+                instructor.user_name, "bbbb"
+            ).unwrap()
+            is None
+        )
+        assert (
+            instructor_presistance.get_password_hash(instructor.user_name).unwrap()
+            == "bbbb"
+        )
         instructor_presistance.delete_instructor(instructor)
