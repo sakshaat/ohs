@@ -39,6 +39,7 @@ class TestCreateCourse:
         course = fake_course()
         assert course_presistence.create_course(course).unwrap() == course
         assert course_presistence.get_course(course.course_code).unwrap() == course
+        course_presistence.delete_course(course.course_code)
 
     def test_duplicate(self, course_presistence):
         course = fake_course()
@@ -57,7 +58,7 @@ class TestCreateSection:
         assert course_presistence.create_section(section).unwrap() == section
         assert course_presistence.get_section(section.identity).unwrap() == section
         course_presistence.delete_section(section.identity)
-        course_presistence.delete_course(section.course)
+        course_presistence.delete_course(section.course.course_code)
         instructor_presistance.delete_instructor(section.taught_by)
 
     def test_invalid_course(self, course_presistence):

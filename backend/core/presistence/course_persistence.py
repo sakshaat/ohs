@@ -29,14 +29,13 @@ class CoursePresistence:
         self.connection.commit()
         return Ok(course)
 
-    def delete_course(self, course: Course) -> Result[Course, str]:
-        if not self.get_course(course.course_code):
-            return Err(f"Course {course} does not exist")
+    def delete_course(self, course_code: str) -> Result[str, str]:
+        if not self.get_course(course_code):
+            return Err(f"Course {course_code} does not exist")
         c = self.connection.cursor()
-        term = (course.course_code,)
-        c.execute("DELETE FROM courses WHERE course_code=%s", term)
+        c.execute("DELETE FROM courses WHERE course_code=%s", (course_code,))
         self.connection.commit()
-        return Ok(course)
+        return Ok(course_code)
 
     def get_course(self, course_code: str) -> Option[Course]:
         c = self.connection.cursor()
