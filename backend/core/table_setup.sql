@@ -51,7 +51,7 @@ CREATE TABLE notes (
  note_id VARCHAR (50) PRIMARY KEY,
  meeting_id VARCHAR (50) NOT NULL,
  time_stamp VARCHAR (50) NOT NULL,
- content_text VARCHAR (50),
+ content_text TEXT,
  CONSTRAINT meeting_fkey FOREIGN KEY (meeting_id)
     REFERENCES meetings (meeting_id) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION 
@@ -63,7 +63,7 @@ CREATE TABLE comments (
  author_if_instructor VARCHAR (50),
  author_if_student VARCHAR (50),
  time_stamp VARCHAR (50) NOT NULL,
- content_text VARCHAR (50),
+ content_text TEXT,
  CONSTRAINT meeting_fkey FOREIGN KEY (meeting_id)
     REFERENCES meetings (meeting_id) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,
