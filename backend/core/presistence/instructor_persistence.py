@@ -66,8 +66,33 @@ class InstructorPersistence(AuthenticationPresistence):
 
     def query_instructor(self, filters=None) -> List[Instructor]:
         c = self.connection.cursor()
-        # TODO: filters
-        c.execute("SELECT * FROM instructors")
+        if filters is None:
+            c.execute("SELECT * FROM instructors")
+        else:
+            terms = []
+            where_text = ""
+            if "user_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " user_name=%s"
+                terms.append(filters["user_name"])
+            if "first_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " first_name=%s"
+                terms.append(filters["first_name"])
+            if "last_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " last_name=%s"
+                terms.append(filters["last_name"])
+            c.execute("SELECT * FROM instructors" + where_text, tuple(terms))
         instructors = c.fetchall()
         if len(instructors) > 0:
             instructors = map(

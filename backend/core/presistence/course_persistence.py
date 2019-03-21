@@ -54,8 +54,12 @@ class CoursePresistence:
 
     def query_courses(self, filters=None) -> List[Course]:
         c = self.connection.cursor()
-        # TODO: filters
-        c.execute("SELECT * FROM courses")
+        if filters is None:
+            c.execute("SELECT * FROM courses")
+        elif "course_code" in filters:
+            c.execute(
+                "SELECT * FROM courses WHERE course_code=%s", (filters["course_code"])
+            )
         courses = c.fetchall()
         if len(courses) > 0:
             courses = map(lambda x: Course(x[0]), courses)
@@ -81,7 +85,6 @@ class CoursePresistence:
                 "num_students) VALUES (%s, %s, %s, %s, %s, %s)",
                 term,
             )
-
             self.connection.commit()
             return Ok(section)
 
@@ -123,8 +126,48 @@ class CoursePresistence:
 
     def query_sections(self, filters=None) -> List[Section]:
         c = self.connection.cursor()
-        # TODO: filters
-        c.execute("SELECT * FROM sections")
+        if filters is None:
+            c.execute("SELECT * FROM sections")
+        else:
+            terms = []
+            where_text = ""
+            if "course" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " course=%s"
+                terms.append(filters["course"])
+            if "year" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " year=%s"
+                terms.append(str(filters["year"]))
+            if "semester" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " semester=%s"
+                terms.append(str(filters["semester"].value))
+            if "section_code" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " section_code=%s"
+                terms.append(filters["section_code"])
+            if "taught_by" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " taught_by=%s"
+                terms.append(filters["taught_by"].user_name)
+            c.execute("SELECT * FROM instructors" + where_text, tuple(terms))
+
         sections = c.fetchall()
         if len(sections) > 0:
 
