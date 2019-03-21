@@ -5,7 +5,7 @@ import attr
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.meeting import Note, Comment, Meeting
-from core.domain.user import User, Student, Instructor
+from core.domain.user import Student, Instructor
 
 
 @attr.s
@@ -104,7 +104,7 @@ class MeetingPresistence:
             comment.comment_id = new_uuid
             return Ok(comment)
 
-    def _res_to_comment(res):
+    def _res_to_comment(self, res):
         if res[2] is None:
             author = res[3]
         else:
@@ -117,7 +117,7 @@ class MeetingPresistence:
         comment = None
         res = c.fetchone()
         if res:
-            comment = _res_to_comment(res)
+            comment = self._res_to_comment(res)
         return maybe(comment)
 
     def get_comments_of_meeting(self, meeting_id) -> List[Comment]:
@@ -125,7 +125,7 @@ class MeetingPresistence:
         c.execute("SELECT * FROM comments WHERE meeting_id=%s", (meeting_id))
         comments = c.fetchall()
         if len(comments) > 0:
-            comments = map(lambda x: _res_to_comment(x), comments)
+            comments = map(lambda x: self._res_to_comment(x), comments)
         return list(comments)
 
     def delete_comment(self, comment_id: str) -> Result[str, str]:
@@ -160,7 +160,9 @@ class MeetingPresistence:
             self.connection.commit()
             return Ok(comment)
 
-    def _res_to_meeting(res):
+    def _res_to_meeting(self, res):
+        c = self.connection.cursor()
+
         def get_inst(user_name):
             c.execute("SELECT * FROM instructors WHERE user_name=%s", (str(user_name),))
             res = c.fetchone()
@@ -193,7 +195,7 @@ class MeetingPresistence:
         meeting = None
         res = c.fetchone()
         if res:
-            meeting = _res_to_meeting(res)
+            meeting = self._res_to_meeting(res)
         return maybe(meeting)
 
     def get_meetings_of_instructor(self, user_name) -> List[Meeting]:
@@ -201,5 +203,5 @@ class MeetingPresistence:
         c.execute("SELECT * FROM meetings WHERE instructor=%s", (user_name))
         meetings = c.fetchall()
         if len(meetings) > 0:
-            meetings = map(lambda x: _res_to_meeting(x), meetings)
+            meetings = map(lambda x: self._res_to_meeting(x), meetings)
         return list(meetings)
