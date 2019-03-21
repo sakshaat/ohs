@@ -121,15 +121,19 @@ class CoursePresistence:
             )
         return maybe(section)
 
-    def query_sections(self, filters=None) -> List[Section]:
+    def query_sections(self, course_code=None) -> List[Section]:
         c = self.connection.cursor()
         # TODO: filters
-        c.execute("SELECT * FROM sections")
+        if(course_code):
+            c.execute(f"SELECT * FROM sections WHERE course='{course_code}'")
+        else:
+            c.execute("SELECT * FROM sections")
+        
+        
         sections = c.fetchall()
         if len(sections) > 0:
-
             def get_inst(user_name):
-                c.execute("SELECT * FROM instructors WHERE user_name=%s", (user_name))
+                c.execute(f"SELECT * FROM instructors WHERE user_name={user_name}")
                 res = c.fetchone()
                 if res:
                     return Instructor(res[0], res[1], res[3])

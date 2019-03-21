@@ -43,6 +43,8 @@ class CreateCourse extends Component {
       },
     })
     .then(this.setState({courseCreated: true}))
+    // send message back to dashboard
+    .then(this.props.callback(value))
     .catch(res => console.log(res));
   }
 
