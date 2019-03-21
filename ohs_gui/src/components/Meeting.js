@@ -13,7 +13,8 @@ class Meeting extends Component {
       meeting: null,
       notes: [],
       comments: [],
-      show: false
+      show: false,
+      showNotes: this.props.user && this.props.user.role === "PROFESSOR"
     }
 
     this.getMeeting = this.getMeeting.bind(this);
@@ -49,7 +50,8 @@ class Meeting extends Component {
       time: "2019-11-17T17:15:00.000Z",
       room: "BA1234",
       courseCode: "CSC302H1S",
-      bookedBy: "Pikachu",
+      student: "Pika Chu",
+      professor: "Alec Gibson",
       id: 11
     }
     this.setState({ meeting: meeting })
@@ -76,27 +78,27 @@ class Meeting extends Component {
       {
         time: "2019-11-17T17:15:00.000Z",
         contents: "Hello, Pikachu",
-        author: "AlecGibson"
+        author: "Alec Gibson"
       },
       {
         time: "2019-11-17T17:16:00.000Z",
         contents: "PIKA",
-        author: "Pikachu"
+        author: "Pika Chu"
       },
       {
         time: "2019-11-17T17:16:30.000Z",
         contents: "Is that all you can say?",
-        author: "AlecGibson"
+        author: "Alec Gibson"
       },
       {
         time: "2019-11-17T17:18:00.000Z",
         contents: "PIKA",
-        author: "Pikachu"
+        author: "Pika Chu"
       },
       {
         time: "2019-11-17T17:20:00.000Z",
         contents: "Well this is gonna be an eventful meeting...",
-        author: "AlecGibson"
+        author: "Alec Gibson"
       }
     ]
     this.setState({ comments: comments })
@@ -156,23 +158,21 @@ class Meeting extends Component {
 
   render() {
     const isProf = this.props.user && this.props.user.role === "PROFESSOR";
-    const { meeting, notes, comments, show } = this.state;
+    const { meeting, notes, comments, show, showNotes } = this.state;
     const dateFormat = require("dateformat")
 
     return (
       <>
-        <div className="meeting-main">
+        <div className={showNotes ? "meeting-main" : "meeting-main-full"}>
           <div className="meeting-info">
-            <h2>Meeting Info</h2>
             {meeting &&
               <>
-                Booked at {dateFormat(new Date(meeting.time), "mmmm dS, yyyy, h:MM TT")}
+                <h2>Meeting With {isProf ? meeting.student : meeting.professor}</h2>
+                Course: {meeting.courseCode}
                 <br />
-                Room {meeting.room}
+                {dateFormat(new Date(meeting.time), "mmmm dS, yyyy, h:MM TT")}
                 <br />
-                Course {meeting.courseCode}
-                <br />
-                Booked by {meeting.bookedBy}
+                {meeting.room}
               </>
             }
           </div>
@@ -194,7 +194,7 @@ class Meeting extends Component {
             </FormGroup>
           </div>
         </div>
-        {isProf &&
+        {isProf && showNotes &&
           <div className="meeting-notes">
             <h2>Notes</h2>
             {notes.map(n => (

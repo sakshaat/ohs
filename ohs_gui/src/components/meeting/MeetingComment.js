@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class MeetingComment extends Component {
   render() {
-    const myComment = this.props.comment.author === this.props.user.first_name + this.props.user.last_name;
+    const myComment = this.props.comment.author === this.props.user.first_name + ' ' + this.props.user.last_name;
     const dateFormat = require("dateformat")
 
     return (
