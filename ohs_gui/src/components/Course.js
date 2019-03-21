@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import LectureSectionCard from "./dashboard/LectureSectionCard"
 import { Link } from 'react-router-dom'
+import shortid from 'shortid';
 
 class Course extends Component {
   constructor(props) {
@@ -8,8 +9,6 @@ class Course extends Component {
     this.state = {
       sections: []
     }
-
-    this.getSections = this.getSections.bind(this);
   }
 
   componentDidMount() {
@@ -49,9 +48,9 @@ class Course extends Component {
       <div id="sections">
         {course && <h1>{course} Lecture Sections</h1>}
         {sections.map(s => (
-          <LectureSectionCard verbose section={s} />
+          <LectureSectionCard verbose section={s} key={shortid.generate()}/>
         ))}
-        {course && <Link to={`/course/${course}/addSection`}>
+        {course && this.props.user.role === "PROFESSOR" && <Link to={`/course/${course}/addSection`}>
           <div className="add-section card-element">
             <span className="fa fa-plus"></span>
           </div>

@@ -17,7 +17,6 @@ class App extends Component {
   }
 
   // TODO: we should set the user in state when we log in
-
   componentDidMount() {
     this.getUser();
   }
@@ -41,9 +40,11 @@ class App extends Component {
                   OHS
                 </a>
               </div>
-              <div className="nav-item">
-                Logged In as Dr. Frankenstein
-              </div>
+              {this.state.user &&
+                <div className="nav-item">
+                  Logged In a {this.state.user.role}
+                </div>
+              } 
             </div>
           </nav>
           {this.state.user &&

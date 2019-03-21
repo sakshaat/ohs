@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom'
 import { Redirect } from "react-router-dom";
-
-import ApolloClient from "apollo-boost";
 import gql from "graphql-tag";
 
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
 import './CreateSection.css';
-
-const client = new ApolloClient({
-  uri: "http://127.0.0.1:8000/graphql"
-});
+import {client} from "../utils/client"
 
 const ADD_SECTION = gql`
     mutation addSection($sectionInput: SectionInput!) {

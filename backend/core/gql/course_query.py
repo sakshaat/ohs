@@ -33,8 +33,8 @@ class SectionQuery(graphene.ObjectType):
         section_code=graphene.String(required=True),
     )
     sections = graphene.List(
-        Section, filters=graphene.String()
-    )  # TODO: Use an actual filter
+        Section, course_code=graphene.String()
+    ) 
 
     def resolve_section(self, info, course, year, semester, section_code):
         return (
@@ -47,8 +47,8 @@ class SectionQuery(graphene.ObjectType):
             .map_or(Section.from_domain, None)
         )
 
-    def resolve_sections(self, info, filters=None):
+    def resolve_sections(self, info, course_code=None):
         return [
             Section.from_domain(section)
-            for section in course_api(info).query_sections(filters)
+            for section in course_api(info).query_sections(course_code)
         ]
