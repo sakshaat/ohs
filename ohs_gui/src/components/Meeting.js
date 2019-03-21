@@ -53,7 +53,7 @@ class Meeting extends Component {
         let pos = 400
         elem.style.left = "400px"
         let id = setInterval(function () {
-          if (pos == 0) {
+          if (pos === 0) {
             clearInterval(id);
             this.setState({ expandingNotes: false })
           } else {
@@ -200,7 +200,7 @@ class Meeting extends Component {
     let elem = this.refs.notes;
     let pos = 0;
     let id = setInterval(function () {
-      if (pos == 400) {
+      if (pos === 400) {
         clearInterval(id);
         this.setState({ showNotes: false })
       } else {
