@@ -18,7 +18,7 @@ class Note:
     note_id: str
     meeting_id: str
     time_stamp: str
-    content: str
+    content_text: str
 
 
 @attr.s(slots=True, auto_attribs=True, frozen=True)
@@ -27,16 +27,18 @@ class Comment:
     Represents a comment on a meeting.
 
     Args:
-        commend_id: Unique UUID to identify comment
+        comment_id: Unique UUID to identify comment
         meeting_id: UUID of associated meeting
         author: User
         time_stamp: date and time of creation
         content: content of note
     """
 
+    comment_id: str
     meeting_id: str
+    author: User
     time_stamp: str
-    content: str
+    content_text: str
 
 
 @attr.s(slots=True, auto_attribs=True, frozen=True)
