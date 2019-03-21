@@ -51,6 +51,8 @@ class App(metaclass=ABCMeta):
                 return HttpError(400, "Not a valid JSON request").to_flask_response()
             user_id = request_json.get("id")
             password = request_json.get("password")
+            if user_id is None or password is None:
+                return HttpError(400, "Invalid JSON body").to_flask_response()
             token_result = self.get_token(user_id, password)
             if token_result.is_ok:
                 return flask.jsonify({"token": token_result.unwrap()})

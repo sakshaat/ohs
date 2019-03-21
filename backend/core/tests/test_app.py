@@ -19,6 +19,12 @@ mock_api = MagicMock(OhsApi)
 
 
 class FakeApp(App):
+    def create_user(self, post_json: dict) -> Result[str, str]:
+        pass
+
+    def get_token(self, user_identity, password) -> Result[str, str]:
+        pass
+
     authenticate_user_by_token = MagicMock(return_value=Ok(None))
 
 
