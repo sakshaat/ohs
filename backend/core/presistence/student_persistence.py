@@ -22,7 +22,7 @@ class StudentPersistence(AuthenticationPresistence):
     def create_student(
         self, student: Student, password_hash: str
     ) -> Result[Student, str]:
-        if self.get_student(student.s):
+        if self.get_student(student.student_number):
             return Err(f"Student {student} already exists")
         c = self.connection.cursor()
         term = (

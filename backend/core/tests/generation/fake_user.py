@@ -7,4 +7,4 @@ def fake_instructor() -> Instructor:
 
 
 def fake_student() -> Student:
-    return Student(fake.first_name(), fake.last_name(), fake.py_str())
+    return Student(fake.first_name(), fake.last_name(), fake.pystr())
