@@ -1,7 +1,7 @@
 import attr
 
 from core.domain.user import User, Instructor, Student
-
+from uuid import UUID
 
 @attr.s(slots=True, auto_attribs=True, frozen=True)
 class Note:
@@ -15,8 +15,8 @@ class Note:
         content: content of note
     """
 
-    note_id: str
-    meeting_id: str
+    note_id: UUID
+    meeting_id: UUID
     time_stamp: str
     content_text: str
 
@@ -34,8 +34,8 @@ class Comment:
         content: content of note
     """
 
-    comment_id: str
-    meeting_id: str
+    comment_id: UUID
+    meeting_id: UUID
     author: User
     time_stamp: str
     content_text: str
@@ -56,7 +56,7 @@ class Meeting:
         end_time: Duration of meeting
     """
 
-    meeting_id: str
+    meeting_id: UUID
     instructor: Instructor
     student: Student
     notes: [Note]
