@@ -5,7 +5,7 @@ from option import Option, Result
 
 from core.domain.meeting import Note, Meeting, Comment
 from core.domain.user import User, Student, Instructor
-from core.presistence.meeting_persistence import MeetingPresistence
+from core.presistence.meeting_persistence import MeetingPersistence
 
 
 @attr.s(auto_attribs=True)

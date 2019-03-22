@@ -9,7 +9,7 @@ from core.domain.user import Student, Instructor
 
 
 @attr.s
-class MeetingPresistence:
+class MeetingPersistence:
     """
     Presistence layer implementation for meeting related things.
     """
