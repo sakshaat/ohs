@@ -35,7 +35,7 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        - REACT_APP_INSTRUCTOR_SERVICE_URL=
+        REACT_APP_INSTRUCTOR_SERVICE_URL:
     image: ohs_gui
     container_name: ohs_gui
     ports:
