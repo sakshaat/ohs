@@ -22,7 +22,6 @@ class CourseQuery(graphene.ObjectType):
             for course in course_api(info).query_courses(filters)
         ]
 
-
 @register_query(allow=SchemaRestriction.ALL)
 class SectionQuery(graphene.ObjectType):
     section = graphene.Field(

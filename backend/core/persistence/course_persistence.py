@@ -92,7 +92,6 @@ class CoursePersistence:
             section_identity.section_code,
         )
 
-        print(term)
         c.execute(
             "SELECT * FROM sections WHERE course=%s AND year=%s AND semester=%s AND "
             "section_code=%s",
