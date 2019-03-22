@@ -39,7 +39,6 @@ class Home extends Component {
     if(isProf) {
       this.getCourses()
     } else {
-      console.log("sections");
       this.getSections();
     }
     

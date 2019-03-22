@@ -39,8 +39,9 @@ class App extends Component {
     // TODO: dummy json
     const user = {
       role: "PROFESSOR",
-      first_name: "Alec",
-      last_name: "Gibson"
+      firstName: "Alec",
+      lastName: "Gibson",
+      id: "a"
     }
     this.setState({ user: user });
   }
@@ -65,13 +66,12 @@ class App extends Component {
                 this.state.user &&
                   [
                     <div key={0} className="nav-item">
-                      Logged In as a {this.state.user.role}
+                      Logged In as {this.state.user.role} {this.state.user.id}
                     </div>,
                     <div key={1} onClick={this.logout} className="logout-btn nav-item">
                       Logout
                     </div>
                   ]
-                
               }
             </div>
           </nav>

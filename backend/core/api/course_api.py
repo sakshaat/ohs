@@ -2,6 +2,7 @@ from typing import List
 
 import attr
 from option import Option, Result
+import json
 
 from core.domain.course import Course, Section, SectionIdentity, Semester
 from core.domain.user import Instructor
@@ -68,13 +69,18 @@ class CourseApi:
         Query for sections is the system
 
         Args:
-            course_code: Filter by course code
+            filters: Filters to apply to the query
 
 
         Returns:
             List of sections returned by the query
         """
-        return self.course_persistence.query_sections(filters)
+
+        payload = None
+        if(filters is not None):
+            payload = json.loads(filters) 
+
+        return self.course_persistence.query_sections(payload)
 
     def get_course(self, course_code: str) -> Option[Course]:
         """

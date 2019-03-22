@@ -6,7 +6,9 @@ import gql from "graphql-tag";
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
 import './CreateSection.css';
-import {client} from "../utils/client"
+import {getClient} from "../utils/client"
+
+const client = getClient();
 
 const ADD_SECTION = gql`
     mutation addSection($sectionInput: SectionInput!) {
@@ -19,17 +21,11 @@ class CreateSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickedCourse: null,
-      sectionCreated: false
+      sectionCreated: false,
+      course_code: this.props.match.params.course_code
     }
 
     this.createSection = this.createSection.bind(this);
-  }
-
-  componentDidMount() {
-    // TODO: use this.props.match.params.id to fetch course name.
-    const pickedCourse = "CSC302"
-    this.setState({ pickedCourse: pickedCourse })
   }
 
   createSection() {
@@ -42,11 +38,12 @@ class CreateSection extends Component {
     let sectionInput =
     {
       course:
-        { courseCode: this.state.pickedCourse },
+        { courseCode: this.state.course_code},
       year: yearVal,
       semester: semesterVal,
       sectionCode: lsVal,
-      numStudents: snumVal
+      numStudents: snumVal,
+      taughtBy: this.props.user.id
     }
 
     // send request
@@ -66,47 +63,45 @@ class CreateSection extends Component {
       return (<Redirect to={"/course/" + this.props.match.params.course_code}></Redirect>)
     }
 
-    let sectionComponent = null;
-    if (this.state.pickedCourse) {
-      sectionComponent = (
-        <div>
-          <h1>Add a new Section to {this.state.pickedCourse}</h1>
-          <FormGroup role="form">
+    let sectionComponent = (
+      <div>
+        <h1>Add a new Section to {this.state.pickedCourse}</h1>
+        <FormGroup role="form">
 
-            <FormControl ref="lsInput"
-              placeholder="Section"
-              aria-label="Section"
-              aria-describedby="basic-addon2"
-            />
+          <FormControl ref="lsInput"
+            placeholder="Section"
+            aria-label="Section"
+            aria-describedby="basic-addon2"
+          />
 
-            <FormControl ref="yearInput"
-              placeholder="Year"
-              aria-label="Year"
-              aria-describedby="basic-addon2"
-              type="number"
-            />
+          <FormControl ref="yearInput"
+            placeholder="Year"
+            aria-label="Year"
+            aria-describedby="basic-addon2"
+            type="number"
+          />
 
-            <FormControl ref="studentInput"
-              placeholder="student"
-              aria-label="student"
-              aria-describedby="basic-addon2"
-              type="number"
-            />
+          <FormControl ref="studentInput"
+            placeholder="student"
+            aria-label="student"
+            aria-describedby="basic-addon2"
+            type="number"
+          />
 
-            <select ref="semesterSelect" onChange={this.coursePicked}>
-              <option value="WINTER">WINTER</option>
-              <option value="FALL">FALL</option>
-              <option value="SUMMER">SUMMER</option>
-              <option value="FULL_YEAR">FULL_YEAR</option>
-            </select>
+          <select ref="semesterSelect" onChange={this.coursePicked}>
+            <option value="WINTER">WINTER</option>
+            <option value="FALL">FALL</option>
+            <option value="SUMMER">SUMMER</option>
+            <option value="FULL_YEAR">FULL_YEAR</option>
+          </select>
 
-            <br />
+          <br />
 
-            <Button variant="secondary" onClick={this.createSection}>Create a Section</Button>
-          </FormGroup>
-        </div>
-      )
-    }
+          <Button variant="secondary" onClick={this.createSection}>Create a Section</Button>
+        </FormGroup>
+      </div>
+    )
+    
 
     return (
       <section className="container">

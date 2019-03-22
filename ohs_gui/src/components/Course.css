@@ -1,0 +1,26 @@
+#sections .container {
+    width: 100%;
+}
+
+.header-cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-cont i {
+    cursor: pointer;
+}
+
+i {
+    transition: transform 0.1s, color 0.01s;
+
+}
+
+i:hover {
+    transform: rotate(180deg);
+ }
+
+ i:active {
+     color: red;
+ }

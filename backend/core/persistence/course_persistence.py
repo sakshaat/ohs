@@ -91,6 +91,8 @@ class CoursePersistence:
             str(section_identity.semester.value),
             section_identity.section_code,
         )
+
+        print(term)
         c.execute(
             "SELECT * FROM sections WHERE course=%s AND year=%s AND semester=%s AND "
             "section_code=%s",
@@ -119,7 +121,7 @@ class CoursePersistence:
             )
         return maybe(section)
 
-    def query_sections(self, course_code=None) -> List[Section]:
+    def query_sections(self, filters=None) -> List[Section]:
         c = self.connection.cursor()
         if filters is None:
             c.execute("SELECT * FROM sections")
@@ -132,7 +134,7 @@ class CoursePersistence:
                 else:
                     where_text += " AND"
                 where_text += " course=%s"
-                terms.append(filters["course"])
+                terms.append(str(filters["course"]))
             if "year" in filters:
                 if where_text == "":
                     where_text += " WHERE"
@@ -161,12 +163,13 @@ class CoursePersistence:
                     where_text += " AND"
                 where_text += " taught_by=%s"
                 terms.append(filters["taught_by"].user_name)
-            c.execute("SELECT * FROM instructors" + where_text, tuple(terms))
+
+            c.execute("SELECT * FROM sections" + where_text, tuple(terms))
 
         sections = c.fetchall()
         if len(sections) > 0:
             def get_inst(user_name):
-                c.execute(f"SELECT * FROM instructors WHERE user_name={user_name}")
+                c.execute(f"SELECT * FROM instructors WHERE user_name='{user_name}'")
                 res = c.fetchone()
                 if res:
                     return Instructor(res[0], res[1], res[3])
@@ -174,7 +177,7 @@ class CoursePersistence:
 
             sections = map(
                 lambda res: Section(
-                    Section(res[0]),
+                    Course(res[0]),
                     res[1],
                     Semester(int(res[2])),
                     res[3],
