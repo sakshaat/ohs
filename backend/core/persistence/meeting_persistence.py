@@ -107,6 +107,7 @@ class MeetingPersistence:
     def _res_to_comment(self, res):
         c = self.connection.cursor()
         if res[2] is None:
+
             def get_stud(student_number):
                 c.execute(
                     "SELECT * FROM students WHERE student_number=%s",
@@ -119,6 +120,7 @@ class MeetingPersistence:
 
             author = get_stud(res[3])
         else:
+
             def get_inst(user_name):
                 c.execute(
                     "SELECT * FROM instructors WHERE user_name=%s", (str(user_name),)
