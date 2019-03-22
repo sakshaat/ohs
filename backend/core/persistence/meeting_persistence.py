@@ -27,10 +27,9 @@ class MeetingPersistence:
         elif not self.get_meeting(note.meeting_id):
             return Err(f"Meeting {note.meeting_id} does not exist")
         else:
-            new_uuid = uuid.uuid4()
             c = self.connection.cursor()
             term = (
-                str(new_uuid),
+                str(note.note_id),
                 str(note.meeting_id),
                 note.time_stamp,
                 note.content_text,
@@ -41,7 +40,6 @@ class MeetingPersistence:
                 term,
             )
             self.connection.commit()
-            note.note_id = new_uuid
             return Ok(note)
 
     def get_note(self, note_id: uuid.UUID) -> Option[Note]:
@@ -78,11 +76,10 @@ class MeetingPersistence:
         elif not self.get_meeting(comment.meeting_id):
             return Err(f"Meeting {comment.meeting_id} does not exist")
         else:
-            new_uuid = uuid.uuid4()
             c = self.connection.cursor()
             if isinstance(comment.author, Instructor):
                 term = (
-                    str(new_uuid),
+                    str(comment.comment_id),
                     str(comment.meeting_id),
                     comment.author,
                     None,
@@ -105,7 +102,6 @@ class MeetingPersistence:
                 term,
             )
             self.connection.commit()
-            comment.comment_id = new_uuid
             return Ok(comment)
 
     def _res_to_comment(self, res):
@@ -144,10 +140,9 @@ class MeetingPersistence:
         if self.get_meeting(meeting.meeting_id):
             return Err(f"Meeting {meeting} already exists")
         else:
-            new_uuid = uuid.uuid4()
             c = self.connection.cursor()
             term = (
-                str(new_uuid),
+                str(meeting.meeting_id),
                 meeting.instructor.user_name,
                 meeting.student.student_number,
                 meeting.start_time,

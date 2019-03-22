@@ -2,6 +2,7 @@ from typing import List
 
 import attr
 from option import Result
+import uuid
 
 from core.domain.meeting import Note, Meeting, Comment
 from core.domain.user import User, Student, Instructor
@@ -27,7 +28,9 @@ class MeetingApi:
         Returns:
             The new meeting created
         """
-        meeting = Meeting("", instructor, student, [], [], start_time, end_time)
+        meeting = Meeting(
+            uuid.uuid4(), instructor, student, [], [], start_time, end_time
+        )
         return self.meeting_persistence.create_meeting(meeting)
 
     def create_note(
@@ -39,7 +42,7 @@ class MeetingApi:
         Returns:
             The new Note created
         """
-        note = Note("", meeting_id, time_stamp, content_text)
+        note = Note(uuid.uuid4(), meeting_id, time_stamp, content_text)
         return self.meeting_persistence.create_note(note)
 
     def create_comment(
@@ -51,7 +54,7 @@ class MeetingApi:
         Returns:
             The new Comment created
         """
-        comment = Comment("", meeting_id, author, time_stamp, content_text)
+        comment = Comment(uuid.uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
 
     def delete_note(self, note_id: str) -> Result[str, str]:
