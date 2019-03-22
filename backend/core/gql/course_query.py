@@ -49,5 +49,5 @@ class SectionQuery(graphene.ObjectType):
     def resolve_sections(self, info, filters=None):
         return [
             Section.from_domain(section)
-            for section in course_api(info).query_sections(course_code)
+            for section in course_api(info).query_sections(filters)
         ]
