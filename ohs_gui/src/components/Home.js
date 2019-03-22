@@ -8,11 +8,13 @@ import LectureSection from './LectureSection';
 import Meeting from './Meeting';
 import Course from './Course';
 import Dashboard from './Dashboard';
+import {getClient} from '../utils/client'
 
-import { client } from "../utils/client";
 import { GET_COURSES, GET_SECTIONS } from "../utils/queries"
 
 import "./Home.css"
+
+const client = getClient();
 
 /* A wrapper which provides the meetings sidebar */
 class Home extends Component {
@@ -37,6 +39,7 @@ class Home extends Component {
     if(isProf) {
       this.getCourses()
     } else {
+      console.log("sections");
       this.getSections();
     }
     

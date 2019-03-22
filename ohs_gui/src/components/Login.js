@@ -3,15 +3,43 @@ import { Button, FormControl} from "react-bootstrap";
 import ReactDOM from 'react-dom'
 
 import './Login.css';
-
-const URL = `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL || 'http://localhost:8000'}/create-user`
+import {BASE_URL} from "../utils/client"
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
-
         this.register = this.register.bind(this);
+        this.login = this.login.bind(this);
+        this.user_registered = this.user_registered.bind(this);
+    }
+
+    login() {
+        let username = ReactDOM.findDOMNode(this.refs.loginUsernameInput).value;
+        let password = ReactDOM.findDOMNode(this.refs.loginPwdInput).value;
+
+        let url = BASE_URL + "/get-token";
+
+        let data = {
+            id: username,
+            password: password
+        }
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }}).then(res => {
+                if(res.ok) {
+                    return res.json()
+                } else {
+                    throw new Error(`'Network response was not ok - ${res.status}: ${res.statusText}`);
+                }
+            })
+        .then(response => this.user_registered(response))
+        .catch(error => console.error('Error:', error));
+
     }
 
     register() {
@@ -20,21 +48,33 @@ class Login extends Component {
         let username = ReactDOM.findDOMNode(this.refs.registerUsernameInput).value;
         let password = ReactDOM.findDOMNode(this.refs.registerPwdInput).value;
 
+        let url = BASE_URL + "/create-user"
+
         let data = {
-            "id": username, 
-            "password": password, 
-            "firstName": fname, 
-            "lastName": lname
+            id: username, 
+            password: password, 
+            firstName: fname, 
+            lastName: lname
         }
 
-        fetch(URL, {
+        fetch(url, {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data), // data can be `string` or {object}!
             headers:{
                 'Content-Type': 'application/json'
-            }}).then(res => res.json())
-        .then(response => console.log('Success:', JSON.stringify(response)))
+            }}).then(res => {
+                if(res.ok) {
+                    return res.json()
+                } else {
+                    throw new Error(`'Network response was not ok - ${res.status}: ${res.statusText}`);
+                }
+            })
+        .then(response => this.user_registered(data, response))
         .catch(error => console.error('Error:', error));
+    }
+
+    user_registered(res) {
+        this.props.notifyLogIn(res.token);
     }
 
     render() { 
@@ -44,20 +84,20 @@ class Login extends Component {
                 <section className="form-container">
                     <section className="form login-form">
                         <h1>Login</h1>
-                        <FormControl ref="login-usernameInput"
+                        <FormControl ref="loginUsernameInput"
                                 placeholder="Username"
                                 aria-label="username"
                                 aria-describedby="basic-addon2"
                                 id="login-username-input"
                             />
-                        <FormControl ref="login-pwdInput"
+                        <FormControl ref="loginPwdInput"
                                 type="password"
                                 placeholder="Password"
                                 aria-label="Password"
                                 aria-describedby="basic-addon2"
                                 id="login-password-input"
                             />
-                        <Button variant="secondary" onClick={this.createCourse}>Login</Button>
+                        <Button variant="secondary" onClick={this.login}>Login</Button>
                     </section>
                     <section className="form register-form">
                         <h1>Register</h1>

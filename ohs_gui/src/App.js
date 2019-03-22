@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 import Home from "./components/Home";
-import Login from "./components/Login"
+import Login from "./components/Login";
 
 import './App.css';
 
@@ -12,18 +12,27 @@ class App extends Component {
     super(props);
     this.state = {
       user: null,
-      isLoggedIn: false
+      isLoggedIn: window.sessionStorage.token ? true : false
     }
 
     this.getUser = this.getUser.bind(this);
+    this.notifyLogIn = this.notifyLogIn.bind(this);
+    this.logout = this.logout.bind(this);
+  }
+
+  notifyLogIn(token) {
+    window.sessionStorage.token = token;
+    this.getUser();
+    this.setState({isLoggedIn: true});
+    
   }
 
   // TODO: we should set the user in state when we log in
   componentDidMount() {
-    if(window.sessionStorage.token) {
-      this.setState({isLoggedIn: true});
+    this.getUser();
+    if(window.sessionStorage.token !== undefined) {
+      this.getUser();
     }
-    // this.getUser();
   }
 
   getUser() {
@@ -34,6 +43,11 @@ class App extends Component {
       last_name: "Gibson"
     }
     this.setState({ user: user });
+  }
+
+  logout(e) {
+    window.sessionStorage.removeItem("token");
+    this.setState({isLoggedIn: false});
   }
 
   render() {
@@ -48,14 +62,21 @@ class App extends Component {
                 </a>
               </div>
               {this.state.isLoggedIn &&
-                <div className="nav-item">
-                  Logged In as a {this.state.user.role}
-                </div>
-              } 
+                this.state.user &&
+                  [
+                    <div key={0} className="nav-item">
+                      Logged In as a {this.state.user.role}
+                    </div>,
+                    <div key={1} onClick={this.logout} className="logout-btn nav-item">
+                      Logout
+                    </div>
+                  ]
+                
+              }
             </div>
           </nav>
           <div className="app-container">
-            {this.state.isLoggedIn ? <Home user={this.state.user} /> : <Login />}
+            {this.state.isLoggedIn && this.state.user ? <Home user={this.state.user} /> : <Login notifyLogIn={(token)=>this.notifyLogIn(token)}/>}
           </div>
 
           
