@@ -3,6 +3,7 @@ import attr
 from core.domain.user import User, Instructor, Student
 from uuid import UUID
 
+
 @attr.s(slots=True, auto_attribs=True, frozen=True)
 class Note:
     """

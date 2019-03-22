@@ -29,11 +29,16 @@ class MeetingPersistence:
         else:
             new_uuid = uuid.uuid4()
             c = self.connection.cursor()
-            term = (str(new_uuid), str(note.meeting_id), note.time_stamp, note.content_text)
+            term = (
+                str(new_uuid),
+                str(note.meeting_id),
+                note.time_stamp,
+                note.content_text,
+            )
             c.execute(
                 "INSERT INTO notes(note_id, meeting_id, time_stamp, "
                 "content_text) VALUES (%s, %s, %s, %s)",
-                term
+                term,
             )
             self.connection.commit()
             note.note_id = new_uuid
@@ -53,7 +58,10 @@ class MeetingPersistence:
         c.execute("SELECT * FROM notes WHERE meeting_id=%s", (str(meeting_id)))
         notes = c.fetchall()
         if len(notes) > 0:
-            notes = map(lambda res: Note(uuid.UUID(res[0]), uuid.UUID(res[1]), res[2], res[3]), notes)
+            notes = map(
+                lambda res: Note(uuid.UUID(res[0]), uuid.UUID(res[1]), res[2], res[3]),
+                notes,
+            )
         return list(notes)
 
     def delete_note(self, note_id: uuid.UUID) -> Result[uuid.UUID, str]:
