@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "apollo-boost": "^0.3.1",
     "apollo-client": "^2.5.1",
+    "apollo-link-context": "^1.0.17",
     "bootstrap": "^4.3.1",
     "dateformat": "^3.0.3",
     "font-awesome": "^4.7.0",
@@ -20,7 +21,7 @@
     "react-bootstrap": "^1.0.0-beta.5",
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.5",
+    "react-scripts": "^2.1.8",
     "shortid": "^2.2.14",
     "typescript": "^3.3.3333"
   },
@@ -39,6 +40,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "proxy": "http://localhost:8000",
   "devDependencies": {
     "react-test-renderer": "^16.8.4"
   }
