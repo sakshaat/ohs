@@ -78,7 +78,7 @@ class CourseApi:
 
         payload = None
         if(filters is not None):
-            payload = json.loads(filters) 
+            payload = json.loads(filters)
 
         return self.course_persistence.query_sections(payload)
 

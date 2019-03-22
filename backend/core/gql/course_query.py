@@ -22,6 +22,7 @@ class CourseQuery(graphene.ObjectType):
             for course in course_api(info).query_courses(filters)
         ]
 
+
 @register_query(allow=SchemaRestriction.ALL)
 class SectionQuery(graphene.ObjectType):
     section = graphene.Field(
@@ -33,7 +34,7 @@ class SectionQuery(graphene.ObjectType):
     )
     sections = graphene.List(
         Section, filters=graphene.String()
-    ) 
+    )
 
     def resolve_section(self, info, course, year, semester, section_code):
         return (
