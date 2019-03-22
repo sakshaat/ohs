@@ -30,6 +30,8 @@ tests_cov_html:
 	pytest student_service instructor_service core \
 	--cov-report html --cov=core --cov=student_service --cov=instructor_service
 
+htmlcov: tests_cov_html
+
 test_student: ; pytest student_service/tests --cov=student_service
 
 test_instructor: ; pytest instructor_service/tests --cov=instructor_service
