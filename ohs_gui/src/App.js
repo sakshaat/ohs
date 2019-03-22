@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
+import Login from "./components/Login"
 
 import './App.css';
 
@@ -10,7 +11,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      isLoggedIn: false
     }
 
     this.getUser = this.getUser.bind(this);
@@ -18,7 +20,10 @@ class App extends Component {
 
   // TODO: we should set the user in state when we log in
   componentDidMount() {
-    this.getUser();
+    if(window.sessionStorage.token) {
+      this.setState({isLoggedIn: true});
+    }
+    // this.getUser();
   }
 
   getUser() {
@@ -42,20 +47,18 @@ class App extends Component {
                   OHS
                 </a>
               </div>
-              {this.state.user &&
+              {this.state.isLoggedIn &&
                 <div className="nav-item">
-                  Logged In a {this.state.user.role}
+                  Logged In as a {this.state.user.role}
                 </div>
               } 
             </div>
           </nav>
-          {this.state.user &&
-            <div className="App-body">
-              <Switch>
-                <Route path="/" render={() => <Home user={this.state.user} />} />
-              </Switch>
-            </div>
-          }
+          <div className="app-container">
+            {this.state.isLoggedIn ? <Home user={this.state.user} /> : <Login />}
+          </div>
+
+          
         </div>
       </Router>
     );
