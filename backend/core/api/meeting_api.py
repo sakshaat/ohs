@@ -57,7 +57,7 @@ class MeetingApi:
         comment = Comment(uuid.uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
 
-    def delete_note(self, note_id: uuid.UUID) -> Result[str, str]:
+    def delete_note(self, note_id: uuid.UUID) -> Result[uuid.UUID, str]:
         """
         Deletes note of <note_id>.
 
@@ -66,7 +66,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_note(note_id)
 
-    def delete_comment(self, comment_id: uuid.UUID) -> Result[str, str]:
+    def delete_comment(self, comment_id: uuid.UUID) -> Result[uuid.UUID, str]:
         """
         Deletes comment of <comment_id>.
 
@@ -75,7 +75,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_comment(comment_id)
 
-    def delete_meeting(self, meeting_id: uuid.UUID) -> Result[str, str]:
+    def delete_meeting(self, meeting_id: uuid.UUID) -> Result[uuid.UUID, str]:
         """
         Deletes meeting of <meeting_id>.
 
