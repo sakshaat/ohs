@@ -205,3 +205,11 @@ class MeetingPresistence:
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
         return list(meetings)
+
+    def delete_meeting(self, meeting_id: str) -> Result[str, str]:
+        if not self.get_meeting(meeting_id):
+            return Err(f"Meeting {meeting_id} does not exist")
+        c = self.connection.cursor()
+        c.execute("DELETE FROM meetings WHERE meeting_id=%s", (meeting_id))
+        self.connection.commit()
+        return Ok(meeting_id)
