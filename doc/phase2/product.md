@@ -3,6 +3,8 @@
 We built a single page application with React as our front end and Flask as our backend.
 We are communicating between the front and back ends of our application using GraphQL.
 
+We have tests for our back end services.
+
 The features we have implemented so far are:
 - User creation and authentication
 - Creating and deleting courses
