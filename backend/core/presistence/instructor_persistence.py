@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
@@ -100,13 +100,12 @@ class InstructorPersistence(AuthenticationPresistence):
         c = self.connection.cursor()
         term = (user_identity,)
         c.execute("SELECT * FROM instructors WHERE user_name=%s", term)
-        pass_hash = None
         res = c.fetchone()
         if res:
             pass_hash = res[2]
+            return Ok(pass_hash)
         else:
             return Err(f"Instructor {user_identity} does not exist")
-        return maybe(pass_hash)
 
     def update_password_hash(
         self, user_identity: str, new_hash: str

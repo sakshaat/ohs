@@ -5,7 +5,7 @@ from pathlib import Path
 import flask
 from flask import Flask
 from flask_cors import CORS
-from option import Result, Err
+from option import Err, Result
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 
@@ -36,7 +36,7 @@ class InstructorService(App):
         else:
             return self.api.instructor_api.create_instructor(
                 first_name, last_name, user_id, password
-            )
+            ).flatmap(lambda instructor: self.get_token(user_id, password))
 
     def get_token(self, user_identity, password):
         return self.api.instructor_api.get_token(user_identity, password)
