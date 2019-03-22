@@ -41,7 +41,7 @@ CREATE TABLE meetings (
  end_time VARCHAR (50) NOT NULL,
  CONSTRAINT instructor_fkey FOREIGN KEY (instructor)
     REFERENCES instructors (user_name) MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
+    ON UPDATE NO ACTION ON DELETE NO ACTION,
  CONSTRAINT student_fkey FOREIGN KEY (student)
     REFERENCES students (student_number) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
