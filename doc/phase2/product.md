@@ -1,5 +1,17 @@
 # What was built
 
+We built a single page application with React as our front end and Flask as our backend.
+We are communicating between the front and back ends of our application using GraphQL.
+
+The features we have implemented so far are:
+- User creation and authentication
+- Creating and deleting courses
+- Creating and deleting sections
+- Frontend views
+- CRUD operations for meetings (not connected to the front end yet)
+- CRUD operations for comments on meetings (not connected to the front end yet)
+- CRUD operations for notes on meeting (not connected to the front end yet)
+
 # High level design
 
 Our frontend is built with React. We made use of Apollo-Client to handle our GraphQL requests, and Bootstrap and FontAwesome to help with styles. We also imported a library for creating human-readable dates, called DateFormat. There is only one frontend for our application, but we have split it into views which are served up based on whether the user is a professor or a student. We keep a user object in App.js, and pass it down in props to every other page. That user object has a role field, which we check to determine which view to display.
