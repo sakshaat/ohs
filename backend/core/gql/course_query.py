@@ -32,9 +32,7 @@ class SectionQuery(graphene.ObjectType):
         semester=graphene.Argument(Semester, required=True),
         section_code=graphene.String(required=True),
     )
-    sections = graphene.List(
-        Section, filters=graphene.String()
-    )
+    sections = graphene.List(Section, filters=graphene.String())
 
     def resolve_section(self, info, course, year, semester, section_code):
         return (
