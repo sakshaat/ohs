@@ -10,7 +10,7 @@ import gql from "graphql-tag";
 import './CreateCourse.css';
 
 const client = new ApolloClient({
-  uri: "http://127.0.0.1:8000/graphql"
+  uri: `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL || 'http://localhost:8000'}/graphql`
 });
 
 const ADD_COURSE = gql`
@@ -23,17 +23,17 @@ const ADD_COURSE = gql`
 class CreateCourse extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       courseCreated : false
      }
-    
+
     this.createCourse = this.createCourse.bind(this);
   }
 
   createCourse() {
     let elem = ReactDOM.findDOMNode(this.refs.ccInput);
     let value = elem.value;
-    
+
     // send request
     client
     .mutate({

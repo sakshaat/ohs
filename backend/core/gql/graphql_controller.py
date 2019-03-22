@@ -1,16 +1,13 @@
-from typing import Generic, TypeVar
-
 import attr
 from graphene import Schema
 from option import Result
 
+from core.gql.context import Context
 from core.gql.graphql_request import GraphqlRequest
-
-Context = TypeVar("Context")
 
 
 @attr.s(slots=True, auto_attribs=True)
-class GraphqlController(Generic[Context]):
+class GraphqlController:
     schema: Schema
 
     def execute(

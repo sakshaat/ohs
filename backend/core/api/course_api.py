@@ -5,12 +5,12 @@ from option import Option, Result
 
 from core.domain.course import Course, Section, SectionIdentity, Semester
 from core.domain.user import Instructor
-from core.presistence.course_persistence import CoursePresistence
+from core.persistence.course_persistence import CoursePersistence
 
 
 @attr.s(auto_attribs=True)
 class CourseApi:
-    course_presistence: CoursePresistence
+    course_persistence: CoursePersistence
 
     def create_section(
         self,
@@ -36,7 +36,7 @@ class CourseApi:
             The new section created
         """
         section = Section(course, year, semester, section_code, taught_by, num_students)
-        return self.course_presistence.create_section(section)
+        return self.course_persistence.create_section(section)
 
     def create_course(self, course_code: str) -> Result[Course, str]:
         """
@@ -49,7 +49,7 @@ class CourseApi:
             The new course created
         """
         course = Course(course_code)
-        return self.course_presistence.create_course(course)
+        return self.course_persistence.create_course(course)
 
     def query_courses(self, filters=None) -> List[Course]:
         """
@@ -61,7 +61,7 @@ class CourseApi:
         Returns:
             List of courses returned by the query
         """
-        return self.course_presistence.query_courses(filters)
+        return self.course_persistence.query_courses(filters)
 
     def query_sections(self, filters=None) -> List[Section]:
         """
@@ -73,7 +73,7 @@ class CourseApi:
         Returns:
             List of sections returned by the query
         """
-        return self.course_presistence.query_sections(filters)
+        return self.course_persistence.query_sections(filters)
 
     def get_course(self, course_code: str) -> Option[Course]:
         """
@@ -85,7 +85,7 @@ class CourseApi:
         Returns:
             The course if found
         """
-        return self.course_presistence.get_course(course_code)
+        return self.course_persistence.get_course(course_code)
 
     def get_section(self, section_identity: SectionIdentity) -> Option[Section]:
         """
@@ -97,4 +97,4 @@ class CourseApi:
         Returns:
             The section if found
         """
-        return self.course_presistence.get_section(section_identity)
+        return self.course_persistence.get_section(section_identity)

@@ -11,7 +11,7 @@ from core.domain.user import Student, Instructor
 @attr.s
 class MeetingPersistence:
     """
-    Presistence layer implementation for meeting related things.
+    Persistence layer implementation for meeting related things.
     """
 
     # create_note, delete_note, get_note, get_notes

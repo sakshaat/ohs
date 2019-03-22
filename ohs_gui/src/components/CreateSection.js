@@ -10,7 +10,7 @@ import { Button, FormGroup, FormControl } from 'react-bootstrap';
 import './CreateSection.css';
 
 const client = new ApolloClient({
-  uri: "http://127.0.0.1:8000/graphql"
+  uri: `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL || 'http://localhost:8000'}/graphql`
 });
 
 const ADD_SECTION = gql`
