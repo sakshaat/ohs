@@ -34,7 +34,7 @@ class MeetingApi:
         return self.meeting_persistence.create_meeting(meeting)
 
     def create_note(
-        self, meeting_id: str, time_stamp: str, content_text: str
+        self, meeting_id: uuid.UUID, time_stamp: str, content_text: str
     ) -> Result[Note, str]:
         """
         Create a new note for the meeting <meeting_id>.
@@ -46,7 +46,7 @@ class MeetingApi:
         return self.meeting_persistence.create_note(note)
 
     def create_comment(
-        self, meeting_id: str, author: User, time_stamp: str, content_text: str
+        self, meeting_id: uuid.UUID, author: User, time_stamp: str, content_text: str
     ) -> Result[Comment, str]:
         """
         Create a new comment for the meeting <meeting_id>.
@@ -57,7 +57,7 @@ class MeetingApi:
         comment = Comment(uuid.uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
 
-    def delete_note(self, note_id: str) -> Result[str, str]:
+    def delete_note(self, note_id: uuid.UUID) -> Result[str, str]:
         """
         Deletes note of <note_id>.
 
@@ -66,7 +66,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_note(note_id)
 
-    def delete_comment(self, comment_id: str) -> Result[str, str]:
+    def delete_comment(self, comment_id: uuid.UUID) -> Result[str, str]:
         """
         Deletes comment of <comment_id>.
 
@@ -75,7 +75,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_comment(comment_id)
 
-    def delete_meeting(self, meeting_id: str) -> Result[str, str]:
+    def delete_meeting(self, meeting_id: uuid.UUID) -> Result[str, str]:
         """
         Deletes meeting of <meeting_id>.
 
@@ -84,7 +84,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_meeting(meeting_id)
 
-    def get_notes_of_meeting(self, meeting_id: str) -> List[Note]:
+    def get_notes_of_meeting(self, meeting_id: uuid.UUID) -> List[Note]:
         """
         Gets all notes of the meeting <meeting_id>.
 
@@ -93,7 +93,7 @@ class MeetingApi:
         """
         return self.meeting_persistence.get_notes_of_meeting(meeting_id)
 
-    def get_comments_of_meeting(self, meeting_id: str) -> List[Comment]:
+    def get_comments_of_meeting(self, meeting_id: uuid.UUID) -> List[Comment]:
         """
         Gets all comments of the meeting <meeting_id>.
 
