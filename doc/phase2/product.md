@@ -17,6 +17,9 @@ This allows us to swap out any components of our application without affecting t
 Another advantage of this design is that we are deferring all state to our persistence layer and keeping no state at all in our application. This means our application
 is highly scaleable, with the database being its only bottleneck.
 
+Below is a rough architecrture diagram for our back end:
+![](./arch.svg)
+
 # Technical highlights
 
 GraphQL is our team's main interest when we started this project, but its steep learning curve has proven to be somewhat troublesome in the actual implementation of our application.
