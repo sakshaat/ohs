@@ -3,8 +3,6 @@ services:
   db:
     image: postgres:11
     container_name: 'ohs-db'
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: ohs-user
       POSTGRES_DB: ohs
