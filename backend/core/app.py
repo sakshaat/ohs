@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from functools import wraps
 
 import attr
 import flask
@@ -23,7 +24,18 @@ class App(metaclass=ABCMeta):
     def __attrs_post_init__(self):
         self.setup_routes()
 
+    def require_db(self, f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            with self.connection_manager.connect() as conn:
+                flask.g.connection = conn
+                result = f(*args, **kwargs)
+            return result
+
+        return wrapper
+
     def setup_routes(self):
+        @self.require_db
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
         def graphql():
             result = self.execute_gql(flask.request)
@@ -33,6 +45,7 @@ class App(metaclass=ABCMeta):
                 response = flask.jsonify(result.unwrap())
             return response
 
+        @self.require_db
         @self.flask_app.route("/create-user", methods=["POST"])
         def create_user():
             request_json = flask.request.json
@@ -44,6 +57,7 @@ class App(metaclass=ABCMeta):
             else:
                 return HttpError(400, creation_result.unwrap_err()).to_flask_response()
 
+        @self.require_db
         @self.flask_app.route("/get-token", methods=["POST"])
         def get_token():
             request_json = flask.request.json
@@ -85,17 +99,15 @@ class App(metaclass=ABCMeta):
             gql_request = parse_graphql_request(request)
             if gql_request.is_err:
                 return Err(HttpError(400, gql_request.unwrap_err()))
-            with self.connection_manager.connect() as conn:
-                flask.g.connection = conn
-                return (
-                    self.create_secure_context(request)
+            return (
+                self.create_secure_context(request)
                     .map_err(lambda e: HttpError(401, e))
                     .flatmap(
-                        lambda ctx: self.graphql_controller.execute(
-                            gql_request.unwrap(), ctx
-                        ).map_err(lambda e: HttpError(400, e))
-                    )
+                    lambda ctx: self.graphql_controller.execute(
+                        gql_request.unwrap(), ctx
+                    ).map_err(lambda e: HttpError(400, e))
                 )
+            )
         else:
             return self.graphql_controller.introspect().map_err(
                 lambda e: HttpError(400, e)
