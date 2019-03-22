@@ -101,8 +101,8 @@ class App(metaclass=ABCMeta):
                 return Err(HttpError(400, gql_request.unwrap_err()))
             return (
                 self.create_secure_context(request)
-                    .map_err(lambda e: HttpError(401, e))
-                    .flatmap(
+                .map_err(lambda e: HttpError(401, e))
+                .flatmap(
                     lambda ctx: self.graphql_controller.execute(
                         gql_request.unwrap(), ctx
                     ).map_err(lambda e: HttpError(400, e))
