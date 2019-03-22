@@ -7,7 +7,7 @@ from core.domain.user import Instructor
 from core.presistence.instructor_persistence import InstructorPersistence
 
 
-@attr.s(frozen=True, auto_attribs=True, slots=True)
+@attr.s(auto_attribs=True)
 class InstructorApi:
     instructor_persistence: InstructorPersistence
     password_authenticator: PasswordAuthenticator
@@ -39,4 +39,6 @@ class InstructorApi:
         user_name = payload.get("id")
         if not user_name:
             return Err("Invalid token")
-        return self.get_instructor(user_name).unwrap_or(Err("Could not get instructor"))
+        return self.get_instructor(user_name).map_or(
+            Ok, (Err("Could not get instructor"))
+        )
