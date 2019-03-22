@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from option import Result
 
 
-class AuthenticationPresistence(ABC):
+class AuthenticationPersistence(ABC):
     @abstractmethod
     def get_password_hash(self, user_identity: str) -> Result[str, str]:
         pass

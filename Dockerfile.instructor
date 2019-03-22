@@ -12,7 +12,7 @@ RUN pip install -U pip setuptools poetry
 
 RUN \
  apk add --no-cache postgresql-libs && \
- apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev libffi-dev openssl-dev && \
  poetry install -n --no-dev && \
  apk --purge del .build-deps
 

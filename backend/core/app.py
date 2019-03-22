@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from functools import wraps
 
 import attr
 import flask
@@ -10,7 +11,7 @@ from core.gql.context import Context
 from core.gql.graphql_controller import GraphqlController
 from core.gql.graphql_request import parse_graphql_request
 from core.http import HttpError
-from core.presistence.connection_manager import ConnectionManager
+from core.persistence.connection_manager import ConnectionManager
 
 
 @attr.s(slots=True, auto_attribs=True)
@@ -23,8 +24,19 @@ class App(metaclass=ABCMeta):
     def __attrs_post_init__(self):
         self.setup_routes()
 
+    def require_db(self, f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            with self.connection_manager.connect() as conn:
+                flask.g.connection = conn
+                result = f(*args, **kwargs)
+            return result
+
+        return wrapper
+
     def setup_routes(self):
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
+        @self.require_db
         def graphql():
             result = self.execute_gql(flask.request)
             if result.is_err:
@@ -34,6 +46,7 @@ class App(metaclass=ABCMeta):
             return response
 
         @self.flask_app.route("/create-user", methods=["POST"])
+        @self.require_db
         def create_user():
             request_json = flask.request.json
             if not request_json:
@@ -45,6 +58,7 @@ class App(metaclass=ABCMeta):
                 return HttpError(400, creation_result.unwrap_err()).to_flask_response()
 
         @self.flask_app.route("/get-token", methods=["POST"])
+        @self.require_db
         def get_token():
             request_json = flask.request.json
             if not request_json:
@@ -85,17 +99,15 @@ class App(metaclass=ABCMeta):
             gql_request = parse_graphql_request(request)
             if gql_request.is_err:
                 return Err(HttpError(400, gql_request.unwrap_err()))
-            with self.connection_manager.connect() as conn:
-                flask.g.connection = conn
-                return (
-                    self.create_secure_context(request)
-                    .map_err(lambda e: HttpError(401, e))
-                    .flatmap(
-                        lambda ctx: self.graphql_controller.execute(
-                            gql_request.unwrap(), ctx
-                        ).map_err(lambda e: HttpError(400, e))
-                    )
+            return (
+                self.create_secure_context(request)
+                .map_err(lambda e: HttpError(401, e))
+                .flatmap(
+                    lambda ctx: self.graphql_controller.execute(
+                        gql_request.unwrap(), ctx
+                    ).map_err(lambda e: HttpError(400, e))
                 )
+            )
         else:
             return self.graphql_controller.introspect().map_err(
                 lambda e: HttpError(400, e)

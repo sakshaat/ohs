@@ -4,7 +4,7 @@ from option import Err, Ok, Option, Result
 from core.authentication.password_auth import PasswordAuthenticator
 from core.authentication.token_auth import JwtAuthenticator
 from core.domain.user import Instructor
-from core.presistence.instructor_persistence import InstructorPersistence
+from core.persistence.instructor_persistence import InstructorPersistence
 
 
 @attr.s(auto_attribs=True)
