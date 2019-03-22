@@ -1,7 +1,7 @@
 from typing import List
 
 import attr
-from option import Option, Result
+from option import Result
 
 from core.domain.meeting import Note, Meeting, Comment
 from core.domain.user import User, Student, Instructor
