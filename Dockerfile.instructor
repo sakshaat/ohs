@@ -10,7 +10,11 @@ WORKDIR /app
 
 RUN pip install -U pip setuptools poetry
 
-RUN poetry install -n --no-dev
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+ poetry install -n --no-dev && \
+ apk --purge del .build-deps
 
 EXPOSE 8000
 
