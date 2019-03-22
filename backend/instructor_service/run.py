@@ -54,7 +54,7 @@ gql_controller = GraphqlController(
     build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
 )
 course_presistence = CoursePresistence(lambda: flask.g.connection)
-instructor_presistence = InstructorPersistence(lambda: flask.g.conncetion)
+instructor_presistence = InstructorPersistence(lambda: flask.g.connection)
 
 token_auth = JwtAuthenticator(os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"])
 password_auth = PasswordAuthenticator(instructor_presistence)
