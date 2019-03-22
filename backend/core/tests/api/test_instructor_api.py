@@ -6,7 +6,7 @@ from option import Err, NONE, Ok, Some, maybe
 from core.api.instructor_api import InstructorApi
 from core.authentication.password_auth import PasswordAuthenticator
 from core.authentication.token_auth import JwtAuthenticator
-from core.presistence.instructor_persistence import InstructorPersistence
+from core.persistence.instructor_persistence import InstructorPersistence
 from core.tests.generation import fake
 from core.tests.generation.fake_user import fake_instructor
 

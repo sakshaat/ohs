@@ -17,4 +17,31 @@ const GET_SECTIONS = gql`{
     }
   }`;
 
-export {GET_COURSES, GET_SECTIONS}
+const GET_SECTION = gql`
+  query getSection($course: CourseInput!, $year: Int!, $semester: Semester!, $sectionCode: String!) {
+    section(course: $course, year: $year, semester: $semester, sectionCode: $sectionCode) {
+      course {
+        courseCode,
+      },
+      year,
+      semester,
+      sectionCode,
+      numStudents
+    }
+  }
+`
+
+const GET_SECTION_FOR_COURSE = gql`
+  query getSectionForCourse($sectionFilter: String) {
+    sections(courseCode: $sectionFilter) {
+      course {
+        courseCode
+      }
+      year,
+      semester,
+      sectionCode,
+      numStudents
+    }
+  }`
+
+export {GET_COURSES, GET_SECTIONS, GET_SECTION, GET_SECTION_FOR_COURSE}

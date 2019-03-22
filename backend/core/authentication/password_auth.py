@@ -2,23 +2,23 @@ import attr
 from option import Err, Ok, Result
 from passlib.context import CryptContext
 
-from core.presistence.authentication_presistence import AuthenticationPresistence
+from core.persistence.authentication_persistence import AuthenticationPersistence
 
 
 @attr.s(slots=True, frozen=True, auto_attribs=True)
 class PasswordAuthenticator:
-    authentication_presistence: AuthenticationPresistence
+    authentication_persistence: AuthenticationPersistence
     algorithm: str = "argon2"
     crypto_context: CryptContext = CryptContext(algorithm)
 
     def update_password(self, user_identity: str, password: str) -> Result[None, str]:
         new_hash = self.crypto_context.hash(password)
-        return self.authentication_presistence.update_password_hash(
+        return self.authentication_persistence.update_password_hash(
             user_identity, new_hash
         )
 
     def verify_password(self, user_identity: str, password: str) -> Result[None, str]:
-        get_hash_result = self.authentication_presistence.get_password_hash(
+        get_hash_result = self.authentication_persistence.get_password_hash(
             user_identity
         )
         if get_hash_result.is_err:
@@ -31,7 +31,7 @@ class PasswordAuthenticator:
         if not verified:
             return Err(f"Incorrect password for user: {user_identity}")
         if new_hash:
-            return self.authentication_presistence.update_password_hash(
+            return self.authentication_persistence.update_password_hash(
                 user_identity, new_hash
             )
         return Ok(None)

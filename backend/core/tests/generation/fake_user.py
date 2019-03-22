@@ -9,4 +9,4 @@ def fake_instructor(user_name=None) -> Instructor:
 
 
 def fake_student() -> Student:
-    return Student(fake.first_name(), fake.last_name(), fake.py_str())
+    return Student(fake.first_name(), fake.last_name(), fake.pystr())

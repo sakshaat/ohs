@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from flask import Flask, Request
@@ -9,7 +9,7 @@ from core.app import App
 from core.gql.graphql_controller import GraphqlController
 from core.gql.graphql_request import GraphqlRequest
 from core.http import HttpError
-from core.presistence.connection_manager import ConnectionManager
+from core.persistence.connection_manager import ConnectionManager
 from core.tests.generation import fake
 
 mock_gql_controller = MagicMock(GraphqlController)
@@ -32,7 +32,6 @@ app = FakeApp(mock_flask_app, mock_gql_controller, mock_api, mock_connection_man
 
 
 class TestExecuteGql:
-    @patch("flask.g", MagicMock())
     @pytest.mark.parametrize("success", [True, False])
     def test_post(self, success):
         expected_data = {"data": {"f": "s"}}
@@ -44,7 +43,6 @@ class TestExecuteGql:
 
         gql_request = GraphqlRequest(query)
 
-        mock_connection_manager.connect = MagicMock()
         result = Ok(expected_data) if success else Err(expected_data)
         mock_gql_controller.execute = MagicMock(return_value=result)
 
@@ -56,7 +54,6 @@ class TestExecuteGql:
         mock_gql_controller.execute.assert_called_once_with(
             gql_request, app.create_secure_context(...).unwrap()
         )
-        mock_connection_manager.connect.assert_called_once()
 
     def test_post_parse_fail(self):
         request = MagicMock(Request)
@@ -64,16 +61,13 @@ class TestExecuteGql:
         request.json = None
 
         mock_gql_controller.execute = MagicMock()
-        mock_connection_manager.connect = MagicMock()
 
         result = app.execute_gql(request)
         assert result.unwrap_err().code == 400
         for err in result.unwrap_err().to_dict()["errors"]:
             assert isinstance(err, str)
         mock_gql_controller.execute.assert_not_called()
-        mock_connection_manager.connect.assert_not_called()
 
-    @patch("flask.g", MagicMock())
     def test_post_auth_fail(self):
         request = MagicMock(Request)
         request.method = "POST"
@@ -81,7 +75,6 @@ class TestExecuteGql:
         error = fake.pystr()
 
         mock_gql_controller.execute = MagicMock()
-        mock_connection_manager.connect = MagicMock()
         _old_create_secure_context = app.create_secure_context
         app.create_secure_context = MagicMock(return_value=Err(error))
         result = app.execute_gql(request)
@@ -89,7 +82,6 @@ class TestExecuteGql:
         assert result.unwrap_err().to_dict() == {"errors": [error]}
 
         mock_gql_controller.execute.assert_not_called()
-        mock_connection_manager.connect.assert_called_once()
         app.create_secure_context = _old_create_secure_context
 
     @pytest.mark.parametrize(

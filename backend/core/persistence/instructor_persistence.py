@@ -1,20 +1,16 @@
-from typing import List, Callable
+from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.user import Instructor
-from core.presistence.authentication_presistence import AuthenticationPresistence
+from core.persistence.authentication_persistence import AuthenticationPersistence
 
 
 @attr.s
-class InstructorPersistence(AuthenticationPresistence):
+class InstructorPersistence(AuthenticationPersistence):
     """
-    Presistence layer implementation for instructor related things.
-
-    Dummy implementation for now, using Python dicts as the database.
-
-    # TODO: Use an actual DB
+    Persistence layer implementation for instructor related things.
     """
 
     get_connection = attr.ib(type=Callable)
@@ -66,8 +62,33 @@ class InstructorPersistence(AuthenticationPresistence):
 
     def query_instructor(self, filters=None) -> List[Instructor]:
         c = self.connection.cursor()
-        # TODO: filters
-        c.execute("SELECT * FROM instructors")
+        if filters is None:
+            c.execute("SELECT * FROM instructors")
+        else:
+            terms = []
+            where_text = ""
+            if "user_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " user_name=%s"
+                terms.append(filters["user_name"])
+            if "first_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " first_name=%s"
+                terms.append(filters["first_name"])
+            if "last_name" in filters:
+                if where_text == "":
+                    where_text += " WHERE"
+                else:
+                    where_text += " AND"
+                where_text += " last_name=%s"
+                terms.append(filters["last_name"])
+            c.execute("SELECT * FROM instructors" + where_text, tuple(terms))
         instructors = c.fetchall()
         if len(instructors) > 0:
             instructors = map(
@@ -79,13 +100,12 @@ class InstructorPersistence(AuthenticationPresistence):
         c = self.connection.cursor()
         term = (user_identity,)
         c.execute("SELECT * FROM instructors WHERE user_name=%s", term)
-        pass_hash = None
         res = c.fetchone()
         if res:
             pass_hash = res[2]
+            return Ok(pass_hash)
         else:
             return Err(f"Instructor {user_identity} does not exist")
-        return maybe(pass_hash)
 
     def update_password_hash(
         self, user_identity: str, new_hash: str
