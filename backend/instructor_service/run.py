@@ -19,9 +19,9 @@ from core.domain.user import Instructor
 from core.gql.graphql_controller import GraphqlController
 from core.gql.schema_registry import SchemaRestriction, build_schema
 from core.http import parse_auth_token
-from core.presistence.connection_manager import ConnectionManager
-from core.presistence.course_persistence import CoursePresistence
-from core.presistence.instructor_persistence import InstructorPersistence
+from core.persistence.connection_manager import ConnectionManager
+from core.persistence.course_persistence import CoursePersistence
+from core.persistence.instructor_persistence import InstructorPersistence
 
 
 class InstructorService(App):
@@ -53,15 +53,15 @@ CORS(flask_app)
 gql_controller = GraphqlController(
     build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
 )
-course_presistence = CoursePresistence(lambda: flask.g.connection)
-instructor_presistence = InstructorPersistence(lambda: flask.g.connection)
+course_persistence = CoursePersistence(lambda: flask.g.connection)
+instructor_persistence = InstructorPersistence(lambda: flask.g.connection)
 
 token_auth = JwtAuthenticator(os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"])
-password_auth = PasswordAuthenticator(instructor_presistence)
+password_auth = PasswordAuthenticator(instructor_persistence)
 
 ohs_api = OhsApi(
-    CourseApi(course_presistence),
-    InstructorApi(instructor_presistence, password_auth, token_auth),
+    CourseApi(course_persistence),
+    InstructorApi(instructor_persistence, password_auth, token_auth),
 )
 
 connection_manager = ConnectionManager(

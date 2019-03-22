@@ -8,9 +8,9 @@ from core.domain.user import Instructor
 
 
 @attr.s
-class CoursePresistence:
+class CoursePersistence:
     """
-    Presistence layer implementation for course related things.
+    Persistence layer implementation for course related things.
     """
 
     # table courses(code text)

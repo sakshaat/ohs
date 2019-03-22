@@ -4,13 +4,13 @@ import attr
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.user import Student
-from core.presistence.authentication_presistence import AuthenticationPresistence
+from core.persistence.authentication_persistence import AuthenticationPersistence
 
 
 @attr.s
-class StudentPersistence(AuthenticationPresistence):
+class StudentPersistence(AuthenticationPersistence):
     """
-    Presistence layer implementation for student related things.
+    Persistence layer implementation for student related things.
     """
 
     get_connection = attr.ib(type=Callable)

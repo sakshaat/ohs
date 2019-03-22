@@ -9,7 +9,7 @@ from core.app import App
 from core.gql.graphql_controller import GraphqlController
 from core.gql.graphql_request import GraphqlRequest
 from core.http import HttpError
-from core.presistence.connection_manager import ConnectionManager
+from core.persistence.connection_manager import ConnectionManager
 from core.tests.generation import fake
 
 mock_gql_controller = MagicMock(GraphqlController)

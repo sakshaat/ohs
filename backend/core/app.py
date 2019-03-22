@@ -11,7 +11,7 @@ from core.gql.context import Context
 from core.gql.graphql_controller import GraphqlController
 from core.gql.graphql_request import parse_graphql_request
 from core.http import HttpError
-from core.presistence.connection_manager import ConnectionManager
+from core.persistence.connection_manager import ConnectionManager
 
 
 @attr.s(slots=True, auto_attribs=True)
