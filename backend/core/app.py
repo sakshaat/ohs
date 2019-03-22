@@ -35,8 +35,8 @@ class App(metaclass=ABCMeta):
         return wrapper
 
     def setup_routes(self):
-        @self.require_db
         @self.flask_app.route("/graphql", methods=["GET", "POST"])
+        @self.require_db
         def graphql():
             result = self.execute_gql(flask.request)
             if result.is_err:
@@ -45,8 +45,8 @@ class App(metaclass=ABCMeta):
                 response = flask.jsonify(result.unwrap())
             return response
 
-        @self.require_db
         @self.flask_app.route("/create-user", methods=["POST"])
+        @self.require_db
         def create_user():
             request_json = flask.request.json
             if not request_json:
@@ -57,8 +57,8 @@ class App(metaclass=ABCMeta):
             else:
                 return HttpError(400, creation_result.unwrap_err()).to_flask_response()
 
-        @self.require_db
         @self.flask_app.route("/get-token", methods=["POST"])
+        @self.require_db
         def get_token():
             request_json = flask.request.json
             if not request_json:
