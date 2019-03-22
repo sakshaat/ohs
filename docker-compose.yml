@@ -11,6 +11,7 @@ services:
       POSTGRES_PASSWORD:
     volumes:
       - ohs_data:/var/lib/postgresql/data
+      - ./backend/core/table_setup.sql:/docker-entrypoint-initdb.d/table_setup.sql
     restart: always
   instructor_service:
     build:
