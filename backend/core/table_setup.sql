@@ -1,7 +1,7 @@
 CREATE TABLE users (
  first_name VARCHAR (50) NOT NULL,
  last_name VARCHAR (50) NOT NULL,
- password_hash VARCHAR (50) NOT NULL,
+ password_hash TEXT NOT NULL,
  PRIMARY KEY (first_name, last_name)
 );
 
