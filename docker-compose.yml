@@ -1,5 +1,16 @@
 version: "3"
 services:
+  db:
+    image: postgres:11
+    container_name: 'ohs-db'
+    environment:
+      POSTGRES_USER: ohs-user
+      POSTGRES_DB: ohs
+      POSTGRES_PASSWORD:
+    volumes:
+      - ohs_data:/var/lib/postgresql/data
+      - ./backend/core/table_setup.sql:/docker-entrypoint-initdb.d/table_setup.sql
+    restart: always
   instructor_service:
     build:
       context: .
@@ -8,14 +19,27 @@ services:
     container_name: instructor_service
     environment:
       OHS_INSTRUCTOR_SERVICE_SECRET:
+      OHS_DB_HOST: db
+      OHS_DB_NAME: ohs
+      OHS_DB_USER: ohs-user
+      OHS_DB_PASSWORD:
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    restart: always
   ohs_gui:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+      args:
+        REACT_APP_INSTRUCTOR_SERVICE_URL:
     image: ohs_gui
     container_name: ohs_gui
     ports:
       - 5000:5000
-    depends_on:
-      - instructor_service
+    restart: always
+
+volumes:
+  ohs_data:
 
