@@ -1,87 +1,100 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom'
-import { Redirect } from "react-router-dom";
-import gql from "graphql-tag";
+import ReactDOM from 'react-dom';
+import { Redirect } from 'react-router-dom';
+import gql from 'graphql-tag';
 
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
 import './CreateSection.css';
-import {getClient} from "../utils/client"
+import { getClient } from '../utils/client';
 
 const client = getClient();
 
 const ADD_SECTION = gql`
-    mutation addSection($sectionInput: SectionInput!) {
-        createSection(sectionInput: $sectionInput) {
-            sectionCode
-        }
-    }`;
+  mutation addSection($sectionInput: SectionInput!) {
+    createSection(sectionInput: $sectionInput) {
+      sectionCode
+    }
+  }
+`;
 
 class CreateSection extends Component {
   constructor(props) {
     super(props);
+    const {
+      match: {
+        params: { courseCode }
+      }
+    } = this.props;
     this.state = {
       sectionCreated: false,
-      course_code: this.props.match.params.course_code
-    }
+      courseCode
+    };
 
     this.createSection = this.createSection.bind(this);
   }
 
   createSection() {
-    let lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
-    let yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
-    let semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
-    let snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
+    const { courseCode } = this.state;
+    const {
+      user: { id }
+    } = this.props;
+
+    const lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
+    const yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
+    const semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
+    const snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
 
     // variable
-    let sectionInput =
-    {
-      course:
-        { courseCode: this.state.course_code},
+    const sectionInput = {
+      course: { courseCode },
       year: yearVal,
       semester: semesterVal,
       sectionCode: lsVal,
       numStudents: snumVal,
-      taughtBy: this.props.user.id
-    }
+      taughtBy: id
+    };
 
     // send request
     client
       .mutate({
         mutation: ADD_SECTION,
         variables: {
-          sectionInput: sectionInput,
-        },
+          sectionInput
+        }
       })
       .then(this.setState({ sectionCreated: true }))
       .catch(res => console.log(res));
   }
 
   render() {
-    if (this.state.sectionCreated) {
-      return (<Redirect to={"/course/" + this.props.match.params.course_code}></Redirect>)
+    const { sectionCreated, courseCode, pickedCourse } = this.state;
+
+    if (sectionCreated) {
+      return <Redirect to={`/course/${courseCode}`} />;
     }
 
-    let sectionComponent = (
+    const sectionComponent = (
       <div>
-        <h1>Add a new Section to {this.state.pickedCourse}</h1>
+        <h1>Add a new Section to {pickedCourse}</h1>
         <FormGroup role="form">
-
-          <FormControl ref="lsInput"
+          <FormControl
+            ref="lsInput"
             placeholder="Section"
             aria-label="Section"
             aria-describedby="basic-addon2"
           />
 
-          <FormControl ref="yearInput"
+          <FormControl
+            ref="yearInput"
             placeholder="Year"
             aria-label="Year"
             aria-describedby="basic-addon2"
             type="number"
           />
 
-          <FormControl ref="studentInput"
+          <FormControl
+            ref="studentInput"
             placeholder="student"
             aria-label="student"
             aria-describedby="basic-addon2"
@@ -97,17 +110,14 @@ class CreateSection extends Component {
 
           <br />
 
-          <Button variant="secondary" onClick={this.createSection}>Create a Section</Button>
+          <Button variant="secondary" onClick={this.createSection}>
+            Create a Section
+          </Button>
         </FormGroup>
       </div>
-    )
-    
-
-    return (
-      <section className="container">
-        {sectionComponent}
-      </section>
     );
+
+    return <section className="container">{sectionComponent}</section>;
   }
 }
 

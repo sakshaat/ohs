@@ -1,0 +1,41 @@
+{
+    "extends": [
+        "airbnb", 
+        "prettier", 
+        "prettier/react",    
+        "plugin:react/recommended",
+        "plugin:import/recommended"
+    ],
+    "plugins": ["prettier", "import", "react"],
+    "rules": {
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [".js", ".jsx"]
+        }
+      ],
+      "no-console": 0,
+      "react/prop-types": 0,
+      "no-underscore-dangle": 0,
+      "import/imports-first": ["error", "absolute-first"],
+      "import/newline-after-import": "error",
+      "react/no-string-refs": 0,
+      "react/no-find-dom-node" : 0
+    },
+    "env": {
+      "browser": true,
+      "mocha": true,
+      "node": true,
+      "jest": true
+    },
+    "globals": {
+      "window": true,
+      "document": true,
+      "localStorage": true,
+      "FormData": true,
+      "FileReader": true,
+      "Blob": true,
+      "navigator": true
+    },
+    "parser": "babel-eslint"
+  }

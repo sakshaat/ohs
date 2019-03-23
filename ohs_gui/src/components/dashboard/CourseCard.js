@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 
-class CourseCard extends Component {
+class CourseCard extends PureComponent {
   render() {
+    const { course } = this.props;
     return (
-      <Link to={`/course/${this.props.course}`}>
-        <div className="course card-element">
-          {this.props.course}
-        </div>
+      <Link to={`/course/${course}`}>
+        <div className="course card-element">{course}</div>
       </Link>
     );
   }
