@@ -1,28 +1,45 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
-class LectureSectionCard extends Component {
+class LectureSectionCard extends PureComponent {
   render() {
-    const section = this.props.section;
+    const { section, verbose } = this.props;
     return (
-      <Link to={this.props.verbose ?
-        { pathname: "/section", search: `?course=${section.course.courseCode}&year=${section.year}&semester=${section.semester}&section_code=${section.sectionCode}` }
-        :
-        { pathname: "/section", search: `?course=${section.course.courseCode}` }}>
-        <div className={this.props.verbose ? "card-element lecture-section-verbose" : "card-element lecture-section"}>
-          {this.props.verbose ?
-            (
-              <div>
-                year: {section.year}
-                <br />
-                semester: {section.semester}
-                <br />
-                students: {section.numStudents}
-              </div>
-            )
-            :
-            section.course
+      <Link
+        to={
+          verbose
+            ? {
+                pathname: '/section',
+                search: `?course=${section.course.courseCode}&year=${
+                  section.year
+                }&semester=${section.semester}&sectionCode=${
+                  section.sectionCode
+                }`
+              }
+            : {
+                pathname: '/section',
+                search: `?course=${section.course.courseCode}`
+              }
+        }
+      >
+        <div
+          className={
+            verbose
+              ? 'card-element lecture-section-verbose'
+              : 'card-element lecture-section'
           }
+        >
+          {verbose ? (
+            <div>
+              year: {section.year}
+              <br />
+              semester: {section.semester}
+              <br />
+              students: {section.numStudents}
+            </div>
+          ) : (
+            section.course
+          )}
         </div>
       </Link>
     );

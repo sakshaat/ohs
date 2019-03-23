@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import CourseCard from "./dashboard/CourseCard"
-import LectureSectionCard from "./dashboard/LectureSectionCard"
-import { Link } from 'react-router-dom'
-
-import "./Home.css"
+import { Link } from 'react-router-dom';
 import shortid from 'shortid';
+
+import CourseCard from './CourseCard';
+import LectureSectionCard from './LectureSectionCard';
+import './Dashboard.css';
 
 class Dashboard extends Component {
   render() {
-    const isProf = this.props.user && this.props.user.role === "PROFESSOR";
+    const { user, sections, courses } = this.props;
+    const isProf = user && user.role === 'PROFESSOR';
     const studentView = (
       <div id="sections">
         <h1>Current Courses</h1>
-        {this.props.sections.map(s => (
+        {sections.map(s => (
           <LectureSectionCard section={s} key={shortid.generate()} />
         ))}
       </div>
@@ -21,12 +22,12 @@ class Dashboard extends Component {
     const profView = (
       <div id="courses">
         <h1>Current Courses</h1>
-        {this.props.courses.map(c => (
+        {courses.map(c => (
           <CourseCard course={c} key={shortid.generate()} />
         ))}
-        <Link to={'/add-course'}>
+        <Link to="/add-course">
           <div className="add-course card-element">
-            <span className="fa fa-plus"></span>
+            <span className="fa fa-plus" />
           </div>
         </Link>
       </div>

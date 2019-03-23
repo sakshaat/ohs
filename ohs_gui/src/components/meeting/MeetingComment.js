@@ -1,18 +1,23 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-class MeetingComment extends Component {
+// TO DO - Change this to import to be consistent
+const dateFormat = require('dateformat');
+
+class MeetingComment extends PureComponent {
   render() {
-    const myComment = this.props.comment.author === this.props.user.first_name + ' ' + this.props.user.last_name;
-    const dateFormat = require("dateformat")
+    const { comment, user } = this.props;
+    const myComment = comment.author === `${user.first_name} ${user.last_name}`;
 
     return (
-      <div className={myComment ? "meeting-comment mine" : "meeting-comment theirs"}>
+      <div
+        className={
+          myComment ? 'meeting-comment mine' : 'meeting-comment theirs'
+        }
+      >
         <div className="comment-box">
-          <p className="comment-content">
-            {this.props.comment.contents}
-          </p>
+          <p className="comment-content">{comment.contents}</p>
           <p className="comment-date">
-            {dateFormat(new Date(this.props.comment.time), "mmmm dS, yyyy, h:MM TT")}
+            {dateFormat(new Date(comment.time), 'mmmm dS, yyyy, h:MM TT')}
           </p>
         </div>
       </div>
