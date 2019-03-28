@@ -1,11 +1,11 @@
-from typing import Callable, List
 import uuid
+from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
 
-from core.domain.meeting import Note, Comment, Meeting
-from core.domain.user import Student, Instructor
+from core.domain.meeting import Comment, Meeting, Note
+from core.domain.user import Instructor, Student
 
 
 @attr.s
@@ -96,7 +96,7 @@ class MeetingPersistence:
                     comment.content_text,
                 )
             c.execute(
-                "INSERT INTO comments(note_id, meeting_id, author_if_instructor,"
+                "INSERT INTO comments(comment_id, meeting_id, author_if_instructor,"
                 " author_if_student, time_stamp, content_text) "
                 "VALUES (%s, %s, %s, %s, %s, %s)",
                 term,
@@ -217,9 +217,9 @@ class MeetingPersistence:
             meeting = self._res_to_meeting(res)
         return maybe(meeting)
 
-    def get_meetings_of_instructor(self, user_name: uuid.UUID) -> List[Meeting]:
+    def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM meetings WHERE instructor=%s", (str(user_name)))
+        c.execute("SELECT * FROM meetings WHERE instructor=%s", (user_name,))
         meetings = c.fetchall()
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)

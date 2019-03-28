@@ -1,11 +1,12 @@
+import time
+import uuid
 from typing import List
 
 import attr
 from option import Result
-import uuid
 
-from core.domain.meeting import Note, Meeting, Comment
-from core.domain.user import User, Student, Instructor
+from core.domain.meeting import Comment, Meeting, Note
+from core.domain.user import Instructor, Student, User
 from core.persistence.meeting_persistence import MeetingPersistence
 
 
@@ -14,7 +15,7 @@ class MeetingApi:
     meeting_persistence: MeetingPersistence
 
     def create_meeting(
-        self, instructor: Instructor, student: Student, start_time: str, end_time: str
+        self, instructor: Instructor, student: Student, start_time: int, end_time: int
     ) -> Result[Meeting, str]:
         """
         Create a new meeting in the system.
@@ -34,7 +35,7 @@ class MeetingApi:
         return self.meeting_persistence.create_meeting(meeting)
 
     def create_note(
-        self, meeting_id: uuid.UUID, time_stamp: str, content_text: str
+        self, meeting_id: uuid.UUID, content_text: str
     ) -> Result[Note, str]:
         """
         Create a new note for the meeting <meeting_id>.
@@ -42,11 +43,12 @@ class MeetingApi:
         Returns:
             The new Note created
         """
+        time_stamp = int(time.time())
         note = Note(uuid.uuid4(), meeting_id, time_stamp, content_text)
         return self.meeting_persistence.create_note(note)
 
     def create_comment(
-        self, meeting_id: uuid.UUID, author: User, time_stamp: str, content_text: str
+        self, meeting_id: uuid.UUID, author: User, content_text: str
     ) -> Result[Comment, str]:
         """
         Create a new comment for the meeting <meeting_id>.
@@ -54,6 +56,7 @@ class MeetingApi:
         Returns:
             The new Comment created
         """
+        time_stamp = int(time.time())
         comment = Comment(uuid.uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
 
