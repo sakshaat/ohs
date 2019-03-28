@@ -9,8 +9,7 @@ from core.tests.generation.fake_user import fake_instructor, fake_student
 
 def fake_meeting() -> Iterator[Meeting]:
     while True:
-        start_time = fake.date_time()
-        end_time = start_time + fake.time_delta()
+        start_time, end_time = sorted([fake.date_time(), fake.date_time()])
         assert end_time > start_time
         yield Meeting(
             meeting_id=uuid4(),
