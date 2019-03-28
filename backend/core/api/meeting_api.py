@@ -87,24 +87,6 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_meeting(meeting_id)
 
-    def get_notes_of_meeting(self, meeting_id: uuid.UUID) -> List[Note]:
-        """
-        Gets all notes of the meeting <meeting_id>.
-
-        Returns:
-            List of notes
-        """
-        return self.meeting_persistence.get_notes_of_meeting(meeting_id)
-
-    def get_comments_of_meeting(self, meeting_id: uuid.UUID) -> List[Comment]:
-        """
-        Gets all comments of the meeting <meeting_id>.
-
-        Returns:
-            List of comments
-        """
-        return self.meeting_persistence.get_comments_of_meeting(meeting_id)
-
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
         """
         Gets all meetings of the instructor <user_name>.
