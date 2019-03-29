@@ -97,5 +97,5 @@ class TestExecuteGql:
         if result.is_err:
             assert result.unwrap_err() == HttpError(400, expected_result.unwrap_err())
         else:
-            assert result == expected_result
+            assert result.unwrap()["data"] == expected_result.unwrap()
         mock_gql_controller.introspect.assert_called_once_with()

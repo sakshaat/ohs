@@ -109,6 +109,8 @@ class App(metaclass=ABCMeta):
                 )
             )
         else:
-            return self.graphql_controller.introspect().map_err(
-                lambda e: HttpError(400, e)
+            return (
+                self.graphql_controller.introspect()
+                .map_err(lambda e: HttpError(400, e))
+                .map(lambda schema: {"data": schema})
             )
