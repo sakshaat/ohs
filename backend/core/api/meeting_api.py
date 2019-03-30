@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 
 import attr
-from option import Err, Option, Result
+from option import Err, Ok, Option, Result
 
 from core.domain.meeting import Comment, Meeting, Note
 from core.domain.user import Instructor, Student, User
@@ -96,15 +96,11 @@ class MeetingApi:
         Returns:
             meeting_id on success
         """
-        meeting_result = self.meeting_persistence.get_meeting(meeting_id)
-        if not meeting_result:
-            return Err(f"Meeting with ID: '{meeting_id}' does not exist")
-        meeting = meeting_result.unwrap()
-        if not (
-            (isinstance(user, Instructor) and user == meeting.instructor)
-            or (isinstance(user, Student) and user == meeting.student)
-        ):
-            return Err("Cannot delete meeting that you are not a part of")
+        check_user = self._check_meeting_user(
+            meeting_id, user, "Cannot delete meeting that you are not a part of"
+        )
+        if not check_user:
+            return check_user
         return self.meeting_persistence.delete_meeting(meeting_id)
 
     def get_meeting(self, meeting_id: UUID) -> Option[Meeting]:
@@ -136,3 +132,17 @@ class MeetingApi:
             List of meetings
         """
         return self.meeting_persistence.get_meetings_of_student(student_number)
+
+    def _check_meeting_user(
+        self, meeting_id: UUID, user: User, error_msg: str
+    ) -> Result[None, str]:
+        meeting_result = self.meeting_persistence.get_meeting(meeting_id)
+        if not meeting_result:
+            return Err(f"Meeting with ID: '{meeting_id}' does not exist")
+        meeting = meeting_result.unwrap()
+        if not (
+            (isinstance(user, Instructor) and user == meeting.instructor)
+            or (isinstance(user, Student) and user == meeting.student)
+        ):
+            return Err(error_msg)
+        return Ok(None)

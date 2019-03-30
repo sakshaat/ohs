@@ -16,6 +16,43 @@ def meeting_api():
     return MeetingApi(MagicMock(MeetingPersistence))
 
 
+@pytest.mark.parametrize("user_type", ["instructor", "student"])
+def test_check_meeting_user(meeting_api, user_type):
+    meeting = next(fake_meeting())
+    user = meeting.instructor if user_type == "instructor" else meeting.student
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    assert meeting_api._check_meeting_user(meeting.meeting_id, user, "").is_ok
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(
+        meeting.meeting_id
+    )
+
+
+@pytest.mark.parametrize("user", [fake_student(), fake_instructor()])
+def test_check_meeting_user_not_permitted(meeting_api, user):
+    meeting = next(fake_meeting())
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    error = fake.pystr()
+    assert (
+        meeting_api._check_meeting_user(meeting.meeting_id, user, error).unwrap_err()
+        == error
+    )
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(
+        meeting.meeting_id
+    )
+
+
+@pytest.mark.parametrize("user", [fake_student(), fake_instructor()])
+def test_check_meeting_user_not_found(meeting_api, user):
+    id_ = uuid4()
+    meeting_api.meeting_persistence.get_meeting.return_value = NONE
+    error = fake.pystr()
+    assert (
+        "does not exist"
+        in meeting_api._check_meeting_user(id_, user, error).unwrap_err()
+    )
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(id_)
+
+
 @pytest.mark.parametrize("success", [True, False])
 def test_create_meeting(meeting_api, success):
     meeting = next(fake_meeting())
@@ -124,15 +161,15 @@ def test_delete_meeting(meeting_api, success, user_type):
     meeting_api.meeting_persistence.delete_meeting.return_value = (
         Ok(meeting.meeting_id) if success else error
     )
-    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    meeting_api._check_meeting_user = MagicMock(return_value=Ok(None))
     user = meeting.instructor if user_type == "instructor" else meeting.student
     result = meeting_api.delete_meeting(meeting.meeting_id, user)
     if success:
         assert result.unwrap() == meeting.meeting_id
     else:
         assert result == error
-    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(
-        meeting.meeting_id
+    meeting_api._check_meeting_user.assert_called_once_with(
+        meeting.meeting_id, user, "Cannot delete meeting that you are not a part of"
     )
     meeting_api.meeting_persistence.delete_meeting.assert_called_once_with(
         meeting.meeting_id
@@ -140,24 +177,15 @@ def test_delete_meeting(meeting_api, success, user_type):
 
 
 @pytest.mark.parametrize("user", [fake_instructor(), fake_student()])
-def test_delete_meeting_not_permitted(meeting_api, user):
+def test_delete_meeting_fail_user_check(meeting_api, user):
     meeting = next(fake_meeting())
-    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
-    assert (
-        "not a part of"
-        in meeting_api.delete_meeting(meeting.meeting_id, user).unwrap_err()
-    )
-    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(
-        meeting.meeting_id
-    )
+    error = Err(fake.pystr())
+    meeting_api._check_meeting_user = MagicMock(return_value=error)
+    assert meeting_api.delete_meeting(meeting.meeting_id, user) == error
     meeting_api.meeting_persistence.delete_meeting.assert_not_called()
-
-
-def test_delete_meeting_not_found(meeting_api):
-    id_ = uuid4()
-    meeting_api.meeting_persistence.get_meeting.return_value = NONE
-    assert "does not exist" in meeting_api.delete_meeting(id_, None).unwrap_err()
-    assert meeting_api.meeting_persistence.get_meeting.called_once_with(id_)
+    meeting_api._check_meeting_user.assert_called_once_with(
+        meeting.meeting_id, user, "Cannot delete meeting that you are not a part of"
+    )
 
 
 @pytest.mark.parametrize("expected", [Some(next(fake_meeting())), NONE])
