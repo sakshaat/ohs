@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from typing import NamedTuple
+from uuid import UUID
 
 import attr
 
@@ -11,6 +12,14 @@ class Semester(Enum):
     FALL = auto()
     SUMMER = auto()
     FULL_YEAR = auto()
+
+
+class Weekday(Enum):
+    MONDAY = auto()
+    TUESDAY = auto()
+    WEDNESDAY = auto()
+    THURSDAY = auto()
+    FRIDAY = auto()
 
 
 @attr.s(slots=True, auto_attribs=True, frozen=True)
@@ -65,3 +74,22 @@ class SectionIdentity(NamedTuple):
     @classmethod
     def from_section(cls, section: Section):
         return cls(section.course, section.year, section.semester, section.section_code)
+
+
+@attr.s(auto_attribs=True, slots=True, frozen=True)
+class OfficeHour:
+    """
+    Represents a single office hour block with 6 slots for meetings to be booked.
+
+    Args:
+        section: Section for which this Office hour is held
+        starting_hour: 0-23, starting hour of block
+        weekday: Weekday
+        meetings: [Meeting]
+    """
+
+    office_hour_id: UUID
+    section: Section
+    starting_hour: int
+    weekday: Weekday
+    meetings: [Meeting] = [None, None, None, None, None, None]
