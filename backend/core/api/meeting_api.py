@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 
 import attr
-from option import Option, Result
+from option import Err, Option, Result
 
 from core.domain.meeting import Comment, Meeting, Note
 from core.domain.user import Instructor, Student, User
@@ -89,13 +89,22 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_comment(comment_id)
 
-    def delete_meeting(self, meeting_id: UUID) -> Result[UUID, str]:
+    def delete_meeting(self, meeting_id: UUID, user: User) -> Result[UUID, str]:
         """
         Deletes meeting of <meeting_id>.
 
         Returns:
             meeting_id on success
         """
+        meeting_result = self.meeting_persistence.get_meeting(meeting_id)
+        if not meeting_result:
+            return Err(f"Meeting with ID: '{meeting_id}' does not exist")
+        meeting = meeting_result.unwrap()
+        if not (
+            (isinstance(user, Instructor) and user == meeting.instructor)
+            or (isinstance(user, Student) and user == meeting.student)
+        ):
+            return Err("Cannot delete meeting that you are not a part of")
         return self.meeting_persistence.delete_meeting(meeting_id)
 
     def get_meeting(self, meeting_id: UUID) -> Option[Meeting]:

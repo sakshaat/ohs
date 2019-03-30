@@ -8,6 +8,7 @@ from core.api.meeting_api import MeetingApi
 from core.persistence.meeting_persistence import MeetingPersistence
 from core.tests.generation import fake
 from core.tests.generation.fake_meeting import fake_comment, fake_meeting, fake_note
+from core.tests.generation.fake_user import fake_instructor, fake_student
 
 
 @pytest.fixture()
@@ -23,13 +24,13 @@ def test_create_meeting(meeting_api, success):
     def assert_called_correctly(_meeting):
         assert meeting.meeting_id != _meeting.meeting_id
         for attr in (
-            "office_hour_id",
-            "index",
-            "instructor",
-            "student",
-            "notes",
-            "comments",
-            "start_time",
+                "office_hour_id",
+                "index",
+                "instructor",
+                "student",
+                "notes",
+                "comments",
+                "start_time",
         ):
             assert getattr(meeting, attr) == getattr(_meeting, attr)
         return Ok(meeting) if success else error
@@ -96,7 +97,7 @@ def test_create_comment(meeting_api, success):
 
 
 @pytest.mark.parametrize("success", [True, False])
-@pytest.mark.parametrize("delete_type", ["note", "comment", "meeting"])
+@pytest.mark.parametrize("delete_type", ["note", "comment"])
 def test_delete(meeting_api, delete_type, success):
     id_ = uuid4()
     error = Err(fake.pystr())
@@ -115,12 +116,48 @@ def test_delete(meeting_api, delete_type, success):
     delete_persistence_method.assert_called_once_with(id_)
 
 
+@pytest.mark.parametrize("success", [True, False])
+@pytest.mark.parametrize("user_type", ["instructor", "student"])
+def test_delete_meeting(meeting_api, success, user_type):
+    meeting = next(fake_meeting())
+    error = Err(fake.pystr())
+    meeting_api.meeting_persistence.delete_meeting.return_value = (
+        Ok(meeting.meeting_id) if success else error
+    )
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    user = meeting.instructor if user_type == "instructor" else meeting.student
+    result = meeting_api.delete_meeting(meeting.meeting_id, user)
+    if success:
+        assert result.unwrap() == meeting.meeting_id
+    else:
+        assert result == error
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(meeting.meeting_id)
+    meeting_api.meeting_persistence.delete_meeting.assert_called_once_with(meeting.meeting_id)
+
+
+@pytest.mark.parametrize('user', [fake_instructor(), fake_student()])
+def test_delete_meeting_not_permitted(meeting_api, user):
+    meeting = next(fake_meeting())
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    assert 'not a part of' in meeting_api.delete_meeting(meeting.meeting_id, user).unwrap_err()
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(meeting.meeting_id)
+    meeting_api.meeting_persistence.delete_meeting.assert_not_called()
+
+
+def test_delete_meeting_not_found(meeting_api):
+    id_ = uuid4()
+    meeting_api.meeting_persistence.get_meeting.return_value = NONE
+    assert 'does not exist' in meeting_api.delete_meeting(id_, None).unwrap_err()
+    assert meeting_api.meeting_persistence.get_meeting.called_once_with(id_)
+
+
 @pytest.mark.parametrize("expected", [Some(next(fake_meeting())), NONE])
 def test_get_meeting(meeting_api, expected):
     meeting_id = expected.unwrap().meeting_id if expected else uuid4()
     meeting_api.meeting_persistence.get_meeting.return_value = expected
     assert meeting_api.get_meeting(meeting_id) == expected
     meeting_api.meeting_persistence.get_meeting.assert_called_once_with(meeting_id)
+    meeting_api.meeting_persistence.delete_meeting.assert_not_called()
 
 
 def test_get_meetings_of_instructor(meeting_api):
