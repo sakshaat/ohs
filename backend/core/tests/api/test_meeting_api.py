@@ -91,6 +91,7 @@ def test_create_meeting(meeting_api, success):
 def test_create_note(meeting_api, success):
     note = next(fake_note())
     error = Err(fake.pystr())
+    meeting = next(fake_meeting())
 
     def assert_called_correctly(_note):
         assert abs(note.time_stamp - _note.time_stamp) < 10
@@ -100,13 +101,17 @@ def test_create_note(meeting_api, success):
         return Ok(note) if success else error
 
     meeting_api.meeting_persistence.create_note.side_effect = assert_called_correctly
+    meeting_api._check_meeting_user = MagicMock(return_value=Ok(None))
 
-    result = meeting_api.create_note(note.meeting_id, note.content_text)
+    result = meeting_api.create_note(
+        note.meeting_id, meeting.instructor, note.content_text
+    )
     if success:
         assert result.unwrap() == note
     else:
         assert result == error
     meeting_api.meeting_persistence.create_note.assert_called_once()
+    meeting_api._check_meeting_user.assert_called_once()
 
 
 @pytest.mark.parametrize("success", [True, False])

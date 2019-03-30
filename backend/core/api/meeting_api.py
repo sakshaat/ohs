@@ -47,13 +47,20 @@ class MeetingApi:
         )
         return self.meeting_persistence.create_meeting(meeting)
 
-    def create_note(self, meeting_id: UUID, content_text: str) -> Result[Note, str]:
+    def create_note(
+        self, meeting_id: UUID, author: Instructor, content_text: str
+    ) -> Result[Note, str]:
         """
         Create a new note for the meeting <meeting_id>.
 
         Returns:
             The new Note created
         """
+        check_user = self._check_meeting_user(
+            meeting_id, author, "Cannot make a not on meetings that you don't belong to"
+        )
+        if not check_user:
+            return check_user
         time_stamp = int(time.time())
         note = Note(uuid4(), meeting_id, time_stamp, content_text)
         return self.meeting_persistence.create_note(note)
@@ -68,9 +75,7 @@ class MeetingApi:
             The new Comment created
         """
         check_user = self._check_meeting_user(
-            meeting_id,
-            author,
-            "Cannot comment on meetings which you don't belong " "to",
+            meeting_id, author, "Cannot comment on meetings which you don't belong to"
         )
         if not check_user:
             return check_user

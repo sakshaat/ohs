@@ -7,7 +7,7 @@ from option import Err, Ok
 
 from core.domain.user import Instructor
 from core.tests.generation import fake
-from core.tests.generation.fake_meeting import fake_comment
+from core.tests.generation.fake_meeting import fake_comment, fake_note
 from core.tests.generation.fake_user import fake_instructor, fake_student
 
 
@@ -85,4 +85,36 @@ def test_create_comment(schema, author, success):
         assert error.unwrap_err() in str(result.errors)
     context.api.meeting_api.create_comment.assert_called_once_with(
         comment.meeting_id, context.user, comment.content_text
+    )
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_create_note(schema, success):
+    note = next(fake_note())
+    error = Err(fake.pystr())
+    context = MagicMock()
+    context.api.meeting_api.create_note.return_value = Ok(note) if success else error
+    query = """
+    mutation createNote($meetingId: UUID!, $contentText: String!) {
+        createNote(meetingId: $meetingId, contentText: $contentText) {
+            noteId
+            meetingId
+            timeStamp
+            contentText
+        }
+    }
+    """
+    variables = {"meetingId": str(note.meeting_id), "contentText": note.content_text}
+    result = schema.execute(query, context=context, variables=variables)
+    if success:
+        assert not result.errors
+        for attr, val in result.data["createNote"].items():
+            expected = getattr(note, to_snake_case(attr))
+            if isinstance(expected, UUID):
+                expected = str(expected)
+            assert expected == val
+    else:
+        assert error.unwrap_err() in str(result.errors)
+    context.api.meeting_api.create_note.assert_called_once_with(
+        note.meeting_id, context.user, note.content_text
     )
