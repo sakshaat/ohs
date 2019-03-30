@@ -223,7 +223,8 @@ class MeetingPersistence:
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
         c = self.connection.cursor()
         c.execute(
-            "SELECT * FROM meetings WHERE instructor=%s AND start_time>=%s ORDER BY start_time ASC",
+            "SELECT * FROM meetings WHERE instructor=%s AND start_time>=%s"
+            " ORDER BY start_time ASC",
             (user_name, int(time.time())),
         )
         meetings = c.fetchall()
