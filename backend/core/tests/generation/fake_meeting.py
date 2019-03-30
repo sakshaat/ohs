@@ -9,16 +9,16 @@ from core.tests.generation.fake_user import fake_instructor, fake_student
 
 def fake_meeting() -> Iterator[Meeting]:
     while True:
-        start_time, end_time = sorted([fake.date_time(), fake.date_time()])
-        assert end_time > start_time
+        start_time = fake.date_time()
         yield Meeting(
             meeting_id=uuid4(),
+            office_hour_id=uuid4(),
+            index=abs(fake.pyint()),
             instructor=fake_instructor(),
             student=fake_student(),
             notes=[],
             comments=[],
             start_time=int(start_time.timestamp()),
-            end_time=int(end_time.timestamp()),
         )
 
 

@@ -23,19 +23,24 @@ def test_create_meeting(meeting_api, success):
     def assert_called_correctly(_meeting):
         assert meeting.meeting_id != _meeting.meeting_id
         for attr in (
+            "office_hour_id",
+            "index",
             "instructor",
             "student",
             "notes",
             "comments",
             "start_time",
-            "end_time",
         ):
             assert getattr(meeting, attr) == getattr(_meeting, attr)
         return Ok(meeting) if success else error
 
     meeting_api.meeting_persistence.create_meeting.side_effect = assert_called_correctly
     result = meeting_api.create_meeting(
-        meeting.instructor, meeting.student, meeting.start_time, meeting.end_time
+        meeting.instructor,
+        meeting.student,
+        meeting.office_hour_id,
+        meeting.index,
+        meeting.start_time,
     )
     if success:
         assert result.unwrap() == meeting

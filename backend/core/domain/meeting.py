@@ -50,18 +50,20 @@ class Meeting:
 
     Args:
         meeting_id: Unique UUID to identify meetings
+        office_hour_id: ID of office hour the meeting belongs to
+        index: Index of the meeting in the office hour
         instructor: Instructor
         student: Student
         notes: List of Notes of meeting
         comments: List of comments of meeting
         start_time: Start date/time of meeting
-        end_time: Duration of meeting
     """
 
     meeting_id: UUID
+    office_hour_id: UUID
+    index: int
     instructor: Instructor
     student: Student
     notes: [Note]
     comments: [Comment]
     start_time: int
-    end_time: int
