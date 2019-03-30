@@ -8,9 +8,9 @@ from flask_cors import CORS
 from option import Err, Result
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
-
 from core.api.course_api import CourseApi
 from core.api.instructor_api import InstructorApi
+from core.api.meeting_api import MeetingApi
 from core.api.ohs_api import OhsApi
 from core.app import App
 from core.authentication.password_auth import PasswordAuthenticator
@@ -21,6 +21,7 @@ from core.gql.schema_registry import SchemaRestriction, build_schema
 from core.persistence.connection_manager import ConnectionManager
 from core.persistence.course_persistence import CoursePersistence
 from core.persistence.instructor_persistence import InstructorPersistence
+from core.persistence.meeting_persistence import MeetingPersistence
 
 
 class InstructorService(App):
@@ -44,20 +45,26 @@ class InstructorService(App):
         return self.api.instructor_api.verify_instructor_by_token(token)
 
 
+def get_connection():
+    return flask.g.connection
+
+
 flask_app = Flask("Instructor Service")
 CORS(flask_app)
 gql_controller = GraphqlController(
     build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
 )
-course_persistence = CoursePersistence(lambda: flask.g.connection)
-instructor_persistence = InstructorPersistence(lambda: flask.g.connection)
+course_persistence = CoursePersistence(get_connection)
+instructor_persistence = InstructorPersistence(get_connection)
+meeting_persistence = MeetingPersistence(get_connection)
 
 token_auth = JwtAuthenticator(os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"])
 password_auth = PasswordAuthenticator(instructor_persistence)
 
 ohs_api = OhsApi(
-    CourseApi(course_persistence),
-    InstructorApi(instructor_persistence, password_auth, token_auth),
+    course_api=CourseApi(course_persistence),
+    instructor_api=InstructorApi(instructor_persistence, password_auth, token_auth),
+    meeting_api=MeetingApi(meeting_persistence),
 )
 
 connection_manager = ConnectionManager(

@@ -32,12 +32,13 @@ def fake_note() -> Iterator[Note]:
         )
 
 
-def fake_comment() -> Iterator[Comment]:
+def fake_comment(author=None) -> Iterator[Comment]:
     while True:
+        _author = author or fake_instructor()
         yield Comment(
             comment_id=uuid4(),
             meeting_id=uuid4(),
-            author=fake_instructor(),
+            author=_author,
             time_stamp=int(time.time()),
             content_text=fake.pystr(),
         )

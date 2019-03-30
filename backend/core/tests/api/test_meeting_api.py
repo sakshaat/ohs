@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
-from option import Err, Ok
+from option import Err, NONE, Ok, Some
 
 from core.api.meeting_api import MeetingApi
 from core.persistence.meeting_persistence import MeetingPersistence
@@ -115,6 +115,14 @@ def test_delete(meeting_api, delete_type, success):
     delete_persistence_method.assert_called_once_with(id_)
 
 
+@pytest.mark.parametrize("expected", [Some(next(fake_meeting())), NONE])
+def test_get_meeting(meeting_api, expected):
+    meeting_id = expected.unwrap().meeting_id if expected else uuid4()
+    meeting_api.meeting_persistence.get_meeting.return_value = expected
+    assert meeting_api.get_meeting(meeting_id) == expected
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(meeting_id)
+
+
 def test_get_meetings_of_instructor(meeting_api):
     user_name = fake.pystr()
     expected = [meeting for meeting, _ in zip(fake_meeting(), range(10))]
@@ -122,4 +130,14 @@ def test_get_meetings_of_instructor(meeting_api):
     assert meeting_api.get_meetings_of_instructor(user_name) == expected
     meeting_api.meeting_persistence.get_meetings_of_instructor.assert_called_once_with(
         user_name
+    )
+
+
+def test_get_meetings_of_student(meeting_api):
+    student_number = fake.pystr()
+    expected = [meeting for meeting, _ in zip(fake_meeting(), range(10))]
+    meeting_api.meeting_persistence.get_meetings_of_student.return_value = expected
+    assert meeting_api.get_meetings_of_student(student_number) == expected
+    meeting_api.meeting_persistence.get_meetings_of_student.assert_called_once_with(
+        student_number
     )

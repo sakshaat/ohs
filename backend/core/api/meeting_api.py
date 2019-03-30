@@ -3,7 +3,7 @@ from typing import List
 from uuid import UUID, uuid4
 
 import attr
-from option import Result
+from option import Option, Result
 
 from core.domain.meeting import Comment, Meeting, Note
 from core.domain.user import Instructor, Student, User
@@ -98,11 +98,32 @@ class MeetingApi:
         """
         return self.meeting_persistence.delete_meeting(meeting_id)
 
+    def get_meeting(self, meeting_id: UUID) -> Option[Meeting]:
+        """
+        Get meeting by ID
+
+        Args:
+            meeting_id: The meeting Id
+
+        Returns:
+            Meeting if found
+        """
+        return self.meeting_persistence.get_meeting(meeting_id)
+
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
         """
-        Gets all meetings of the instructor <user_name>.
+        Gets all upcoming meetings of the instructor <user_name>.
 
         Returns:
             List of meetings
         """
         return self.meeting_persistence.get_meetings_of_instructor(user_name)
+
+    def get_meetings_of_student(self, student_number: str) -> List[Meeting]:
+        """
+        Gets all upcoming meetings of the student <student_number>.
+
+        Returns:
+            List of meetings
+        """
+        return self.meeting_persistence.get_meetings_of_student(student_number)

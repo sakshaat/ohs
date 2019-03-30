@@ -218,12 +218,17 @@ class MeetingPersistence:
         return maybe(meeting)
 
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
+        # TODO: Filter out meetings ealier than the current timestamp (int(time.time()))
+        # TODO: Sort by time
         c = self.connection.cursor()
         c.execute("SELECT * FROM meetings WHERE instructor=%s", (user_name,))
         meetings = c.fetchall()
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
         return list(meetings)
+
+    def get_meetings_of_student(self, student_number: str) -> List[Meeting]:
+        raise NotImplementedError
 
     def delete_meeting(self, meeting_id: uuid.UUID) -> Result[uuid.UUID, str]:
         if not self.get_meeting(meeting_id):
