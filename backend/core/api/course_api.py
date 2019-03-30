@@ -63,17 +63,28 @@ class CourseApi:
         """
         return self.course_persistence.query_courses(filters)
 
-    def query_sections(self, filters=None) -> List[Section]:
+    def query_sections(
+        self, taught_by: str = None, enrolled_in: str = None, course_code: str = None
+    ) -> List[Section]:
         """
         Query for sections is the system
 
         Args:
-            filters: Filters to apply to the query
+            taught_by: Filter by instroctor username of sections
+            enrolled_in: Filter by student's student number enrolled in sections
+            course_code: Filter by course code of sections
 
         Returns:
             List of sections returned by the query
         """
-        return self.course_persistence.query_sections(filters)
+
+        return self.course_persistence.query_sections(
+            {
+                "course_code": course_code,
+                "taught_by": taught_by,
+                "enrolled_in": enrolled_in,
+            }
+        )
 
     def get_course(self, course_code: str) -> Option[Course]:
         """

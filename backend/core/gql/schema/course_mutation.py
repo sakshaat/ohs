@@ -2,7 +2,7 @@ import graphene
 
 from core.domain.course import Semester as DomainSemester
 from core.gql.context import course_api, instructor_api
-from core.gql.course_schema import Course, CourseInput, Section, SectionInput
+from core.gql.schema.course_schema import Course, CourseInput, Section, SectionInput
 from core.gql.schema_registry import SchemaRestriction, register_mutation
 
 

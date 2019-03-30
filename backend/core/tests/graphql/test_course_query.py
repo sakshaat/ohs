@@ -1,12 +1,13 @@
 from unittest.mock import MagicMock
 
 import pytest
+from graphene.utils.str_converters import to_camel_case
 from option import NONE, Some
 
-from core.tests.generation import fake, list_fakes
-from core.tests.generation.fake_course import fake_course, fake_section
 from core.api.course_api import CourseApi
 from core.gql.context import Context
+from core.tests.generation import fake, list_fakes
+from core.tests.generation.fake_course import fake_course, fake_section
 
 
 class CourseQueryBehavious:
@@ -162,8 +163,8 @@ query getSection($course: CourseInput!, $year: Int!, $semester: Semester!, $sect
     @property
     def listing_query(self):
         return """
-query querySections($filters: String) {
-    sections(filters: $filters) {
+query querySections($taughtBy: String, $enrolledIn: String, $courseCode: String) {
+    sections(taughtBy: $taughtBy, enrolledIn: $enrolledIn, courseCode: $courseCode) {
         course {
             courseCode
         }
@@ -181,7 +182,15 @@ query querySections($filters: String) {
 
     @property
     def filters_list(self):
-        return [None, fake.pystr()]  # TODO: Use actual filters
+        return [
+            {},
+            {"courseCode": fake.pystr()},
+            {
+                "taughtBy": fake.pystr(),
+                "courseCode": fake.pystr(),
+                "enrolledIn": fake.pystr(),
+            },
+        ]
 
     def mock_get_method(self):
         return self.mock_course_api.get_section
@@ -224,3 +233,25 @@ query querySections($filters: String) {
 
     def to_graphql_list(self, domain_list):
         return {"sections": [self._to_gql(section) for section in domain_list]}
+
+    @pytest.mark.parametrize("num_objects", [0, 10])
+    def test_listing(self, num_objects, schema):
+        for variables in self.filters_list:
+            super().before_each()
+            fake_domains = list_fakes(self.fake_domain, num_objects)
+
+            def assert_called_correctly(**kwargs):
+                for key, val in kwargs.items():
+                    if val:
+                        assert variables[to_camel_case(key)] == val
+                    else:
+                        assert variables.get(to_camel_case(key)) is None
+                return fake_domains
+
+            self.mock_query_method().side_effect = assert_called_correctly
+            result = schema.execute(
+                self.listing_query, variables=variables, context=self.mock_context
+            )
+            assert not result.errors
+            assert result.data == self.to_graphql_list(fake_domains)
+            self.mock_query_method().assert_called_once()

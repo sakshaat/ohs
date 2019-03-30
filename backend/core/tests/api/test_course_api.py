@@ -3,10 +3,10 @@ from unittest.mock import MagicMock
 import pytest
 from option import Err, NONE, Ok, Some
 
-from core.tests.generation import fake, list_fakes
-from core.tests.generation.fake_course import fake_course, fake_section
 from core.api.course_api import CourseApi
 from core.persistence.course_persistence import CoursePersistence
+from core.tests.generation import fake, list_fakes
+from core.tests.generation.fake_course import fake_course, fake_section
 
 
 @pytest.fixture()
@@ -76,12 +76,33 @@ def test_query_courses(mock_course_persistence, filters, expected):
     mock_course_persistence.query_courses.assert_called_once_with(filters)
 
 
-@pytest.mark.parametrize("filters,expected", [(None, list_fakes(fake_section, 5))])
+@pytest.mark.parametrize("expected", [list_fakes(fake_section, 5), []])
+@pytest.mark.parametrize(
+    "filters",
+    [
+        {},
+        {"course_code": fake.pystr()},
+        {
+            "course_code": fake.pystr(),
+            "taught_by": fake.pystr(),
+            "enrolled_in": fake.pystr(),
+        },
+    ],
+)
 def test_query_sections(mock_course_persistence, filters, expected):
     course_api = CourseApi(mock_course_persistence)
-    mock_course_persistence.query_sections = MagicMock(return_value=expected)
-    assert course_api.query_sections(filters) == expected
-    mock_course_persistence.query_sections.assert_called_once_with(filters)
+
+    def assert_called_correctly(_filters):
+        for key, val in _filters.items():
+            if val is None:
+                assert key not in filters
+            else:
+                assert val == filters[key]
+        return expected
+
+    mock_course_persistence.query_sections.side_effect = assert_called_correctly
+    assert course_api.query_sections(**filters) == expected
+    mock_course_persistence.query_sections.assert_called_once()
 
 
 @pytest.mark.parametrize("expected", [NONE, Some(fake_course())])

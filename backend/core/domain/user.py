@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 import attr
 
@@ -12,6 +12,10 @@ class User(ABC):
     first_name: str
     last_name: str
 
+    @abstractmethod
+    def as_dict(self):
+        pass
+
 
 @attr.s(slots=True, frozen=True, auto_attribs=True)
 class Instructor(User):
@@ -21,6 +25,13 @@ class Instructor(User):
 
     user_name: str
 
+    def as_dict(self):
+        return {
+            "userName": self.user_name,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+        }
+
 
 @attr.s(slots=True, frozen=True, auto_attribs=True)
 class Student(User):
@@ -29,3 +40,10 @@ class Student(User):
     """
 
     student_number: str
+
+    def as_dict(self):
+        return {
+            "studentNumber": self.student_number,
+            "firstName": self.first_name,
+            "lastName": self.last_name,
+        }

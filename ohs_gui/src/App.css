@@ -1,5 +1,15 @@
 .App {
   text-align: center;
+
+  display: flex;
+  align-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+}
+
+.logout-btn {
+  cursor: pointer;
 }
 
 .App-logo {
@@ -8,12 +18,15 @@
   pointer-events: none;
 }
 
+.app-container {
+  height: 100%;
+  width: 100%;
+}
+
 nav {
   background-color: gray; 
-  position: absolute;
   width: 100%;
   height: 30px;
-  top: 0;
 }
 
 nav .links {
@@ -32,19 +45,6 @@ nav .links a {
   margin: 10px;
   color: black;
 }
-
-/*
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-*/
 
 .App-body {
   margin-top: 30px;

@@ -6,9 +6,9 @@ class LectureSectionCard extends Component {
     const section = this.props.section;
     return (
       <Link to={this.props.verbose ?
-        { pathname: "/lectureSection", search: `?course=${section.course}&year=${section.year}&semester=${section.semester}&section_code=${section.section_code}` }
+        { pathname: "/section", search: `?course=${section.course.courseCode}&year=${section.year}&semester=${section.semester}&section_code=${section.sectionCode}` }
         :
-        { pathname: "/lectureSection", search: `?course=${section.course}` }}>
+        { pathname: "/section", search: `?course=${section.course.courseCode}` }}>
         <div className={this.props.verbose ? "card-element lecture-section-verbose" : "card-element lecture-section"}>
           {this.props.verbose ?
             (
@@ -17,7 +17,7 @@ class LectureSectionCard extends Component {
                 <br />
                 semester: {section.semester}
                 <br />
-                students: {section.num_students}
+                students: {section.numStudents}
               </div>
             )
             :
