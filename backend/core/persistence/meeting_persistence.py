@@ -2,6 +2,7 @@ import uuid
 from typing import Callable, List
 
 import attr
+import time
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.meeting import Comment, Meeting, Note
@@ -220,10 +221,11 @@ class MeetingPersistence:
         return maybe(meeting)
 
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
-        # TODO: Filter out meetings ealier than the current timestamp (int(time.time()))
-        # TODO: Sort by time
         c = self.connection.cursor()
-        c.execute("SELECT * FROM meetings WHERE instructor=%s", (user_name,))
+        c.execute(
+            "SELECT * FROM meetings WHERE instructor=%s AND start_time>=%s ORDER BY start_time ASC",
+            (user_name, int(time.time())),
+        )
         meetings = c.fetchall()
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
@@ -231,7 +233,10 @@ class MeetingPersistence:
 
     def get_meetings_of_student(self, student_number: str) -> List[Meeting]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM meetings WHERE student=%s", (student_number,))
+        c.execute(
+            "SELECT * FROM meetings WHERE student=%s AND start_time>=%s ORDER BY start_time ASC",
+            (student_number, int(time.time())),
+        )
         meetings = c.fetchall()
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
