@@ -38,6 +38,7 @@ class TestExecuteGql:
         query = "foo"
 
         request = MagicMock(Request)
+        request.headers = {"Authorization": "Bearer TOKEN"}
         request.method = "POST"
         request.json = {"query": query}
 
@@ -52,7 +53,7 @@ class TestExecuteGql:
         else:
             assert result.unwrap_err() == HttpError(400, expected_data)
         mock_gql_controller.execute.assert_called_once_with(
-            gql_request, app.create_secure_context(...).unwrap()
+            gql_request, app.create_secure_context(request).unwrap()
         )
 
     def test_post_parse_fail(self):

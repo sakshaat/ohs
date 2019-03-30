@@ -18,7 +18,6 @@ from core.authentication.token_auth import JwtAuthenticator
 from core.domain.user import Instructor
 from core.gql.graphql_controller import GraphqlController
 from core.gql.schema_registry import SchemaRestriction, build_schema
-from core.http import parse_auth_token
 from core.persistence.connection_manager import ConnectionManager
 from core.persistence.course_persistence import CoursePersistence
 from core.persistence.instructor_persistence import InstructorPersistence
@@ -41,11 +40,8 @@ class InstructorService(App):
     def get_token(self, user_identity, password):
         return self.api.instructor_api.get_token(user_identity, password)
 
-    def authenticate_user_by_token(
-        self, request: flask.Request
-    ) -> Result[Instructor, str]:
-        token = parse_auth_token(request)
-        return token.flatmap(self.api.instructor_api.verify_instructor_by_token)
+    def authenticate_user_by_token(self, token: str) -> Result[Instructor, str]:
+        return self.api.instructor_api.verify_instructor_by_token(token)
 
 
 flask_app = Flask("Instructor Service")
