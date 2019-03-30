@@ -67,6 +67,13 @@ class MeetingApi:
         Returns:
             The new Comment created
         """
+        check_user = self._check_meeting_user(
+            meeting_id,
+            author,
+            "Cannot comment on meetings which you don't belong " "to",
+        )
+        if not check_user:
+            return check_user
         time_stamp = int(time.time())
         comment = Comment(uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
@@ -140,9 +147,6 @@ class MeetingApi:
         if not meeting_result:
             return Err(f"Meeting with ID: '{meeting_id}' does not exist")
         meeting = meeting_result.unwrap()
-        if not (
-            (isinstance(user, Instructor) and user == meeting.instructor)
-            or (isinstance(user, Student) and user == meeting.student)
-        ):
+        if user not in (meeting.instructor, meeting.student):
             return Err(error_msg)
         return Ok(None)

@@ -122,6 +122,7 @@ def test_create_comment(meeting_api, success):
         return Ok(comment) if success else error
 
     meeting_api.meeting_persistence.create_comment.side_effect = assert_called_correctly
+    meeting_api._check_meeting_user = MagicMock(return_value=Ok(None))
     result = meeting_api.create_comment(
         comment.meeting_id, comment.author, comment.content_text
     )
@@ -131,6 +132,7 @@ def test_create_comment(meeting_api, success):
         assert result == error
 
     meeting_api.meeting_persistence.create_comment.assert_called_once()
+    meeting_api._check_meeting_user.assert_called_once()
 
 
 @pytest.mark.parametrize("success", [True, False])

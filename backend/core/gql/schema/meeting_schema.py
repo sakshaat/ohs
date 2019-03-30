@@ -1,7 +1,7 @@
 import graphene
 
 from core.domain.meeting import Instructor as DomainInstructor, Meeting as DomainMeeting
-from core.gql.schema.user_schema import Instructor, Student, UserTypes
+from core.gql.schema.user_schema import Instructor, Student, User
 
 
 class Note(graphene.ObjectType):
@@ -23,24 +23,24 @@ class Note(graphene.ObjectType):
 class Comment(graphene.ObjectType):
     comment_id = graphene.UUID(required=True)
     meeting_id = graphene.UUID(required=True)
-    author = graphene.Field(UserTypes, required=True)
+    author = graphene.Field(User, required=True)
     time_stamp = graphene.Int(required=True)
     content_text = graphene.String(required=True)
 
     @classmethod
-    def from_domain(cls, domain_note):
-        domain_author = domain_note.author
+    def from_domain(cls, domain_comment):
+        domain_author = domain_comment.author
         author = (
             Instructor.from_domain(domain_author)
             if isinstance(domain_author, DomainInstructor)
             else Student.from_domain(domain_author)
         )
         return cls(
-            domain_note.comment_id,
-            domain_note.meeting_id,
+            domain_comment.comment_id,
+            domain_comment.meeting_id,
             author,
-            domain_note.time_stamp,
-            domain_note.content_text,
+            domain_comment.time_stamp,
+            domain_comment.content_text,
         )
 
 
