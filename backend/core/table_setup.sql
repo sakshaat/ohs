@@ -40,11 +40,12 @@ CREATE TABLE sections
 
 CREATE TABLE meetings
 (
-  meeting_id VARCHAR(50) PRIMARY KEY,
-  instructor VARCHAR(50) NOT NULL,
-  student    VARCHAR(50) NOT NULL,
-  start_time BIGINT      NOT NULL,
-  end_time   BIGINT      NOT NULL,
+  meeting_id      VARCHAR(50) PRIMARY KEY,
+  office_hour_id  VARCHAR(50) NOT NULL,
+  index           integer     NOT NULL,
+  instructor      VARCHAR(50) NOT NULL,
+  student         VARCHAR(50) NOT NULL,
+  start_time      BIGINT      NOT NULL,
   CONSTRAINT instructor_fkey FOREIGN KEY (instructor)
     REFERENCES instructors (user_name) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,

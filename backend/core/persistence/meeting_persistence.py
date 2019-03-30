@@ -2,6 +2,7 @@ import uuid
 from typing import Callable, List
 
 import attr
+import time
 from option import Err, Ok, Option, Result, maybe
 
 from core.domain.meeting import Comment, Meeting, Note
@@ -165,15 +166,16 @@ class MeetingPersistence:
             c = self.connection.cursor()
             term = (
                 str(meeting.meeting_id),
+                meeting.office_hour_id,
+                meeting.index,
                 meeting.instructor.user_name,
                 meeting.student.student_number,
                 meeting.start_time,
-                meeting.end_time,
             )
             c.execute(
-                "INSERT INTO meetings(meeting_id, instructor, student,"
-                " start_time, end_time) "
-                "VALUES (%s, %s, %s, %s, %s)",
+                "INSERT INTO meetings(meeting_id, office_hour_id, index, instructor, student,"
+                " start_time) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
                 term,
             )
             self.connection.commit()
@@ -200,12 +202,13 @@ class MeetingPersistence:
 
         return Meeting(
             uuid.UUID(res[0]),
-            get_inst(res[1]),
-            get_stud(res[2]),
-            self.get_notes_of_meeting(res[0]),
-            self.get_comments_of_meeting(res[0]),
-            res[3],
-            res[4],
+            uuid.UUID(res[1]),
+            int(res[2]),
+            get_inst(res[3]),
+            get_stud(res[4]),
+            self.get_notes_of_meeting(uuid.UUID(res[0])),
+            self.get_comments_of_meeting(uuid.UUID(res[0])),
+            res[5],
         )
 
     def get_meeting(self, meeting_id: uuid.UUID) -> Option[Meeting]:
@@ -218,17 +221,27 @@ class MeetingPersistence:
         return maybe(meeting)
 
     def get_meetings_of_instructor(self, user_name: str) -> List[Meeting]:
-        # TODO: Filter out meetings ealier than the current timestamp (int(time.time()))
-        # TODO: Sort by time
         c = self.connection.cursor()
-        c.execute("SELECT * FROM meetings WHERE instructor=%s", (user_name,))
+        c.execute(
+            "SELECT * FROM meetings WHERE instructor=%s AND start_time>=%s"
+            " ORDER BY start_time ASC",
+            (user_name, int(time.time())),
+        )
         meetings = c.fetchall()
         if len(meetings) > 0:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
         return list(meetings)
 
     def get_meetings_of_student(self, student_number: str) -> List[Meeting]:
-        raise NotImplementedError
+        c = self.connection.cursor()
+        c.execute(
+            "SELECT * FROM meetings WHERE student=%s AND start_time>=%s ORDER BY start_time ASC",
+            (student_number, int(time.time())),
+        )
+        meetings = c.fetchall()
+        if len(meetings) > 0:
+            meetings = map(lambda x: self._res_to_meeting(x), meetings)
+        return list(meetings)
 
     def delete_meeting(self, meeting_id: uuid.UUID) -> Result[uuid.UUID, str]:
         if not self.get_meeting(meeting_id):
