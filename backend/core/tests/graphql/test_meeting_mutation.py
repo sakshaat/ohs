@@ -7,7 +7,7 @@ from option import Err, Ok
 
 from core.domain.user import Instructor
 from core.tests.generation import fake
-from core.tests.generation.fake_meeting import fake_comment, fake_note
+from core.tests.generation.fake_meeting import fake_comment, fake_meeting, fake_note
 from core.tests.generation.fake_user import fake_instructor, fake_student
 
 
@@ -117,4 +117,97 @@ def test_create_note(schema, success):
         assert error.unwrap_err() in str(result.errors)
     context.api.meeting_api.create_note.assert_called_once_with(
         note.meeting_id, context.user, note.content_text
+    )
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_delete_note(schema, success):
+    context = MagicMock()
+    note_id = uuid4()
+    error = Err(fake.pystr())
+    context.user = fake_instructor()
+    context.api.meeting_api.delete_note.return_value = Ok(note_id) if success else error
+    query = """
+    mutation deleteNote($noteId: UUID!) {
+        deleteNote(noteId: $noteId) {
+            noteId
+        }
+    }
+    """
+
+    result = schema.execute(query, context=context, variables={"noteId": str(note_id)})
+    if success:
+        assert not result.errors
+        assert result.data["deleteNote"] == {"noteId": str(note_id)}
+    else:
+        assert error.unwrap_err() in str(result.errors)
+    context.api.meeting_api.delete_note.assert_called_once_with(note_id, context.user)
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_create_meeting(schema, success):
+    context = MagicMock()
+    meeting = next(fake_meeting())
+    error = Err(fake.pystr())
+    context.api.instructor_api.get_instructor.return_value = Ok(meeting.instructor)
+    context.api.meeting_api.create_meeting.return_value = (
+        Ok(meeting) if success else error
+    )
+    context.user = meeting.student
+    query = """
+    mutation createMeeting($instructor: String!, $officeHourId: UUID!, $index: Int!, $startTime:
+    Int!) {
+        createMeeting(instructor: $instructor, officeHourId: $officeHourId, index: $index,
+        startTime: $startTime) {
+            instructor {
+                userName
+            }
+            student {
+                studentNumber
+            }
+            officeHourId
+            index
+            startTime
+            notes {
+                noteId
+            }
+            comments {
+                commentId
+            }
+        }
+    }
+    """
+    result = schema.execute(
+        query,
+        context=context,
+        variables={
+            "instructor": meeting.instructor.user_name,
+            "officeHourId": str(meeting.office_hour_id),
+            "index": meeting.index,
+            "startTime": meeting.start_time,
+        },
+    )
+    if success:
+        assert not result.errors
+        create_meeting = result.data["createMeeting"]
+        for attr in ("index", "startTime"):
+            assert getattr(meeting, to_snake_case(attr)) == create_meeting[attr]
+        assert str(meeting.office_hour_id) == create_meeting["officeHourId"]
+        assert create_meeting["notes"] == []
+        assert create_meeting["comments"] == []
+        assert create_meeting["instructor"]["userName"] == meeting.instructor.user_name
+        assert (
+            create_meeting["student"]["studentNumber"] == meeting.student.student_number
+        )
+    else:
+        assert error.unwrap_err() in str(result.errors)
+    context.api.instructor_api.get_instructor.assert_called_once_with(
+        meeting.instructor.user_name
+    )
+    context.api.meeting_api.create_meeting.assert_called_once_with(
+        meeting.instructor,
+        context.user,
+        meeting.office_hour_id,
+        meeting.index,
+        meeting.start_time,
     )

@@ -83,13 +83,22 @@ class MeetingApi:
         comment = Comment(uuid4(), meeting_id, author, time_stamp, content_text)
         return self.meeting_persistence.create_comment(comment)
 
-    def delete_note(self, note_id: UUID) -> Result[UUID, str]:
+    def delete_note(self, note_id: UUID, author: Instructor) -> Result[UUID, str]:
         """
         Deletes note of <note_id>.
 
         Returns:
             note_id on success
         """
+        note_result = self.meeting_persistence.get_note(note_id)
+        if not note_result:
+            return Err(f"Note with ID: '{note_id}' does not exist")
+        meeting_id = note_result.unwrap().meeting_id
+        meeting_result = self.meeting_persistence.get_meeting(meeting_id)
+        if not meeting_result:
+            return Err(f"Meeting with ID: '{meeting_id}' does not exist")
+        if author != meeting_result.unwrap().instructor:
+            return Err("Cannot delete a note that does not belong to you")
         return self.meeting_persistence.delete_note(note_id)
 
     def delete_comment(self, comment_id: UUID) -> Result[UUID, str]:

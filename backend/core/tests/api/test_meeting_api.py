@@ -141,23 +141,74 @@ def test_create_comment(meeting_api, success):
 
 
 @pytest.mark.parametrize("success", [True, False])
-@pytest.mark.parametrize("delete_type", ["note", "comment"])
-def test_delete(meeting_api, delete_type, success):
+def test_delete_comment(meeting_api, success):
     id_ = uuid4()
     error = Err(fake.pystr())
 
-    delete_method = getattr(meeting_api, f"delete_{delete_type}")
-    delete_persistence_method = getattr(
-        meeting_api.meeting_persistence, f"delete_{delete_type}"
+    meeting_api.meeting_persistence.delete_comment.return_value = (
+        Ok(id_) if success else error
     )
-
-    delete_persistence_method.return_value = Ok(id_) if success else error
-    result = delete_method(id_)
+    result = meeting_api.delete_comment(id_)
     if success:
         assert result.unwrap() == id_
     else:
         assert result == error
-    delete_persistence_method.assert_called_once_with(id_)
+    meeting_api.meeting_persistence.delete_comment.assert_called_once_with(id_)
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_delete_note(meeting_api, success):
+    note = next(fake_note())
+    meeting = next(fake_meeting())
+    error = Err(fake.pystr())
+    meeting_api.meeting_persistence.get_note.return_value = Some(note)
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    meeting_api.meeting_persistence.delete_note.return_value = (
+        Ok(note.note_id) if success else error
+    )
+    result = meeting_api.delete_note(note.note_id, meeting.instructor)
+    if success:
+        assert result.unwrap() == note.note_id
+    else:
+        assert result == error
+    meeting_api.meeting_persistence.get_note.assert_called_once_with(note.note_id)
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(note.meeting_id)
+
+
+def test_delete_note_not_exist(meeting_api):
+    note_id = uuid4()
+    author = fake_instructor()
+    meeting_api.meeting_persistence.get_note.return_value = NONE
+    assert (
+        f"Note with ID: '{note_id}'"
+        in meeting_api.delete_note(note_id, author).unwrap_err()
+    )
+    meeting_api.meeting_persistence.get_note.assert_called_once_with(note_id)
+    meeting_api.meeting_persistence.get_meeting.assert_not_called()
+
+
+def test_delete_note_no_meeting(meeting_api):
+    note = next(fake_note())
+    author = fake_instructor()
+    meeting_api.meeting_persistence.get_note.return_value = Some(note)
+    meeting_api.meeting_persistence.get_meeting.return_value = NONE
+    assert (
+        f"Meeting with ID: '{note.meeting_id}'"
+        in meeting_api.delete_note(note.note_id, author).unwrap_err()
+    )
+    meeting_api.meeting_persistence.get_note.assert_called_once_with(note.note_id)
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(note.meeting_id)
+
+
+def test_delete_note_wrong_author(meeting_api):
+    note = next(fake_note())
+    meeting = next(fake_meeting())
+    author = fake_instructor()
+    meeting_api.meeting_persistence.get_note.return_value = Some(note)
+    meeting_api.meeting_persistence.get_meeting.return_value = Some(meeting)
+    assert "not belong" in meeting_api.delete_note(note.note_id, author).unwrap_err()
+    meeting_api.meeting_persistence.get_note.assert_called_once_with(note.note_id)
+    meeting_api.meeting_persistence.get_meeting.assert_called_once_with(note.meeting_id)
 
 
 @pytest.mark.parametrize("success", [True, False])
