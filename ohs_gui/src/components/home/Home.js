@@ -7,12 +7,14 @@ import CreateSection from '../lectureSection/CreateSection';
 import LectureSection from '../lectureSection/LectureSection';
 import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
-import Dashboard from '../dashboard/Dashboard';
 import { getProfClient } from '../utils/client';
+import { roles } from '../utils/constants';
 
 import { GET_COURSES, GET_SECTIONS } from '../utils/queries';
 
 import './Home.css';
+import ProfessorDashboard from '../dashboard/ProfessorDashboard';
+import StudentDashboard from '../dashboard/StudentDashboard';
 
 const client = getProfClient();
 
@@ -33,17 +35,15 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.updateMeetingsList();
-
     const { user } = this.props;
-
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = user.role === roles.PROFESSOR;
 
     if (isProf) {
       this.getCourses();
     } else {
       this.getSections();
     }
+    this.updateMeetingsList();
   }
 
   getCourses() {
@@ -64,26 +64,6 @@ class Home extends Component {
       })
       .then(res => this.updateSectionList(res))
       .catch(result => console.log(result));
-
-    // TODO: dummy json
-    const sections = [
-      {
-        course: 'CSC302'
-      },
-      {
-        course: 'CSC309'
-      },
-      {
-        course: 'CSC367'
-      },
-      {
-        course: 'CSC258'
-      },
-      {
-        course: 'CSC384'
-      }
-    ];
-    this.setState({ sections });
   }
 
   updateSectionList(res) {
@@ -127,7 +107,7 @@ class Home extends Component {
   render() {
     const { meetings, courses, sections } = this.state;
     const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = user && user.role === roles.PROFESSOR;
 
     return (
       <Router>
@@ -143,13 +123,13 @@ class Home extends Component {
               <Route
                 exact
                 path="/"
-                render={() => (
-                  <Dashboard
-                    user={user}
-                    courses={courses}
-                    sections={sections}
-                  />
-                )}
+                render={() =>
+                  isProf ? (
+                    <ProfessorDashboard courses={courses} />
+                  ) : (
+                    <StudentDashboard sections={sections} />
+                  )
+                }
               />
               <Route
                 exact
@@ -158,7 +138,7 @@ class Home extends Component {
               />
               <Route
                 exact
-                path="/course/:course_code"
+                path="/course/:courseCode"
                 render={props => <Course user={user} {...props} />}
               />
               <Route

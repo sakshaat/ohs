@@ -7,15 +7,17 @@ import {
 } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 
+import { toast } from 'react-toastify';
+
 import './Auth.css';
 import { PROF_BASE_URL, STUDENT_BASE_URL } from '../utils/client';
-import roles from '../utils/constants';
+import { roles, roleLabels } from '../utils/constants';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRole: null
+      userRole: null
     };
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
@@ -24,15 +26,15 @@ class Login extends Component {
   }
 
   toggleRole(role) {
-    this.setState({ selectedRole: role });
+    this.setState({ userRole: role });
   }
 
   login() {
-    const { selectedRole } = this.state;
+    const { userRole } = this.state;
     const username = ReactDOM.findDOMNode(this.refs.loginUsernameInput).value;
     const password = ReactDOM.findDOMNode(this.refs.loginPwdInput).value;
     const url =
-      selectedRole === roles.PROFESSOR
+      userRole === roles.PROFESSOR
         ? `${PROF_BASE_URL}/get-token`
         : `${STUDENT_BASE_URL}/get-token`;
 
@@ -50,8 +52,18 @@ class Login extends Component {
     })
       .then(res => {
         if (res.ok) {
+          toast(`Logged in as ${username}`, { type: toast.TYPE.SUCCESS });
           return res.json();
         }
+
+        if (res.status === 401) {
+          toast('Login Failed - The username or password is incorrect', {
+            type: toast.TYPE.ERROR
+          });
+        } else {
+          toast('An Unknown Error Occured.', { type: toast.TYPE.ERROR });
+        }
+
         throw new Error(
           `'Network response was not ok - ${res.status}: ${res.statusText}`
         );
@@ -61,7 +73,7 @@ class Login extends Component {
   }
 
   register() {
-    const { selectedRole } = this.state;
+    const { userRole } = this.state;
     const fname = ReactDOM.findDOMNode(this.refs.registerFnameInput).value;
     const lname = ReactDOM.findDOMNode(this.refs.registerLnameInput).value;
     const username = ReactDOM.findDOMNode(this.refs.registerUsernameInput)
@@ -69,7 +81,7 @@ class Login extends Component {
     const password = ReactDOM.findDOMNode(this.refs.registerPwdInput).value;
 
     const url =
-      selectedRole === roles.PROFESSOR
+      userRole === roles.PROFESSOR
         ? `${PROF_BASE_URL}/get-token`
         : `${STUDENT_BASE_URL}/get-token`;
 
@@ -101,12 +113,12 @@ class Login extends Component {
 
   userRegistered(res) {
     const { notifyLogIn } = this.props;
-    notifyLogIn(res.token);
+    const { userRole } = this.state;
+    notifyLogIn(res.token, { ...res.user, role: userRole });
   }
 
   render() {
-    console.log(this.state);
-    const { selectedRole } = this.state;
+    const { userRole } = this.state;
     const authForm = (
       <section className="form-container">
         <section className="form login-form">
@@ -168,12 +180,10 @@ class Login extends Component {
       </section>
     );
 
-    const roleLabels = n => (n === roles.PROFESSOR ? 'Professor' : 'Student');
-
     return (
       <section className="auth-container">
-        {selectedRole ? (
-          <h1>{roleLabels(selectedRole)} Login/Registration</h1>
+        {userRole ? (
+          <h1>{roleLabels(userRole)} Login/Registration</h1>
         ) : (
           <h1>Login/Registration</h1>
         )}
@@ -187,7 +197,7 @@ class Login extends Component {
           </ToggleButton>
         </ToggleButtonGroup>
 
-        {selectedRole ? authForm : null}
+        {userRole ? authForm : null}
       </section>
     );
   }

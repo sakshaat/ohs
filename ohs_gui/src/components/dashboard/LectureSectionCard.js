@@ -37,9 +37,7 @@ class LectureSectionCard extends PureComponent {
               <br />
               students: {section.numStudents}
             </div>
-          ) : (
-            section.course
-          )}
+          ) : null}
         </div>
       </Link>
     );
