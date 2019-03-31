@@ -8,7 +8,7 @@ import {
 import ReactDOM from 'react-dom';
 
 import './Auth.css';
-import { PROF_BASE_URL } from '../utils/client';
+import { PROF_BASE_URL, STUDENT_BASE_URL } from '../utils/client';
 import { PROFESSOR, STUDENT } from '../utils/constants';
 
 class Login extends Component {
@@ -28,10 +28,13 @@ class Login extends Component {
   }
 
   login() {
+    const { selectedRole } = this.state;
     const username = ReactDOM.findDOMNode(this.refs.loginUsernameInput).value;
     const password = ReactDOM.findDOMNode(this.refs.loginPwdInput).value;
-
-    const url = `${PROF_BASE_URL}/get-token`;
+    const url =
+      selectedRole === 1
+        ? `${PROF_BASE_URL}/get-token`
+        : `${STUDENT_BASE_URL}/get-token`;
 
     const data = {
       id: username,
@@ -40,7 +43,7 @@ class Login extends Component {
 
     fetch(url, {
       method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
+      body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -58,13 +61,17 @@ class Login extends Component {
   }
 
   register() {
+    const { selectedRole } = this.state;
     const fname = ReactDOM.findDOMNode(this.refs.registerFnameInput).value;
     const lname = ReactDOM.findDOMNode(this.refs.registerLnameInput).value;
     const username = ReactDOM.findDOMNode(this.refs.registerUsernameInput)
       .value;
     const password = ReactDOM.findDOMNode(this.refs.registerPwdInput).value;
 
-    const url = `${PROF_BASE_URL}/create-user`;
+    const url =
+      selectedRole === 1
+        ? `${PROF_BASE_URL}/get-token`
+        : `${STUDENT_BASE_URL}/get-token`;
 
     const data = {
       id: username,
@@ -159,9 +166,19 @@ class Login extends Component {
         </section>
       </section>
     );
+
+    const roleLabels = {
+      PROFESSOR: 'Professor',
+      STUDENT: 'Student'
+    };
+
     return (
       <section className="auth-container">
-        <h1>Professor Login/Registration</h1>
+        {selectedRole ? (
+          <h1>{roleLabels[selectedRole]} Login/Registration</h1>
+        ) : (
+          <h1>Login/Registration</h1>
+        )}
 
         <ToggleButtonGroup type="radio" name="roles" onChange={this.toggleRole}>
           <ToggleButton active size="lg" value={PROFESSOR}>
