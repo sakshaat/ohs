@@ -60,7 +60,7 @@ class Meeting:
     """
 
     meeting_id: UUID
-    officehour_id: UUID
+    office_hour_id: UUID
     index: int
     instructor: Instructor
     student: Student

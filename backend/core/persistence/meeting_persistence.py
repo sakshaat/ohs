@@ -166,7 +166,7 @@ class MeetingPersistence:
             c = self.connection.cursor()
             term = (
                 str(meeting.meeting_id),
-                meeting.officehour_id,
+                meeting.office_hour_id,
                 meeting.index,
                 meeting.instructor.user_name,
                 meeting.student.student_number,
