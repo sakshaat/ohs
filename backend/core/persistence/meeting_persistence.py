@@ -166,14 +166,14 @@ class MeetingPersistence:
             c = self.connection.cursor()
             term = (
                 str(meeting.meeting_id),
-                meeting.office_hour_id,
+                meeting.officehour_id,
                 meeting.index,
                 meeting.instructor.user_name,
                 meeting.student.student_number,
                 meeting.start_time,
             )
             c.execute(
-                "INSERT INTO meetings(meeting_id, office_hour_id, index, instructor, student,"
+                "INSERT INTO meetings(meeting_id, officehour_id, index, instructor, student,"
                 " start_time) "
                 "VALUES (%s, %s, %s, %s, %s, %s)",
                 term,

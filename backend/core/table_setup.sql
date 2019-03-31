@@ -38,10 +38,21 @@ CREATE TABLE sections
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE officehours
+(
+  officehour_id        VARCHAR(50) PRIMARY KEY,
+  section_id           VARCHAR(50) NOT NULL,
+  starting_hour        integer NOT NULL,
+  day_of_week          integer NOT NULL,
+  CONSTRAINT section_fkey FOREIGN KEY (section_id)
+    REFERENCES sections (section_id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
 CREATE TABLE meetings
 (
   meeting_id      VARCHAR(50) PRIMARY KEY,
-  office_hour_id  VARCHAR(50) NOT NULL,
+  officehour_id  VARCHAR(50) NOT NULL,
   index           integer     NOT NULL,
   instructor      VARCHAR(50) NOT NULL,
   student         VARCHAR(50) NOT NULL,
@@ -52,6 +63,10 @@ CREATE TABLE meetings
   CONSTRAINT student_fkey FOREIGN KEY (student)
     REFERENCES students (student_number) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT officehour_fkey FOREIGN KEY (officehour_id)
+    REFERENCES officehours (officehour_id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT no_overlap_slot UNIQUE(office_hour_id, index)
 );
 
 CREATE TABLE notes
