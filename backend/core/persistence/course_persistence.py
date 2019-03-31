@@ -233,8 +233,6 @@ class CoursePersistence:
         return Ok(officehour)
 
     def _res_to_officehour(self, res):
-        c = self.connection.cursor()
-
         def to_section_identity(id):
             params = id.split(";delimiter;")
             return SectionIdentity(
