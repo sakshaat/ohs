@@ -294,12 +294,25 @@ class CoursePersistence:
         self.connection.commit()
         return Ok(office_hour_id)
 
-    def get_officehour_by_day(self, day: Weekday) -> Option[OfficeHour]:
+    def get_officehour_for_instructor_by_day(
+        self, user_name: str, day: Weekday
+    ) -> List[OfficeHour]:
         c = self.connection.cursor()
-        term = (day.value,)
-        c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
-        officehour = None
-        res = c.fetchone()
-        if res:
-            officehour = self._res_to_officehour(res)
-        return maybe(officehour)
+        officehours = []
+        sections = map(
+            lambda x: x.identity().to_string(),
+            self.query_sections({"taught_by": user_name}),
+        )
+        if len(sections) > 0:
+            c.execute(
+                "SELECT * FROM officehours WHERE day_of_week=%s AND (section_id=%s"
+                + (" OR section_id=%s" * (len(sections) - 1))
+                + ")",
+                tuple([day.value] + sections),
+            )
+            results = c.fetchall()
+            if len(results) > 0:
+                officehours = list(
+                    map(lambda res: self._res_to_officehour(res), results)
+                )
+        return officehours
