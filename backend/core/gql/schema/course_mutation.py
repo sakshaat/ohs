@@ -14,7 +14,12 @@ class CreateCourse(graphene.Mutation):
     Output = Course
 
     def mutate(self, info, course_input):
-        return course_api(info).create_course(course_input.course_code).unwrap()
+        return (
+            course_api(info)
+            .create_course(course_input.course_code)
+            .map(Course.from_domain)
+            .unwrap()
+        )
 
 
 @register_mutation(allow=SchemaRestriction.INSTRUCTOR)
@@ -45,5 +50,6 @@ class CreateSection(graphene.Mutation):
                 instructor,
                 num_students,
             )
+            .map(Section.from_domain)
             .unwrap()
         )
