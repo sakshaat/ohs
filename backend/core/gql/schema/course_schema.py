@@ -6,7 +6,7 @@ from core.domain.course import (
     SectionIdentity,
     Semester,
 )
-from core.gql.user_schema import Instructor
+from core.gql.schema.user_schema import Instructor
 
 
 def semester_description(value):

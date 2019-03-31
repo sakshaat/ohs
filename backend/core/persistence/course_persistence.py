@@ -127,13 +127,13 @@ class CoursePersistence:
         else:
             terms = []
             where_text = ""
-            if "course" in filters:
+            if "course_code" in filters:
                 if where_text == "":
                     where_text += " WHERE"
                 else:
                     where_text += " AND"
                 where_text += " course=%s"
-                terms.append(str(filters["course"]))
+                terms.append(str(filters["course_code"]))
             if "year" in filters:
                 if where_text == "":
                     where_text += " WHERE"

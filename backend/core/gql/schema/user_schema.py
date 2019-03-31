@@ -26,3 +26,11 @@ class Student(graphene.ObjectType):
         interfaces = (User,)
 
     student_number = graphene.String(required=True)
+
+    @classmethod
+    def from_domain(cls, domain_student):
+        return cls(
+            domain_student.first_name,
+            domain_student.last_name,
+            domain_student.student_number,
+        )

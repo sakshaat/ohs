@@ -10,7 +10,7 @@ from core.domain.user import User
 from core.gql.context import Context
 from core.gql.graphql_controller import GraphqlController
 from core.gql.graphql_request import parse_graphql_request
-from core.http import HttpError
+from core.http import HttpError, parse_auth_token
 from core.persistence.connection_manager import ConnectionManager
 
 
@@ -53,7 +53,7 @@ class App(metaclass=ABCMeta):
                 return HttpError(400, "Not a valid JSON request").to_flask_response()
             creation_result = self.create_user(request_json)
             if creation_result.is_ok:
-                return flask.jsonify({"token": creation_result.unwrap()})
+                return self.token_to_user_response(creation_result.unwrap())
             else:
                 return HttpError(400, creation_result.unwrap_err()).to_flask_response()
 
@@ -69,7 +69,8 @@ class App(metaclass=ABCMeta):
                 return HttpError(400, "Invalid JSON body").to_flask_response()
             token_result = self.get_token(user_id, password)
             if token_result.is_ok:
-                return flask.jsonify({"token": token_result.unwrap()})
+                token = token_result.unwrap()
+                return self.token_to_user_response(token)
             else:
                 return HttpError(401, token_result.unwrap_err()).to_flask_response()
 
@@ -77,13 +78,22 @@ class App(metaclass=ABCMeta):
         def home():
             return "Hello"
 
+    def token_to_user_response(self, token):
+        user = self.authenticate_user_by_token(token)
+        if user:
+            return flask.jsonify({"token": token, "user": user.unwrap().as_dict()})
+        else:
+            return HttpError(401, user.unwrap_err()).to_flask_response()
+
     def create_secure_context(self, request: flask.Request) -> Result[Context, str]:
-        return self.authenticate_user_by_token(request).map(
-            lambda user: Context(self.api, user)
+        return (
+            parse_auth_token(request)
+            .flatmap(self.authenticate_user_by_token)
+            .map(lambda user: Context(self.api, user))
         )
 
     @abstractmethod
-    def authenticate_user_by_token(self, request: flask.Request) -> Result[User, str]:
+    def authenticate_user_by_token(self, token: str) -> Result[User, str]:
         pass
 
     @abstractmethod
@@ -109,6 +119,8 @@ class App(metaclass=ABCMeta):
                 )
             )
         else:
-            return self.graphql_controller.introspect().map_err(
-                lambda e: HttpError(400, e)
+            return (
+                self.graphql_controller.introspect()
+                .map_err(lambda e: HttpError(400, e))
+                .map(lambda schema: {"data": schema})
             )

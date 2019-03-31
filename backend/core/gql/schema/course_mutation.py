@@ -2,7 +2,7 @@ import graphene
 
 from core.domain.course import Semester as DomainSemester
 from core.gql.context import course_api, instructor_api
-from core.gql.course_schema import Course, CourseInput, Section, SectionInput
+from core.gql.schema.course_schema import Course, CourseInput, Section, SectionInput
 from core.gql.schema_registry import SchemaRestriction, register_mutation
 
 
@@ -14,7 +14,12 @@ class CreateCourse(graphene.Mutation):
     Output = Course
 
     def mutate(self, info, course_input):
-        return course_api(info).create_course(course_input.course_code).unwrap()
+        return (
+            course_api(info)
+            .create_course(course_input.course_code)
+            .map(Course.from_domain)
+            .unwrap()
+        )
 
 
 @register_mutation(allow=SchemaRestriction.INSTRUCTOR)
@@ -45,5 +50,6 @@ class CreateSection(graphene.Mutation):
                 instructor,
                 num_students,
             )
+            .map(Section.from_domain)
             .unwrap()
         )
