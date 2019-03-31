@@ -46,8 +46,8 @@ const GET_SECTION = gql`
 `;
 
 const GET_SECTION_FOR_COURSE = gql`
-  query getSectionForCourse($sectionFilter: String) {
-    sections(filters: $sectionFilter) {
+  query getSectionForCourse($courseCode: String!, $taughtBy: String!) {
+    sections(courseCode: $courseCode, taughtBy: $taughtBy) {
       course {
         courseCode
       }

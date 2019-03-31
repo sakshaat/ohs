@@ -5,6 +5,8 @@ import shortid from 'shortid';
 import LectureSectionCard from '../dashboard/LectureSectionCard';
 import { getProfClient } from '../utils/client';
 import { GET_SECTION_FOR_COURSE } from '../utils/queries';
+import { roles } from '../utils/constants';
+
 import './Course.css';
 
 const client = getProfClient();
@@ -37,10 +39,8 @@ class Course extends Component {
       .query({
         query: GET_SECTION_FOR_COURSE,
         variables: {
-          sectionFilter: JSON.stringify({
-            course: courseCode,
-            taughtBy: user.id
-          })
+          courseCode,
+          taughtBy: user.userName
         }
       })
       .then(res => this.updateSectionList(res.data.sections))
@@ -52,7 +52,16 @@ class Course extends Component {
   }
 
   render() {
-    const { sections, courseCode, user } = this.state;
+    const { sections } = this.state;
+    const {
+      user,
+      match: {
+        params: { courseCode }
+      }
+    } = this.props;
+
+    const isProf = user && user.role === roles.PROFESSOR;
+    console.log(user);
 
     return (
       <div id="sections">
@@ -74,7 +83,7 @@ class Course extends Component {
         {sections.map(s => (
           <LectureSectionCard verbose section={s} key={shortid.generate()} />
         ))}
-        {courseCode && user.role === 'PROFESSOR' && (
+        {courseCode && isProf && (
           <Link to={`/course/${courseCode}/add-section`}>
             <div className="add-section card-element">
               <span className="fa fa-plus" />

@@ -1,57 +1,55 @@
 import React, { Component } from 'react';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { BrowserRouter as Router } from 'react-router-dom';
+
 import Home from './components/home/Home';
 import Auth from './components/home/Auth';
 
 import './App.css';
 
+// Have to call it once in your app.
+toast.useLazyContainer();
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+  position: toast.POSITION.BOTTOM_RIGHT
+});
+
 /* A wrapper which keeps track of the current logged in user, and provides the nav bar */
 class App extends Component {
   constructor(props) {
     super(props);
+    const user = window.sessionStorage.user
+      ? JSON.parse(window.sessionStorage.user)
+      : null;
     this.state = {
-      user: null,
+      user,
       isLoggedIn: !!window.sessionStorage.token
     };
 
-    this.getUser = this.getUser.bind(this);
     this.notifyLogIn = this.notifyLogIn.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  // TODO: we should set the user in state when we log in
-  componentDidMount() {
-    this.getUser();
-    if (window.sessionStorage.token !== undefined) {
-      this.getUser();
-    }
-  }
-
-  getUser() {
-    // TODO: dummy json
-    const user = {
-      role: 'PROFESSOR',
-      firstName: 'Alec',
-      lastName: 'Gibson',
-      id: 'a'
-    };
-    this.setState({ user });
-  }
-
-  notifyLogIn(token) {
+  notifyLogIn(token, user) {
     window.sessionStorage.token = token;
-    this.getUser();
-    this.setState({ isLoggedIn: true });
+    window.sessionStorage.user = JSON.stringify(user);
+    this.setState({ user, isLoggedIn: true });
   }
 
   logout() {
+    toast('Successfully Logged Out', { type: toast.TYPE.SUCCESS });
     window.sessionStorage.removeItem('token');
+    window.sessionStorage.removeItem('user');
     this.setState({ isLoggedIn: false });
   }
 
   render() {
     const { isLoggedIn, user } = this.state;
+
     return (
       <Router>
         <div className="App">
@@ -65,7 +63,7 @@ class App extends Component {
               {isLoggedIn &&
                 user && [
                   <div key={0} className="nav-item">
-                    Logged In as {user.role} {user.id}
+                    Logged In as {user.userName}
                   </div>,
                   <div
                     key={1}
@@ -84,7 +82,11 @@ class App extends Component {
             {isLoggedIn && user ? (
               <Home user={user} />
             ) : (
-              <Auth notifyLogIn={token => this.notifyLogIn(token)} />
+              <Auth
+                notifyLogIn={(token, userObj) =>
+                  this.notifyLogIn(token, userObj)
+                }
+              />
             )}
           </div>
         </div>

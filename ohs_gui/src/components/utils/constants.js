@@ -4,4 +4,7 @@ const roles = {
   STUDENT: 2
 };
 
-export default roles;
+// helper
+const roleLabels = n => (n === roles.PROFESSOR ? 'Professor' : 'Student');
+
+export { roles, roleLabels };
