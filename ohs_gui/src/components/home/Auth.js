@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 
 import './Auth.css';
 import { PROF_BASE_URL, STUDENT_BASE_URL } from '../utils/client';
-import { PROFESSOR, STUDENT } from '../utils/constants';
+import roles from '../utils/constants';
 
 class Login extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class Login extends Component {
     const username = ReactDOM.findDOMNode(this.refs.loginUsernameInput).value;
     const password = ReactDOM.findDOMNode(this.refs.loginPwdInput).value;
     const url =
-      selectedRole === 1
+      selectedRole === roles.PROFESSOR
         ? `${PROF_BASE_URL}/get-token`
         : `${STUDENT_BASE_URL}/get-token`;
 
@@ -69,7 +69,7 @@ class Login extends Component {
     const password = ReactDOM.findDOMNode(this.refs.registerPwdInput).value;
 
     const url =
-      selectedRole === 1
+      selectedRole === roles.PROFESSOR
         ? `${PROF_BASE_URL}/get-token`
         : `${STUDENT_BASE_URL}/get-token`;
 
@@ -105,6 +105,7 @@ class Login extends Component {
   }
 
   render() {
+    console.log(this.state);
     const { selectedRole } = this.state;
     const authForm = (
       <section className="form-container">
@@ -167,24 +168,21 @@ class Login extends Component {
       </section>
     );
 
-    const roleLabels = {
-      PROFESSOR: 'Professor',
-      STUDENT: 'Student'
-    };
+    const roleLabels = n => (n === roles.PROFESSOR ? 'Professor' : 'Student');
 
     return (
       <section className="auth-container">
         {selectedRole ? (
-          <h1>{roleLabels[selectedRole]} Login/Registration</h1>
+          <h1>{roleLabels(selectedRole)} Login/Registration</h1>
         ) : (
           <h1>Login/Registration</h1>
         )}
 
         <ToggleButtonGroup type="radio" name="roles" onChange={this.toggleRole}>
-          <ToggleButton active size="lg" value={PROFESSOR}>
+          <ToggleButton active size="lg" value={roles.PROFESSOR}>
             Professor
           </ToggleButton>
-          <ToggleButton size="lg" value={STUDENT}>
+          <ToggleButton size="lg" value={roles.STUDENT}>
             Student
           </ToggleButton>
         </ToggleButtonGroup>

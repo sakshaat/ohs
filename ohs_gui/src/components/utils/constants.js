@@ -1,5 +1,7 @@
 // User roles
-const PROFESSOR = 1;
-const STUDENT = 2;
+const roles = {
+  PROFESSOR: 1,
+  STUDENT: 2
+};
 
-export { PROFESSOR, STUDENT };
+export default roles;
