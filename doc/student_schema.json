@@ -1015,128 +1015,6 @@
                 {
                   "defaultValue": null, 
                   "description": null, 
-                  "name": "courseInput", 
-                  "type": {
-                    "kind": "NON_NULL", 
-                    "name": null, 
-                    "ofType": {
-                      "kind": "INPUT_OBJECT", 
-                      "name": "CourseInput", 
-                      "ofType": null
-                    }
-                  }
-                }
-              ], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "createCourse", 
-              "type": {
-                "kind": "OBJECT", 
-                "name": "Course", 
-                "ofType": null
-              }
-            }, 
-            {
-              "args": [
-                {
-                  "defaultValue": null, 
-                  "description": null, 
-                  "name": "sectionInput", 
-                  "type": {
-                    "kind": "NON_NULL", 
-                    "name": null, 
-                    "ofType": {
-                      "kind": "INPUT_OBJECT", 
-                      "name": "SectionInput", 
-                      "ofType": null
-                    }
-                  }
-                }
-              ], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "createSection", 
-              "type": {
-                "kind": "OBJECT", 
-                "name": "Section", 
-                "ofType": null
-              }
-            }, 
-            {
-              "args": [
-                {
-                  "defaultValue": null, 
-                  "description": null, 
-                  "name": "contentText", 
-                  "type": {
-                    "kind": "NON_NULL", 
-                    "name": null, 
-                    "ofType": {
-                      "kind": "SCALAR", 
-                      "name": "String", 
-                      "ofType": null
-                    }
-                  }
-                }, 
-                {
-                  "defaultValue": null, 
-                  "description": null, 
-                  "name": "meetingId", 
-                  "type": {
-                    "kind": "NON_NULL", 
-                    "name": null, 
-                    "ofType": {
-                      "kind": "SCALAR", 
-                      "name": "UUID", 
-                      "ofType": null
-                    }
-                  }
-                }
-              ], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "createNote", 
-              "type": {
-                "kind": "OBJECT", 
-                "name": "Note", 
-                "ofType": null
-              }
-            }, 
-            {
-              "args": [
-                {
-                  "defaultValue": null, 
-                  "description": null, 
-                  "name": "noteId", 
-                  "type": {
-                    "kind": "NON_NULL", 
-                    "name": null, 
-                    "ofType": {
-                      "kind": "SCALAR", 
-                      "name": "UUID", 
-                      "ofType": null
-                    }
-                  }
-                }
-              ], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "deleteNote", 
-              "type": {
-                "kind": "OBJECT", 
-                "name": "DeleteNote", 
-                "ofType": null
-              }
-            }, 
-            {
-              "args": [
-                {
-                  "defaultValue": null, 
-                  "description": null, 
                   "name": "meetingId", 
                   "type": {
                     "kind": "NON_NULL", 
@@ -1199,126 +1077,81 @@
                 "name": "Comment", 
                 "ofType": null
               }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "index", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "Int", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "instructor", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "String", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "officeHourId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "startTime", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "Int", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "createMeeting", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "Meeting", 
+                "ofType": null
+              }
             }
           ], 
           "inputFields": null, 
           "interfaces": [], 
           "kind": "OBJECT", 
           "name": "Mutation", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": null, 
-          "inputFields": [
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "course", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "INPUT_OBJECT", 
-                  "name": "CourseInput", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "year", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "Int", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "semester", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "ENUM", 
-                  "name": "Semester", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "sectionCode", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "taughtBy", 
-              "type": {
-                "kind": "SCALAR", 
-                "name": "String", 
-                "ofType": null
-              }
-            }, 
-            {
-              "defaultValue": null, 
-              "description": null, 
-              "name": "numStudents", 
-              "type": {
-                "kind": "SCALAR", 
-                "name": "Int", 
-                "ofType": null
-              }
-            }
-          ], 
-          "interfaces": null, 
-          "kind": "INPUT_OBJECT", 
-          "name": "SectionInput", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": [
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "noteId", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "UUID", 
-                  "ofType": null
-                }
-              }
-            }
-          ], 
-          "inputFields": null, 
-          "interfaces": [], 
-          "kind": "OBJECT", 
-          "name": "DeleteNote", 
           "possibleTypes": null
         }, 
         {
