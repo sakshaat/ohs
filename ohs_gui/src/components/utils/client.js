@@ -3,12 +3,15 @@ import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const BASE_URL = `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL ||
+const PROF_BASE_URL = `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL ||
   'http://localhost:8000'}`;
 
-const getClient = () => {
+const STUDENT_BASE_URL = `${process.env.REACT_APP_STUDENT_SERVICE_URL ||
+  'http://localhost:8001'}`;
+
+const getProfClient = () => {
   const httpLink = createHttpLink({
-    uri: `${BASE_URL}/graphql`
+    uri: `${PROF_BASE_URL}/graphql`
   });
 
   const authLink = setContext((_, { headers }) => {
@@ -33,4 +36,4 @@ const getClient = () => {
 
 const client = null;
 
-export { client, BASE_URL, getClient };
+export { client, PROF_BASE_URL, STUDENT_BASE_URL, getProfClient };

@@ -6,9 +6,9 @@ import gql from 'graphql-tag';
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
 import './CreateSection.css';
-import { getClient } from '../utils/client';
+import { getProfClient } from '../utils/client';
 
-const client = getClient();
+const client = getProfClient();
 
 const ADD_SECTION = gql`
   mutation addSection($sectionInput: SectionInput!) {

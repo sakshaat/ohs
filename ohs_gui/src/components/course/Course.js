@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import shortid from 'shortid';
 
 import LectureSectionCard from '../dashboard/LectureSectionCard';
-import { getClient } from '../utils/client';
+import { getProfClient } from '../utils/client';
 import { GET_SECTION_FOR_COURSE } from '../utils/queries';
 import './Course.css';
 
-const client = getClient();
+const client = getProfClient();
 
 class Course extends Component {
   constructor(props) {
@@ -38,8 +38,8 @@ class Course extends Component {
         query: GET_SECTION_FOR_COURSE,
         variables: {
           sectionFilter: JSON.stringify({
-            courseCode,
-            user
+            course: courseCode,
+            taughtBy: user.id
           })
         }
       })

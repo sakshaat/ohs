@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import { getClient } from '../utils/client';
+import { getProfClient } from '../utils/client';
 import { GET_SECTION } from '../utils/queries';
 
-const client = getClient();
+const client = getProfClient();
 
 class LectureSection extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class LectureSection extends Component {
           course: { courseCode: params.get('course') },
           year: params.get('year'),
           semester: params.get('semester'),
-          sectionCode: params.get('section_code')
+          sectionCode: params.get('sectionCode')
         }
       })
       .then(res => this.setState({ section: res.data.section }))

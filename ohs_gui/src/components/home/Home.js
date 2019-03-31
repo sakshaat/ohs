@@ -8,13 +8,13 @@ import LectureSection from '../lectureSection/LectureSection';
 import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
 import Dashboard from '../dashboard/Dashboard';
-import { getClient } from '../utils/client';
+import { getProfClient } from '../utils/client';
 
 import { GET_COURSES, GET_SECTIONS } from '../utils/queries';
 
 import './Home.css';
 
-const client = getClient();
+const client = getProfClient();
 
 /* A wrapper which provides the meetings sidebar */
 class Home extends Component {

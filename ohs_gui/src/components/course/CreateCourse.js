@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 import gql from 'graphql-tag';
-import { getClient } from '../utils/client';
+import { getProfClient } from '../utils/client';
 
 import './CreateCourse.css';
 
-const client = getClient();
+const client = getProfClient();
 
 const ADD_COURSE = gql`
   mutation addCourse($courseInput: CourseInput!) {
