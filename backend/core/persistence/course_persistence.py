@@ -266,3 +266,13 @@ class CoursePersistence:
         c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (office_hour_id,))
         self.connection.commit()
         return Ok(office_hour_id)
+
+    def get_officehour_by_day(self, day: Weekday) -> Option[OfficeHour]:
+        c = self.connection.cursor()
+        term = (day.value,)
+        c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
+        officehour = None
+        res = c.fetchone()
+        if res:
+            officehour = self._res_to_officehour(res)
+        return maybe(officehour)
