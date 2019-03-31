@@ -83,9 +83,9 @@ class CourseApi:
             "taught_by": taught_by,
             "enrolled_in": enrolled_in,
         }
-        
+
         # removing all None values, avoids having to check later
-        filters = {k:v for k,v in filters.items() if v is not None}
+        filters = {k: v for k, v in filters.items() if v is not None}
 
         return self.course_persistence.query_sections(filters)
 
