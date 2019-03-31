@@ -5,6 +5,7 @@ from uuid import UUID
 import attr
 
 from core.domain.user import Instructor
+from core.domain.meeting import Meeting
 
 
 class Semester(Enum):
