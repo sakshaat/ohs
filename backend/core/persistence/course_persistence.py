@@ -2,9 +2,18 @@ from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
+from uuid import UUID
 
-from core.domain.course import Course, Section, SectionIdentity, Semester
+from core.domain.course import (
+    Course,
+    Section,
+    SectionIdentity,
+    Semester,
+    OfficeHour,
+    Weekday,
+)
 from core.domain.user import Instructor
+from core.persistence.meeting_persistence import MeetingPersistence
 
 
 @attr.s
@@ -204,3 +213,58 @@ class CoursePersistence:
         )
         self.connection.commit()
         return Ok(section)
+
+    def create_officehour(self, officehour: OfficeHour) -> Result[OfficeHour, str]:
+        if self.get_officehour(officehour.office_hour_id):
+            return Err(f"OfficeHour {officehour} already exists")
+        c = self.connection.cursor()
+        term = (
+            str(officehour.office_hour_id),
+            officehour.section.identity.to_string(),
+            officehour.starting_hour,
+            officehour.weekday.value,
+        )
+        c.execute(
+            "INSERT INTO officehours(office_hour_id, section_id, starting_hour, day_of_week"
+            "num_students) VALUES (%s, %s, %s, %s)",
+            term,
+        )
+        self.connection.commit()
+        return Ok(officehour)
+
+    def _res_to_officehour(self, res):
+        c = self.connection.cursor()
+
+        def to_section_identity(id):
+            params = id.split(";delimiter;")
+            return SectionIdentity(
+                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+            )
+
+        return OfficeHour(
+            UUID(res[0]),
+            self.get_section(to_section_identity(res[1])),
+            int(res[2]),
+            Weekday(int(res[3])),
+            MeetingPersistence(lambda: self.connection).get_meetings_of_officehour(
+                UUID(res[0])
+            ),
+        )
+
+    def get_officehour(self, office_hour_id: UUID) -> Option[OfficeHour]:
+        c = self.connection.cursor()
+        term = (office_hour_id,)
+        c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
+        officehour = None
+        res = c.fetchone()
+        if res:
+            officehour = self._res_to_officehour(res)
+        return maybe(officehour)
+
+    def delete_officehour(self, office_hour_id: UUID) -> Result[UUID, str]:
+        if not self.get_officehour(office_hour_id):
+            return Err(f"OfficeHour {office_hour_id} does not exist")
+        c = self.connection.cursor()
+        c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (office_hour_id,))
+        self.connection.commit()
+        return Ok(office_hour_id)

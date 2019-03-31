@@ -250,3 +250,13 @@ class MeetingPersistence:
         c.execute("DELETE FROM meetings WHERE meeting_id=%s", (str(meeting_id)))
         self.connection.commit()
         return Ok(meeting_id)
+
+    def get_meetings_of_officehour(self, office_hour_id: uuid.UUID) -> List[Meeting]:
+        c = self.connection.cursor()
+        c.execute(
+            "SELECT * FROM meetings WHERE office_hour_id=%s", (str(office_hour_id))
+        )
+        meetings = c.fetchall()
+        if len(meetings) > 0:
+            meetings = map(lambda x: self._res_to_meeting(x), meetings)
+        return list(meetings)

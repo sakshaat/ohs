@@ -72,6 +72,11 @@ class SectionIdentity(NamedTuple):
     semester: Semester
     section_code: str
 
+    def to_string(self):
+        self.course.course_code + ";delimiter;" + str(self.year) + ";delimiter;" + str(
+            self.semester.value
+        ) + ";delimiter;" + self.section_code
+
     @classmethod
     def from_section(cls, section: Section):
         return cls(section.course, section.year, section.semester, section.section_code)
