@@ -266,13 +266,20 @@ class CoursePersistence:
                 Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
             )
 
+        def format_meeting_slots(meeting_list):
+            lst = [None, None, None, None, None, None]
+            for meeting in meeting_list:
+                lst[meeting.index] = meeting
+
         return OfficeHour(
             UUID(res[0]),
             self.get_section(to_section_identity(res[1])),
             int(res[2]),
             Weekday(int(res[3])),
-            MeetingPersistence(lambda: self.connection).get_meetings_of_officehour(
-                UUID(res[0])
+            format_meeting_slots(
+                MeetingPersistence(lambda: self.connection).get_meetings_of_officehour(
+                    UUID(res[0])
+                )
             ),
         )
 
