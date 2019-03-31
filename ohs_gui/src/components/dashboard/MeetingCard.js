@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
-class MeetingCard extends Component {
+const dateFormat = require('dateformat');
+
+class MeetingCard extends PureComponent {
   render() {
-    const dateFormat = require("dateformat")
+    const { meeting, isProf } = this.props;
     return (
-      <Link to={`/meeting/${this.props.meeting.id}`}>
+      <Link to={`/meeting/${meeting.id}`}>
         <div className="meeting card-element">
-          {this.props.meeting.courseCode}
+          {meeting.courseCode}
           <br />
-          {dateFormat(new Date(this.props.meeting.time), "mmmm dS, yyyy, h:MM TT")}
+          {dateFormat(new Date(meeting.time), 'mmmm dS, yyyy, h:MM TT')}
           <br />
-          {this.props.meeting.room}
+          {meeting.room}
           <br />
-          {this.props.isProf ?
-            this.props.meeting.student : this.props.meeting.professor}
+          {isProf ? meeting.student : meeting.professor}
         </div>
       </Link>
     );

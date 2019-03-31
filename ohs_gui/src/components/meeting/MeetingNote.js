@@ -1,18 +1,23 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+// TO DO use import to stay consistent
+const dateFormat = require('dateformat');
 
-class MeetingNote extends Component {
+class MeetingNote extends PureComponent {
   render() {
-    const dateFormat = require("dateformat")
-
+    const { removeNote, note } = this.props;
     return (
       <div className="meeting-note">
-        <span className="note-delete" onClick={this.props.removeNote(this.props.note.time)}>&#10006;</span>
+        <span
+          className="note-delete"
+          role="presentation"
+          onClick={removeNote(note.time)}
+        >
+          &#10006;
+        </span>
         <p className="note-date">
-          {dateFormat(new Date(this.props.note.time), "mmmm dS, yyyy, h:MM TT")}
+          {dateFormat(new Date(note.time), 'mmmm dS, yyyy, h:MM TT')}
         </p>
-        <p className="note-content">
-          {this.props.note.contents}
-        </p>
+        <p className="note-content">{note.contents}</p>
       </div>
     );
   }
