@@ -2,26 +2,13 @@ import os
 import sys
 from pathlib import Path
 
-import flask
-from flask import Flask
-from flask_cors import CORS
 from option import Err, Result
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
-from core.api.course_api import CourseApi
-from core.api.instructor_api import InstructorApi
-from core.api.meeting_api import MeetingApi
-from core.api.ohs_api import OhsApi
 from core.app import App
-from core.authentication.password_auth import PasswordAuthenticator
-from core.authentication.token_auth import JwtAuthenticator
 from core.domain.user import Instructor
-from core.gql.graphql_controller import GraphqlController
-from core.gql.schema_registry import SchemaRestriction, build_schema
-from core.persistence.connection_manager import ConnectionManager
-from core.persistence.course_persistence import CoursePersistence
-from core.persistence.instructor_persistence import InstructorPersistence
-from core.persistence.meeting_persistence import MeetingPersistence
+from core.gql.schema_registry import SchemaRestriction
+from core.initialization import make_app
 
 
 class InstructorService(App):
@@ -45,39 +32,14 @@ class InstructorService(App):
         return self.api.instructor_api.verify_instructor_by_token(token)
 
 
-def get_connection():
-    return flask.g.connection
-
-
-flask_app = Flask("Instructor Service")
-CORS(flask_app)
-gql_controller = GraphqlController(
-    build_schema([SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR])
+secret = os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"]
+app = make_app(
+    InstructorService,
+    "Instructor Service",
+    secret,
+    [SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR],
 )
-course_persistence = CoursePersistence(get_connection)
-instructor_persistence = InstructorPersistence(get_connection)
-meeting_persistence = MeetingPersistence(get_connection)
-
-token_auth = JwtAuthenticator(os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"])
-password_auth = PasswordAuthenticator(instructor_persistence)
-
-ohs_api = OhsApi(
-    course_api=CourseApi(course_persistence),
-    instructor_api=InstructorApi(instructor_persistence, password_auth, token_auth),
-    meeting_api=MeetingApi(meeting_persistence),
-)
-
-connection_manager = ConnectionManager(
-    1,
-    100,
-    {
-        "host": os.getenv("OHS_DB_HOST"),
-        "dbname": os.getenv("OHS_DB_NAME"),
-        "user": os.getenv("OHS_DB_USER"),
-        "password": os.getenv("OHS_DB_PASSWORD"),
-    },
-)
-app = InstructorService(flask_app, gql_controller, ohs_api, connection_manager)
+flask_app = app.flask_app
 
 if __name__ == "__main__":
     try:
