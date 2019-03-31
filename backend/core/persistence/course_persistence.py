@@ -214,6 +214,33 @@ class CoursePersistence:
         self.connection.commit()
         return Ok(section)
 
+    def enroll_student(self, section: Section, student_number: str) -> Result[str, str]:
+        c = self.connection.cursor()
+        term = (student_number, section.identity().to_string())
+        c.execute(
+            "INSERT INTO enrollment(student_number, section_id) VALUES (%s, %s)", term
+        )
+        self.connection.commit()
+        return Ok(student_number)
+
+    def get_students_of_section(self, student_number: str) -> List[Section]:
+        def to_section_identity(id):
+            params = id.split(";delimiter;")
+            return SectionIdentity(
+                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+            )
+
+        c = self.connection.cursor()
+        term = (student_number,)
+        c.execute("SELECT * FROM enrollment WHERE student_number=%s", term)
+
+        sections = c.fetchall()
+        if len(sections) > 0:
+            sections = map(
+                lambda x: self.get_section(to_section_identity(x[1])), sections
+            )
+        return list(sections)
+
     def create_officehour(self, officehour: OfficeHour) -> Result[OfficeHour, str]:
         if self.get_officehour(officehour.office_hour_id):
             return Err(f"OfficeHour {officehour} already exists")

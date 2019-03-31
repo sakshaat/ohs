@@ -44,9 +44,6 @@ CREATE TABLE officehours
   section_id           VARCHAR(50) NOT NULL,
   starting_hour        integer NOT NULL,
   day_of_week          integer NOT NULL,
-  CONSTRAINT section_fkey FOREIGN KEY (section_id)
-    REFERENCES sections (section_id) MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE meetings
@@ -95,4 +92,14 @@ CREATE TABLE comments
         CASE WHEN author_if_instructor IS NULL THEN 0 ELSE 1 END +
         CASE WHEN author_if_student IS NULL THEN 0 ELSE 1 END = 1
     )
+);
+
+CREATE TABLE enrollment
+(
+  student_number       VARCHAR(50) NOT NULL,
+  section_id           VARCHAR(50) NOT NULL,
+  PRIMARY KEY (student_number, section_id)
+  CONSTRAINT student_fkey FOREIGN KEY (student_number)
+    REFERENCES students (student_number) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
