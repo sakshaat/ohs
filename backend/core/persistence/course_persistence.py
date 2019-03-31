@@ -223,7 +223,7 @@ class CoursePersistence:
         self.connection.commit()
         return Ok(student_number)
 
-    def get_students_of_section(self, student_number: str) -> List[Section]:
+    def get_sections_of_student(self, student_number: str) -> List[Section]:
         def to_section_identity(id):
             params = id.split(";delimiter;")
             return SectionIdentity(
