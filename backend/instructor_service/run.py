@@ -38,6 +38,7 @@ app = make_app(
     "Instructor Service",
     secret,
     [SchemaRestriction.ALL, SchemaRestriction.INSTRUCTOR],
+    Instructor,
 )
 flask_app = app.flask_app
 
