@@ -37,7 +37,7 @@ def make_app(cls, name, secret, restrictions):
     password_auth = PasswordAuthenticator(instructor_persistence)
 
     ohs_api = OhsApi(
-        course_api=CourseApi(course_persistence),
+        course_api=CourseApi(course_persistence, meeting_persistence),
         instructor_api=InstructorApi(instructor_persistence, password_auth, token_auth),
         student_api=StudentApi(student_persistence, password_auth, token_auth),
         meeting_api=MeetingApi(meeting_persistence),

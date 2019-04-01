@@ -2,9 +2,18 @@ from typing import Callable, List
 
 import attr
 from option import Err, Ok, Option, Result, maybe
+from uuid import UUID
 
-from core.domain.course import Course, Section, SectionIdentity, Semester
+from core.domain.course import (
+    Course,
+    Section,
+    SectionIdentity,
+    Semester,
+    OfficeHour,
+    Weekday,
+)
 from core.domain.user import Instructor
+from core.persistence.meeting_persistence import MeetingPersistence
 
 
 @attr.s
@@ -204,3 +213,115 @@ class CoursePersistence:
         )
         self.connection.commit()
         return Ok(section)
+
+    def enroll_student(self, section: Section, student_number: str) -> Result[str, str]:
+        c = self.connection.cursor()
+        term = (student_number, section.identity().to_string())
+        c.execute(
+            "INSERT INTO enrollment(student_number, section_id) VALUES (%s, %s)", term
+        )
+        self.connection.commit()
+        return Ok(student_number)
+
+    def get_sections_of_student(self, student_number: str) -> List[Section]:
+        def to_section_identity(id):
+            params = id.split(";delimiter;")
+            return SectionIdentity(
+                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+            )
+
+        c = self.connection.cursor()
+        term = (student_number,)
+        c.execute("SELECT * FROM enrollment WHERE student_number=%s", term)
+
+        sections = c.fetchall()
+        if len(sections) > 0:
+            sections = map(
+                lambda x: self.get_section(to_section_identity(x[1])), sections
+            )
+        return list(sections)
+
+    def create_officehour(
+        self, officehour: OfficeHour, mp: MeetingPersistence
+    ) -> Result[OfficeHour, str]:
+        if self.get_officehour(officehour.office_hour_id, mp):
+            return Err(f"OfficeHour {officehour} already exists")
+        c = self.connection.cursor()
+        term = (
+            str(officehour.office_hour_id),
+            officehour.section.identity.to_string(),
+            officehour.starting_hour,
+            officehour.weekday.value,
+        )
+        c.execute(
+            "INSERT INTO officehours(office_hour_id, section_id, starting_hour, day_of_week"
+            "num_students) VALUES (%s, %s, %s, %s)",
+            term,
+        )
+        self.connection.commit()
+        return Ok(officehour)
+
+    def _res_to_officehour(self, res, mp):
+        def to_section_identity(id):
+            params = id.split(";delimiter;")
+            return SectionIdentity(
+                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+            )
+
+        def format_meeting_slots(meeting_list):
+            lst = [None, None, None, None, None, None]
+            for meeting in meeting_list:
+                lst[meeting.index] = meeting
+
+        return OfficeHour(
+            UUID(res[0]),
+            self.get_section(to_section_identity(res[1])),
+            int(res[2]),
+            Weekday(int(res[3])),
+            format_meeting_slots(mp.get_meetings_of_officehour(UUID(res[0]))),
+        )
+
+    def get_officehour(
+        self, office_hour_id: UUID, mp: MeetingPersistence
+    ) -> Option[OfficeHour]:
+        c = self.connection.cursor()
+        term = (office_hour_id,)
+        c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
+        officehour = None
+        res = c.fetchone()
+        if res:
+            officehour = self._res_to_officehour(res, mp)
+        return maybe(officehour)
+
+    def delete_officehour(
+        self, office_hour_id: UUID, mp: MeetingPersistence
+    ) -> Result[UUID, str]:
+        if not self.get_officehour(office_hour_id, mp):
+            return Err(f"OfficeHour {office_hour_id} does not exist")
+        c = self.connection.cursor()
+        c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (office_hour_id,))
+        self.connection.commit()
+        return Ok(office_hour_id)
+
+    def get_officehour_for_instructor_by_day(
+        self, user_name: str, day: Weekday, mp: MeetingPersistence
+    ) -> List[OfficeHour]:
+        c = self.connection.cursor()
+        officehours = []
+        sections = map(
+            lambda x: x.identity().to_string(),
+            self.query_sections({"taught_by": user_name}),
+        )
+        if len(sections) > 0:
+            c.execute(
+                "SELECT * FROM officehours WHERE day_of_week=%s AND (section_id=%s"
+                + (" OR section_id=%s" * (len(sections) - 1))
+                + ")",
+                tuple([day.value] + sections),
+            )
+            results = c.fetchall()
+            if len(results) > 0:
+                officehours = list(
+                    map(lambda res: self._res_to_officehour(res, mp), results)
+                )
+        return officehours
