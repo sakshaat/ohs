@@ -6,7 +6,7 @@ from option import Err, Result
 
 sys.path.insert(1, str(Path(__file__).parent.parent.resolve()))  # noqa
 from core.app import App
-from core.domain.user import User
+from core.domain.user import User, Student
 from core.gql.schema_registry import SchemaRestriction
 from core.initialization import make_app
 
@@ -38,6 +38,7 @@ app = make_app(
     "Student Service",
     secret,
     [SchemaRestriction.ALL, SchemaRestriction.STUDENT],
+    Student,
 )
 flask_app = app.flask_app
 if __name__ == "__main__":

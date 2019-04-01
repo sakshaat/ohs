@@ -104,7 +104,7 @@ class StudentPersistence(AuthenticationPersistence):
             pass_hash = res[2]
         else:
             return Err(f"Student {user_identity} does not exist")
-        return maybe(pass_hash)
+        return Ok(pass_hash)
 
     def update_password_hash(
         self, user_identity: str, new_hash: str
