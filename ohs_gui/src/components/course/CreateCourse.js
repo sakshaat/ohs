@@ -17,7 +17,6 @@ const ADD_COURSE = gql`
     }
   }
 `;
-
 class CreateCourse extends Component {
   constructor(props) {
     super(props);
@@ -46,7 +45,7 @@ class CreateCourse extends Component {
         // send message back to dashboard
         callback(value);
       })
-      .catch(
+      .catch(() =>
         toast('Unknown Error - Could not create new course', {
           type: toast.TYPE.ERROR
         })

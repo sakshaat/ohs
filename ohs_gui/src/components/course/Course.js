@@ -45,7 +45,7 @@ class Course extends Component {
         }
       })
       .then(res => this.updateSectionList(res.data.sections))
-      .catch(
+      .catch(() =>
         toast('Unknown Error - Could not get course', {
           type: toast.TYPE.ERROR
         })

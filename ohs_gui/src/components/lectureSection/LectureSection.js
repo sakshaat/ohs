@@ -30,7 +30,7 @@ class LectureSection extends Component {
         }
       })
       .then(res => this.setState({ section: res.data.section }))
-      .catch(
+      .catch(() =>
         toast('Unknown Error - Could not get lecture session', {
           type: toast.TYPE.ERROR
         })
