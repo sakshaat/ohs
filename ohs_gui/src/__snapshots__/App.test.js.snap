@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<BrowserRouter>
+  <div
+    className="App"
+  >
+    <nav>
+      <div
+        className="links"
+      >
+        <div
+          className="nav-item"
+        >
+          <a
+            href="/"
+            tabIndex={0}
+          >
+            OHS
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div
+      className="app-container"
+    >
+      <Login
+        notifyLogIn={[Function]}
+      />
+    </div>
+  </div>
+</BrowserRouter>
+`;

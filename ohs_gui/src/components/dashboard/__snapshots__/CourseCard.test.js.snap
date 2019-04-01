@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`check if it renders properly 1`] = `
+<Link
+  replace={false}
+  to="/course/CSC302"
+>
+  <div
+    className="course card-element"
+  >
+    CSC302
+  </div>
+</Link>
+`;

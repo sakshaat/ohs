@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test if it renders with empty list 1`] = `
+<div
+  id="sections"
+>
+  <h1>
+    Current Courses
+  </h1>
+</div>
+`;
+
+exports[`test if it renders with params 1`] = `
+<div
+  id="sections"
+>
+  <h1>
+    Current Courses
+  </h1>
+  <LectureSectionCard
+    key="1"
+    section={
+      Object {
+        "course": Object {
+          "courseCode": "CSC302",
+        },
+        "numStudent": 25,
+        "sectionCode": "LEC0101",
+        "semester": "FALL",
+        "year": 2019,
+      }
+    }
+  />
+  <LectureSectionCard
+    key="1"
+    section={
+      Object {
+        "course": Object {
+          "courseCode": "CSC304",
+        },
+        "numStudent": 25,
+        "sectionCode": "LEC0102",
+        "semester": "FALL",
+        "year": 2019,
+      }
+    }
+  />
+</div>
+`;

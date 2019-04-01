@@ -63,7 +63,7 @@ class App extends Component {
               {isLoggedIn &&
                 user && [
                   <div key={0} className="nav-item">
-                    Logged In as {user.userName}
+                    Logged In as {user.firstName} {user.lastName}
                   </div>,
                   <div
                     key={1}
