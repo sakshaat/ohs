@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import MeetingCard from '../dashboard/MeetingCard';
 
 import CreateCourse from '../course/CreateCourse';
@@ -53,7 +55,11 @@ class Home extends Component {
         query: GET_COURSES
       })
       .then(res => this.updateCourseList(res))
-      .catch(result => console.log(result));
+      .catch(
+        toast('Unknown Error - Cannot Retrieve Courses', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   getSections() {
@@ -63,7 +69,11 @@ class Home extends Component {
         query: GET_SECTIONS
       })
       .then(res => this.updateSectionList(res))
-      .catch(result => console.log(result));
+      .catch(
+        toast('Unknown Error - Cannot Retrieve Sections', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   updateSectionList(res) {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 
 import { getProfClient } from '../utils/client';
 import { GET_SECTION } from '../utils/queries';
@@ -29,7 +30,11 @@ class LectureSection extends Component {
         }
       })
       .then(res => this.setState({ section: res.data.section }))
-      .catch(result => console.log(result));
+      .catch(
+        toast('Unknown Error - Could not get lecture session', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   updateSection(section) {
