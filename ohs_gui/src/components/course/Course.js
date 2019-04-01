@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import shortid from 'shortid';
+import { toast } from 'react-toastify';
 
 import LectureSectionCard from '../dashboard/LectureSectionCard';
 import { getProfClient } from '../utils/client';
@@ -44,7 +45,11 @@ class Course extends Component {
         }
       })
       .then(res => this.updateSectionList(res.data.sections))
-      .catch(result => console.log(result));
+      .catch(
+        toast('Unknown Error - Could not get course', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   updateSectionList(lst) {
@@ -61,7 +66,6 @@ class Course extends Component {
     } = this.props;
 
     const isProf = user && user.role === roles.PROFESSOR;
-    console.log(user);
 
     return (
       <div id="sections">

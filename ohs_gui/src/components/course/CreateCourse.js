@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-
+import { toast } from 'react-toastify';
 import { Redirect } from 'react-router-dom';
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 import gql from 'graphql-tag';
@@ -41,10 +41,16 @@ class CreateCourse extends Component {
           courseInput: { courseCode: value }
         }
       })
-      .then(this.setState({ courseCreated: true }))
-      // send message back to dashboard
-      .then(callback(value))
-      .catch(res => console.log(res));
+      .then(() => {
+        this.setState({ courseCreated: true });
+        // send message back to dashboard
+        callback(value);
+      })
+      .catch(
+        toast('Unknown Error - Could not create new course', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   render() {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import gql from 'graphql-tag';
+import { toast } from 'react-toastify';
 
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
@@ -63,7 +64,11 @@ class CreateSection extends Component {
         }
       })
       .then(this.setState({ sectionCreated: true }))
-      .catch(res => console.log(res));
+      .catch(
+        toast('Unknown Error - Could not create lecture session', {
+          type: toast.TYPE.ERROR
+        })
+      );
   }
 
   render() {
