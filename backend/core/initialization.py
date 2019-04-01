@@ -11,6 +11,7 @@ from core.api.ohs_api import OhsApi
 from core.api.student_api import StudentApi
 from core.authentication.password_auth import PasswordAuthenticator
 from core.authentication.token_auth import JwtAuthenticator
+from core.domain.user import Instructor
 from core.gql.graphql_controller import GraphqlController
 from core.gql.schema_registry import build_schema
 from core.persistence.connection_manager import ConnectionManager
@@ -24,7 +25,7 @@ def get_connection():
     return flask.g.connection
 
 
-def make_app(cls, name, secret, restrictions):
+def make_app(cls, name, secret, restrictions, user_type):
     flask_app = Flask(name)
     CORS(flask_app)
     gql_controller = GraphqlController(build_schema(restrictions))
@@ -34,7 +35,10 @@ def make_app(cls, name, secret, restrictions):
     meeting_persistence = MeetingPersistence(get_connection)
 
     token_auth = JwtAuthenticator(secret)
-    password_auth = PasswordAuthenticator(instructor_persistence)
+    if user_type == Instructor:
+        password_auth = PasswordAuthenticator(instructor_persistence)
+    else:
+        password_auth = PasswordAuthenticator(student_persistence)
 
     ohs_api = OhsApi(
         course_api=CourseApi(course_persistence, meeting_persistence),
