@@ -62,7 +62,7 @@ token_auth = JwtAuthenticator(os.environ["OHS_INSTRUCTOR_SERVICE_SECRET"])
 password_auth = PasswordAuthenticator(instructor_persistence)
 
 ohs_api = OhsApi(
-    course_api=CourseApi(course_persistence),
+    course_api=CourseApi(course_persistence, meeting_persistence),
     instructor_api=InstructorApi(instructor_persistence, password_auth, token_auth),
     meeting_api=MeetingApi(meeting_persistence),
 )

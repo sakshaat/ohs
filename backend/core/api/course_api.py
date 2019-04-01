@@ -6,11 +6,13 @@ from option import Option, Result
 from core.domain.course import Course, Section, SectionIdentity, Semester
 from core.domain.user import Instructor
 from core.persistence.course_persistence import CoursePersistence
+from core.persistence.meeting_persistence import MeetingPersistence
 
 
 @attr.s(auto_attribs=True)
 class CourseApi:
     course_persistence: CoursePersistence
+    meeting_persistence: MeetingPersistence
 
     def create_section(
         self,
