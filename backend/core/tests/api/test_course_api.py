@@ -14,9 +14,11 @@ from core.tests.generation.fake_course import fake_course, fake_section
 def mock_course_persistence():
     return MagicMock(CoursePersistence)
 
+
 @pytest.fixture()
 def mock_meeting_persistence():
     return MagicMock(MeetingPersistence)
+
 
 class TestCreateSection:
     def test_success(self, mock_course_persistence, mock_meeting_persistence):
@@ -73,7 +75,9 @@ class TestCreateCourse:
 
 
 @pytest.mark.parametrize("filters,expected", [(None, list_fakes(fake_course, 5))])
-def test_query_courses(mock_course_persistence, mock_meeting_persistence, filters, expected):
+def test_query_courses(
+    mock_course_persistence, mock_meeting_persistence, filters, expected
+):
     course_api = CourseApi(mock_course_persistence, mock_meeting_persistence)
     mock_course_persistence.query_courses = MagicMock(return_value=expected)
     assert course_api.query_courses(filters) == expected
@@ -93,7 +97,9 @@ def test_query_courses(mock_course_persistence, mock_meeting_persistence, filter
         },
     ],
 )
-def test_query_sections(mock_course_persistence, mock_meeting_persistence, filters, expected):
+def test_query_sections(
+    mock_course_persistence, mock_meeting_persistence, filters, expected
+):
     course_api = CourseApi(mock_course_persistence, mock_meeting_persistence)
 
     def assert_called_correctly(_filters):

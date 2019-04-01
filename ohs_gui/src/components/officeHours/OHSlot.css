@@ -1,0 +1,39 @@
+.book-button {
+  flex-grow: 1;
+  margin-right: 4px;
+  margin-left: 4px;
+  background-color: rgb(200, 200, 200);
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.book-button:hover {
+  background-color: white;
+}
+
+.book-button:hover .fa-plus {
+  font-size: 50pt;
+}
+
+.fa-plus {
+  color: gray;
+  transition: font-size 0.3s ease;
+  font-size: 35pt;
+}
+
+.booked {
+  background-color: navy;
+}
+
+.slot-info {
+  padding: 10px;
+}
+
+.booked:hover {
+  background-color: rgb(40, 97, 255);
+}
