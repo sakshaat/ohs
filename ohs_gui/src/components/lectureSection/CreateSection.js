@@ -17,7 +17,6 @@ const ADD_SECTION = gql`
     }
   }
 `;
-
 class CreateSection extends Component {
   constructor(props) {
     super(props);

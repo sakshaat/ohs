@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const dateFormat = require('dateformat');
 
@@ -21,5 +22,11 @@ class MeetingCard extends PureComponent {
     );
   }
 }
+
+MeetingCard.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  meeting: PropTypes.object.isRequired,
+  isProf: PropTypes.bool.isRequired
+};
 
 export default MeetingCard;
