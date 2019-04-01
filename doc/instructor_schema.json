@@ -767,8 +767,8 @@
                 "kind": "NON_NULL", 
                 "name": null, 
                 "ofType": {
-                  "kind": "UNION", 
-                  "name": "UserTypes", 
+                  "kind": "INTERFACE", 
+                  "name": "User", 
                   "ofType": null
                 }
               }
@@ -811,27 +811,6 @@
           "kind": "OBJECT", 
           "name": "Comment", 
           "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": null, 
-          "inputFields": null, 
-          "interfaces": null, 
-          "kind": "UNION", 
-          "name": "UserTypes", 
-          "possibleTypes": [
-            {
-              "kind": "OBJECT", 
-              "name": "Instructor", 
-              "ofType": null
-            }, 
-            {
-              "kind": "OBJECT", 
-              "name": "Student", 
-              "ofType": null
-            }
-          ]
         }, 
         {
           "description": null, 
@@ -1084,6 +1063,142 @@
                 "name": "Section", 
                 "ofType": null
               }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "contentText", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "String", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "meetingId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "createNote", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "Note", 
+                "ofType": null
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "noteId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "deleteNote", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "DeleteNote", 
+                "ofType": null
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "meetingId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "deleteMeeting", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "DeleteMeeting", 
+                "ofType": null
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "contentText", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "String", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "meetingId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "createComment", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "Comment", 
+                "ofType": null
+              }
             }
           ], 
           "inputFields": null, 
@@ -1177,6 +1292,60 @@
           "interfaces": null, 
           "kind": "INPUT_OBJECT", 
           "name": "SectionInput", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "noteId", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "UUID", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "DeleteNote", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "meetingId", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "UUID", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "DeleteMeeting", 
           "possibleTypes": null
         }, 
         {

@@ -170,7 +170,7 @@ class CoursePersistence:
                 else:
                     where_text += " AND"
                 where_text += " taught_by=%s"
-                terms.append(filters["taught_by"].user_name)
+                terms.append(filters["taught_by"])
 
             c.execute("SELECT * FROM sections" + where_text, tuple(terms))
 

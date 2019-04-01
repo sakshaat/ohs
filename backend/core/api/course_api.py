@@ -78,13 +78,16 @@ class CourseApi:
             List of sections returned by the query
         """
 
-        return self.course_persistence.query_sections(
-            {
-                "course_code": course_code,
-                "taught_by": taught_by,
-                "enrolled_in": enrolled_in,
-            }
-        )
+        filters = {
+            "course_code": course_code,
+            "taught_by": taught_by,
+            "enrolled_in": enrolled_in,
+        }
+
+        # removing all None values, avoids having to check later
+        filters = {k: v for k, v in filters.items() if v is not None}
+
+        return self.course_persistence.query_sections(filters)
 
     def get_course(self, course_code: str) -> Option[Course]:
         """

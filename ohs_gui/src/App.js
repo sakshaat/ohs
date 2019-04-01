@@ -1,85 +1,94 @@
 import React, { Component } from 'react';
 
-import { BrowserRouter as Router} from "react-router-dom";
-import Home from "./components/Home";
-import Login from "./components/Login";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import Home from './components/home/Home';
+import Auth from './components/home/Auth';
 
 import './App.css';
+
+// Have to call it once in your app.
+toast.useLazyContainer();
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+  position: toast.POSITION.BOTTOM_RIGHT
+});
 
 /* A wrapper which keeps track of the current logged in user, and provides the nav bar */
 class App extends Component {
   constructor(props) {
     super(props);
+    const user = window.sessionStorage.user
+      ? JSON.parse(window.sessionStorage.user)
+      : null;
     this.state = {
-      user: null,
-      isLoggedIn: window.sessionStorage.token ? true : false
-    }
+      user,
+      isLoggedIn: !!window.sessionStorage.token
+    };
 
-    this.getUser = this.getUser.bind(this);
     this.notifyLogIn = this.notifyLogIn.bind(this);
     this.logout = this.logout.bind(this);
   }
 
-  notifyLogIn(token) {
+  notifyLogIn(token, user) {
     window.sessionStorage.token = token;
-    this.getUser();
-    this.setState({isLoggedIn: true});
-    
+    window.sessionStorage.user = JSON.stringify(user);
+    this.setState({ user, isLoggedIn: true });
   }
 
-  // TODO: we should set the user in state when we log in
-  componentDidMount() {
-    this.getUser();
-    if(window.sessionStorage.token !== undefined) {
-      this.getUser();
-    }
-  }
-
-  getUser() {
-    // TODO: dummy json
-    const user = {
-      role: "PROFESSOR",
-      firstName: "Alec",
-      lastName: "Gibson",
-      id: "a"
-    }
-    this.setState({ user: user });
-  }
-
-  logout(e) {
-    window.sessionStorage.removeItem("token");
-    this.setState({isLoggedIn: false});
+  logout() {
+    toast('Successfully Logged Out', { type: toast.TYPE.SUCCESS });
+    window.sessionStorage.removeItem('token');
+    window.sessionStorage.removeItem('user');
+    this.setState({ isLoggedIn: false });
   }
 
   render() {
+    const { isLoggedIn, user } = this.state;
+
     return (
       <Router>
         <div className="App">
           <nav>
             <div className="links">
               <div className="nav-item">
-                <a href="/">
+                <a tabIndex={0} href="/">
                   OHS
                 </a>
               </div>
-              {this.state.isLoggedIn &&
-                this.state.user &&
-                  [
-                    <div key={0} className="nav-item">
-                      Logged In as {this.state.user.role} {this.state.user.id}
-                    </div>,
-                    <div key={1} onClick={this.logout} className="logout-btn nav-item">
-                      Logout
-                    </div>
-                  ]
-              }
+              {isLoggedIn &&
+                user && [
+                  <div key={0} className="nav-item">
+                    Logged In as {user.userName}
+                  </div>,
+                  <div
+                    key={1}
+                    onClick={this.logout}
+                    role="button"
+                    tabIndex={-1}
+                    onKeyPress={this.logout}
+                    className="logout-btn nav-item"
+                  >
+                    Logout
+                  </div>
+                ]}
             </div>
           </nav>
           <div className="app-container">
-            {this.state.isLoggedIn && this.state.user ? <Home user={this.state.user} /> : <Login notifyLogIn={(token)=>this.notifyLogIn(token)}/>}
+            {isLoggedIn && user ? (
+              <Home user={user} />
+            ) : (
+              <Auth
+                notifyLogIn={(token, userObj) =>
+                  this.notifyLogIn(token, userObj)
+                }
+              />
+            )}
           </div>
-
-          
         </div>
       </Router>
     );

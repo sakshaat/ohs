@@ -34,8 +34,3 @@ class Student(graphene.ObjectType):
             domain_student.last_name,
             domain_student.student_number,
         )
-
-
-class UserTypes(graphene.Union):
-    class Meta:
-        types = (Instructor, Student)
