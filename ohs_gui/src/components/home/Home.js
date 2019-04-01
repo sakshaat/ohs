@@ -55,7 +55,7 @@ class Home extends Component {
         query: GET_COURSES
       })
       .then(res => this.updateCourseList(res))
-      .catch(
+      .catch(() =>
         toast('Unknown Error - Cannot Retrieve Courses', {
           type: toast.TYPE.ERROR
         })
@@ -69,7 +69,7 @@ class Home extends Component {
         query: GET_SECTIONS
       })
       .then(res => this.updateSectionList(res))
-      .catch(
+      .catch(() =>
         toast('Unknown Error - Cannot Retrieve Sections', {
           type: toast.TYPE.ERROR
         })
