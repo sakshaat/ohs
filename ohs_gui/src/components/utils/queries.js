@@ -8,6 +8,27 @@ const GET_COURSES = gql`
   }
 `;
 
+const GET_UPCOMING_MEETINGS = gql`
+  query getUpcomingMeetings {
+    upcomingMeetings {
+      meetingId
+      officeHourId
+      index
+      instructor {
+        firstName
+        lastName
+        userName
+      }
+      student {
+        firstName
+        lastName
+        studentNumber
+      }
+      startTime
+    }
+  }
+`;
+
 const GET_SECTIONS = gql`
   query getSections {
     sections {
@@ -59,4 +80,10 @@ const GET_SECTION_FOR_COURSE = gql`
   }
 `;
 
-export { GET_COURSES, GET_SECTIONS, GET_SECTION, GET_SECTION_FOR_COURSE };
+export {
+  GET_COURSES,
+  GET_SECTIONS,
+  GET_SECTION,
+  GET_SECTION_FOR_COURSE,
+  GET_UPCOMING_MEETINGS
+};

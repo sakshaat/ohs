@@ -98,7 +98,7 @@ def test_verify_token(instructor_api, instructor_found):
     else:
         instructor_api.get_instructor = MagicMock(return_value=NONE)
         assert instructor_api.verify_instructor_by_token(token) == Err(
-            "Could not get instructor"
+            "UNAUTHORIZED - Could not get instructor"
         )
     instructor_api.jwt_authenticator.verify_token.assert_called_once_with(token)
     instructor_api.get_instructor.assert_called_once_with(instructor.user_name)
