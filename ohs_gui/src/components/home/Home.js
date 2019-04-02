@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Redirect } from 'react-router-dom';
 
 import { ApolloProvider, Query } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
@@ -18,13 +22,14 @@ import CreateSection from '../lectureSection/CreateSection';
 import LectureSection from '../lectureSection/LectureSection';
 import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
+import AddStudentsToSection from '../lectureSection/AddStudentsToSection';
 
 import { roles } from '../utils/constants';
 
 import {
   GET_COURSES,
-  GET_SECTIONS,
-  GET_UPCOMING_MEETINGS
+  GET_UPCOMING_MEETINGS,
+  GET_SECTIONS_FOR_STUDENT
 } from '../utils/queries';
 
 import './Home.css';
@@ -139,7 +144,8 @@ class Home extends Component {
                       </Query>
                     ) : (
                       <Query
-                        query={GET_SECTIONS}
+                        query={GET_SECTIONS_FOR_STUDENT}
+                        variables={{ studentNum: user.studentNumber }}
                         onError={() => {
                           toast('Unknown Error - Could not get sections', {
                             type: toast.TYPE.ERROR
@@ -175,6 +181,13 @@ class Home extends Component {
                   exact
                   path="/section"
                   render={props => <LectureSection user={user} {...props} />}
+                />
+                <Route
+                  exact
+                  path="/add-students"
+                  render={props => (
+                    <AddStudentsToSection user={user} {...props} />
+                  )}
                 />
                 <Route
                   exact
