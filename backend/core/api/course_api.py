@@ -10,7 +10,7 @@ from core.domain.course import (
     SectionIdentity,
     Semester,
     OfficeHour,
-    Weekday
+    Weekday,
 )
 from core.domain.user import Instructor
 from core.persistence.course_persistence import CoursePersistence
@@ -171,6 +171,23 @@ class CourseApi:
         """
         return self.course_persistence.get_officehour_for_instructor_by_day(
             user_name, weekday, MeetingPersistence
+        )
+
+    def get_officehours_for_section_on_weekday(
+        self, section: Section, weekday: Weekday
+    ) -> List[OfficeHour]:
+        """
+        Get office hours for a section by day of the week
+
+        Args:
+            section: The relevant Section.
+            weekday: The day of the week.
+
+        Returns:
+            List of officehours for section on that day.
+        """
+        return self.course_persistence.get_officehour_for_instructor_by_day(
+            section, weekday, MeetingPersistence
         )
 
     def delete_officehour(self, office_hour_id: UUID) -> Result[UUID, str]:
