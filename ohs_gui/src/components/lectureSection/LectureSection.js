@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 
@@ -7,10 +7,82 @@ import { GET_SECTION } from '../utils/queries';
 import OHContainer from '../officeHours/OHContainer';
 import './LectureSection.css';
 
-class LectureSection extends PureComponent {
+function getSemesterCode(sem) {
+  // assumption: summer courses are assumed to be full session
+  switch (sem) {
+    case 'SUMMER':
+    case 'FULL_YEAR':
+      return 'Y';
+    case 'WINTER':
+      return 'S';
+    case 'FALL':
+      return 'F';
+    default:
+      return '';
+  }
+}
+
+class LectureSection extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      bookedSlots: []
+    };
+
+    this.toggleBooking = this.toggleBooking.bind(this);
+    this.changeDay = this.changeDay.bind(this);
+    this.getOH = this.getOH.bind(this);
+
+    this.selectDay = React.createRef();
+    this.slotNum = 14; // number of times per day where we can book office hours
+  }
+
+  componentDidMount() {
+    this.getOH('Monday');
+  }
+
+  getOH(day) {
+    console.log(day);
+    // TODO: dummy json
+    const bookedSlots = new Array(this.slotNum);
+    for (let i = 0; i < bookedSlots.length; i += 1) {
+      bookedSlots[i] = false;
+    }
+
+    this.setState({ bookedSlots });
+  }
+
+  changeDay() {
+    const val = this.selectDay.current.value;
+    this.getOH(val);
+  }
+
+  toggleBooking(idx) {
+    const { bookedSlots } = this.state;
+    const lst = bookedSlots.slice(0);
+    let consent = false;
+    if (lst[idx]) {
+      consent = window.confirm(
+        'Are you sure you want to delete this office hour?'
+      );
+    } else {
+      consent = window.confirm(
+        'Are you sure you want to create an office hour in this timeslot?'
+      );
+    }
+
+    if (consent) {
+      // TODO: update office hours in backend
+      // negate that index
+      lst[idx] = !lst[idx];
+      this.setState({ bookedSlots: lst });
+    }
+  }
+
   render() {
     const { location } = this.props;
-    const params = new URLSearchParams(location.search);
+    const { bookedSlots } = this.state;
     const daysOfWeek = [
       'Monday',
       'Tuesday',
@@ -37,6 +109,7 @@ class LectureSection extends PureComponent {
       '9pm'
     ];
 
+    const params = new URLSearchParams(location.search);
     const variables = {
       course: { courseCode: params.get('course') },
       year: params.get('year'),
@@ -60,23 +133,23 @@ class LectureSection extends PureComponent {
             return (
               <>
                 <div className="section-info">
-                  Lecture section for {params.get('course')}
-                  {params.get('year') && (
-                    <div>
-                      year: {params.get('year')}
-                      <br />
-                      semester: {params.get('semester')}
-                      <br />
-                      section: {params.get('sectionCode')}
-                    </div>
-                  )}
+                  <h1>
+                    {`${section.course.courseCode}H1${getSemesterCode(
+                      section.semester
+                    )} - ${section.sectionCode}`}
+                  </h1>
+                  <div>
+                    year: {section.year}
+                    <br />
+                    number of students: {section.numStudents}
+                  </div>
                 </div>
                 <div className="section-agenda">
                   Select Day:{' '}
                   <select
                     className="section-day"
-                    ref="daySelect"
-                    onChange={this.dayPicked}
+                    ref={this.selectDay}
+                    onChange={this.changeDay}
                   >
                     {daysOfWeek.map(d => (
                       <option value={d} key={d}>
@@ -89,7 +162,10 @@ class LectureSection extends PureComponent {
                       <div key={t}>{t}</div>
                     ))}
                   </div>
-                  <OHContainer slotNum={14} />
+                  <OHContainer
+                    bookedSlots={bookedSlots}
+                    toggleBooking={this.toggleBooking}
+                  />
                 </div>
               </>
             );
