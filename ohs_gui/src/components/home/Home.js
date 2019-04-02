@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Redirect } from 'react-router-dom';
 
 import { ApolloProvider, Query } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
 
 import MeetingCard from '../dashboard/MeetingCard';
 
@@ -18,7 +21,11 @@ import Course from '../course/Course';
 
 import { roles } from '../utils/constants';
 
-import { GET_COURSES, GET_SECTIONS } from '../utils/queries';
+import {
+  GET_COURSES,
+  GET_SECTIONS,
+  GET_UPCOMING_MEETINGS
+} from '../utils/queries';
 
 import './Home.css';
 import ProfessorDashboard from '../dashboard/ProfessorDashboard';
@@ -35,45 +42,27 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meetings: []
+      isAuth: true
     };
-    this.updateMeetingsList = this.updateMeetingsList.bind(this);
   }
 
-  componentDidMount() {
-    this.updateMeetingsList();
-  }
-
-  updateMeetingsList() {
-    // TODO: dummy json
-    const meetings = [
-      {
-        time: '2019-11-17T17:15:00.000Z',
-        room: 'BA1234',
-        courseCode: 'CSC302H1S',
-        student: 'Pika Chu',
-        professor: 'Alec Gibson',
-        id: 11
-      },
-      {
-        time: '2019-11-18T17:15:00.000Z',
-        room: 'BA1234',
-        courseCode: 'CSC302H1S',
-        student: 'Pika Chu',
-        professor: 'Alec Gibson',
-        id: 12
-      }
-    ];
-    this.setState({ meetings });
+  notAuth() {
+    const { notifyUnauth } = this.props;
+    notifyUnauth();
+    this.setState({ isAuth: false });
   }
 
   render() {
-    const { meetings } = this.state;
+    const { isAuth } = this.state;
     const { user } = this.props;
     const isProf = user && user.role === roles.PROFESSOR;
 
     const httpLink = createHttpLink({
       uri: isProf ? `${PROF_BASE_URL}/graphql` : `${STUDENT_BASE_URL}/graphql`
+    });
+
+    const logoutLink = onError(({ networkError }) => {
+      if (networkError.statusCode === 401) this.notAuth();
     });
 
     const authLink = setContext((_, { headers }) => {
@@ -88,20 +77,40 @@ class Home extends Component {
       };
     });
 
+    const link = ApolloLink.from([logoutLink, authLink, httpLink]);
+
     const client = new ApolloClient({
-      link: authLink.concat(httpLink),
+      link,
       cache: new InMemoryCache()
     });
 
-    return (
+    return isAuth ? (
       <ApolloProvider client={client}>
         <Router>
           <div id="dashboard">
             <div id="meetings">
               <h2>Upcoming Meetings</h2>
-              {meetings.map(m => (
-                <MeetingCard isProf={isProf} meeting={m} key={m.id} />
-              ))}
+              <Query
+                query={GET_UPCOMING_MEETINGS}
+                onError={() => {
+                  toast('Unknown Error - Could not get upcoming meetings ', {
+                    type: toast.TYPE.ERROR
+                  });
+                }}
+              >
+                {({ data }) => {
+                  const { upcomingMeetings } = data;
+                  if (upcomingMeetings && upcomingMeetings.length) {
+                    const lst = upcomingMeetings.map(m => (
+                      <MeetingCard isProf={isProf} meeting={m} key={m.id} />
+                    ));
+                    console.log('list', lst);
+                    return lst;
+                  }
+
+                  return <div>No Upcoming Meetings</div>;
+                }}
+              </Query>
             </div>
             <div id="main">
               <Switch>
@@ -113,14 +122,13 @@ class Home extends Component {
                       <Query
                         query={GET_COURSES}
                         onError={() => {
-                          toast('Unknown Error - Could not create new course', {
+                          toast('Unknown Error - Could not get courses', {
                             type: toast.TYPE.ERROR
                           });
                         }}
                       >
                         {({ data }) => {
                           const { courses } = data;
-                          console.log(courses);
                           if (courses) {
                             const lst = courses.map(elem => elem.courseCode);
                             return <ProfessorDashboard courses={lst} />;
@@ -133,16 +141,22 @@ class Home extends Component {
                       <Query
                         query={GET_SECTIONS}
                         onError={() => {
-                          toast('Unknown Error - Could not create new course', {
+                          toast('Unknown Error - Could not get sections', {
                             type: toast.TYPE.ERROR
                           });
                         }}
                       >
-                        {({ data }) =>
-                          data.sections && (
-                            <StudentDashboard sections={data.sections} />
-                          )
-                        }
+                        {({ data }) => {
+                          if (data.sections) {
+                            return (
+                              data.sections && (
+                                <StudentDashboard sections={data.sections} />
+                              )
+                            );
+                          }
+
+                          return null;
+                        }}
                       </Query>
                     );
                   }}
@@ -182,6 +196,8 @@ class Home extends Component {
           </div>
         </Router>
       </ApolloProvider>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }

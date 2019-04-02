@@ -40,5 +40,5 @@ class InstructorApi:
         if not user_name:
             return Err("Invalid token")
         return self.get_instructor(user_name).map_or(
-            Ok, (Err("Could not get instructor"))
+            Ok, (Err("UNAUTHORIZED - Could not get instructor"))
         )

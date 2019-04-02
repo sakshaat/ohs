@@ -41,14 +41,15 @@ class App extends Component {
   }
 
   logout() {
-    toast('Successfully Logged Out', { type: toast.TYPE.SUCCESS });
+    toast('User Logged Out', { type: toast.TYPE.SUCCESS });
     window.sessionStorage.removeItem('token');
     window.sessionStorage.removeItem('user');
-    this.setState({ isLoggedIn: false });
+    this.setState({ user: {}, isLoggedIn: false });
   }
 
   render() {
     const { isLoggedIn, user } = this.state;
+    console.log(this.state);
 
     return (
       <Router>
@@ -80,7 +81,7 @@ class App extends Component {
           </nav>
           <div className="app-container">
             {isLoggedIn && user ? (
-              <Home user={user} />
+              <Home user={user} notifyUnauth={() => this.logout()} />
             ) : (
               <Auth
                 notifyLogIn={(token, userObj) =>
