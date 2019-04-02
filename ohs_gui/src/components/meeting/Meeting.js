@@ -5,6 +5,9 @@ import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 import MeetingNote from './MeetingNote';
 import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
+import { toast } from 'react-toastify';
+import { Query } from 'react-apollo';
+import { roles } from '../utils/constants';
 
 import './Meeting.css';
 
@@ -71,6 +74,21 @@ class Meeting extends Component {
       }
     }
   }
+
+  const GET_MEETINGS = gql`
+  query getMeeting($meetingId: String!) {
+    meeting(meetingId: $meetingId) {
+    meeting_id
+    office_hour_id
+    index
+    instructor
+    student
+    notes
+    comments
+    start_time
+    }
+  }
+`;
 
   getMeeting() {
     // TODO: dummy json
@@ -229,12 +247,33 @@ class Meeting extends Component {
   }
 
   render() {
-    const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const {
+      user,
+      match: {
+        params: { courseCode }
+      }
+    } = this.props;
+
+    const isProf = user && user.role === roles.PROFESSOR;
+    const variables = {
+      meeting: null,
+      notes: [],
+      comments: [],
+      show: false
+    };
     const { meeting, notes, comments, show, showNotes } = this.state;
 
     return (
       <>
+         <Query
+          query={GET_SECTIONS_FOR_COURSE}
+          variables={variables}
+          onError={() => {
+            toast('Unknown Error - Could not get sections for the course', {
+              type: toast.TYPE.ERROR
+            });
+          }}
+        >
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
           <MeetingInfo
             meeting={meeting}
