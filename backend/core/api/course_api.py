@@ -155,8 +155,8 @@ class CourseApi:
         )
 
     def get_officehours_for_instructor_on_weekday(
-        self, user_name: UUID, weekday: Weekday
-    ) -> List[Section]:
+        self, user_name: str, weekday: Weekday
+    ) -> List[OfficeHour]:
         """
         Get office hours for instructor by day of the week
 
