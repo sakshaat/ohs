@@ -174,20 +174,20 @@ class CourseApi:
         )
 
     def get_officehours_for_section_on_weekday(
-        self, section: Section, weekday: Weekday
+        self, section_identity: SectionIdentity, weekday: Weekday
     ) -> List[OfficeHour]:
         """
         Get office hours for a section by day of the week
 
         Args:
-            section: The relevant Section.
+            section_identity: The relevant SectionIdentity.
             weekday: The day of the week.
 
         Returns:
             List of officehours for section on that day.
         """
         return self.course_persistence.get_officehour_for_instructor_by_day(
-            section, weekday, MeetingPersistence
+            section_identity, weekday, MeetingPersistence
         )
 
     def delete_officehour(self, office_hour_id: UUID) -> Result[UUID, str]:

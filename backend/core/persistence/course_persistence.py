@@ -340,13 +340,13 @@ class CoursePersistence:
         return officehours
 
     def get_officehour_for_section_by_day(
-        self, section: Section, day: Weekday, mp: MeetingPersistence
+        self, section_identity: SectionIdentity, day: Weekday, mp: MeetingPersistence
     ) -> List[OfficeHour]:
         c = self.connection.cursor()
         officehours = []
         c.execute(
             "SELECT * FROM officehours WHERE day_of_week=%s AND section_id=%s",
-            (day.value, section.identity().to_string()),
+            (day.value, section_identity.to_string()),
         )
         results = c.fetchall()
         if len(results) > 0:
