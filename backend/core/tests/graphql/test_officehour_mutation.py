@@ -1,4 +1,5 @@
 from unittest.mock import MagicMock
+from uuid import uuid4
 
 import pytest
 from option import Err, Ok, Some
@@ -70,3 +71,29 @@ def test_create_officehour(schema, success):
     context.api.course_api.create_officehour.assert_called_once_with(
         officehour.section, officehour.starting_hour, officehour.weekday
     )
+
+
+@pytest.mark.parametrize("success", [True, False])
+def test_delete_office_hour(schema, success):
+    context = MagicMock()
+    officehour_id = uuid4()
+    error = Err(fake.pystr())
+    context.api.course_api.delete_officehour.return_value = (
+        Ok(officehour_id) if success else error
+    )
+    query = """
+    mutation deleteOfficeHour($id: UUID!) {
+        deleteOfficeHour(officehourId: $id) {
+            officehourId
+        }
+    }
+    """
+    result = schema.execute(
+        query, context=context, variables={"id": str(officehour_id)}
+    )
+    if success:
+        assert not result.errors
+        assert result.data["deleteOfficeHour"]["officehourId"] == str(officehour_id)
+    else:
+        assert error.unwrap_err() in str(result.errors)
+    context.api.course_api.delete_officehour.assert_called_once_with(officehour_id)

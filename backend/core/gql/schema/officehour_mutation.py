@@ -24,3 +24,19 @@ class CreateOfficeHour(graphene.Mutation):
             .map(OfficeHour.from_domain)
             .unwrap()
         )
+
+
+@register_mutation(allow=SchemaRestriction.INSTRUCTOR)
+class DeleteOfficeHour(graphene.Mutation):
+    class Arguments:
+        officehour_id = graphene.UUID(required=True)
+
+    officehour_id = graphene.UUID(required=True)
+
+    def mutate(self, info, officehour_id):
+        return (
+            course_api(info)
+            .delete_officehour(officehour_id)
+            .map(DeleteOfficeHour)
+            .unwrap()
+        )
