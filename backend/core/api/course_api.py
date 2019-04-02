@@ -2,8 +2,16 @@ from typing import List
 
 import attr
 from option import Option, Result
+from uuid import UUID, uuid4
 
-from core.domain.course import Course, Section, SectionIdentity, Semester
+from core.domain.course import (
+    Course,
+    Section,
+    SectionIdentity,
+    Semester,
+    OfficeHour,
+    Weekday,
+)
 from core.domain.user import Instructor
 from core.persistence.course_persistence import CoursePersistence
 from core.persistence.meeting_persistence import MeetingPersistence
@@ -114,3 +122,60 @@ class CourseApi:
             The section if found
         """
         return self.course_persistence.get_section(section_identity)
+
+    def get_sections_of_student(self, student_number: str) -> List[Section]:
+        """
+        Get sections that a student is enrolled in.
+
+        Args:
+            student_number: Student Number of student.
+
+        Returns:
+            List of Sections returned by the query
+        """
+        return self.course_persistence.get_sections_of_student(student_number)
+
+    def create_officehour(
+        self, section: Section, starting_hour: int, weekday: Weekday
+    ) -> Result[OfficeHour, str]:
+        """
+        Create a new section in the system.
+
+        Args:
+            section: The section of which this OfficeHour belongs to.
+            starting_hour: (0-23) hour at which OfficeHour begins.
+            weekday: day of week of this OffceHour
+
+        Returns:
+            The new OfficeHour created
+        """
+        officehour = OfficeHour(uuid4(), section, starting_hour, weekday, [])
+        return self.course_persistence.create_officehour(
+            officehour, self.meeting_persistence
+        )
+
+    def get_officehours_for_instructor_on_weekday(
+        self, user_name: UUID, weekday: Weekday
+    ) -> List[Section]:
+        """
+        Get office hours for instructor by day of the week
+
+        Args:
+            user_name: The user_name of the Instructor.
+            weekday: The day of the week.
+
+        Returns:
+            List of officehours for instructor on that day.
+        """
+        return self.course_persistence.get_officehour_for_instructor_by_day(
+            user_name, weekday, MeetingPersistence
+        )
+
+    def delete_officehour(self, office_hour_id: UUID) -> Result[UUID, str]:
+        """
+        Deletes OfficeHour of <office_hour_id>.
+
+        Returns:
+            office_hour_id on success
+        """
+        return self.course_persistence.delete_officehour(office_hour_id)
