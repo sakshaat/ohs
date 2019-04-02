@@ -243,6 +243,20 @@ class MeetingPersistence:
             meetings = map(lambda x: self._res_to_meeting(x), meetings)
         return list(meetings)
 
+    def get_meetings_of_officehour_for_date(
+        self, office_hour_id: uuid.UUID, range_start: int, range_end: int
+    ) -> List[Meeting]:
+        c = self.connection.cursor()
+        c.execute(
+            "SELECT * FROM meetings WHERE office_hour_id=%s AND start_time>=%s AND start_time<=%s"
+            " ORDER BY start_time ASC",
+            (office_hour_id, range_start, range_end),
+        )
+        meetings = c.fetchall()
+        if len(meetings) > 0:
+            meetings = map(lambda x: self._res_to_meeting(x), meetings)
+        return list(meetings)
+
     def delete_meeting(self, meeting_id: uuid.UUID) -> Result[uuid.UUID, str]:
         if not self.get_meeting(meeting_id):
             return Err(f"Meeting {meeting_id} does not exist")
