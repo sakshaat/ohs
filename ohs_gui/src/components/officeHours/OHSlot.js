@@ -10,7 +10,7 @@ library.add(faPlus);
 class OHSlot extends Component {
   constructor(props) {
     super(props);
-    const { booked } = props.booked;
+    const { booked } = this.props;
     this.state = {
       booked
     };
@@ -23,19 +23,20 @@ class OHSlot extends Component {
 
   render() {
     const { booked } = this.state;
-    const { id, toggleBooking } = this.props;
-
+    const { toggleBooking, id } = this.props;
     const slotClass = booked ? 'book-button booked' : 'book-button';
     return (
       <div
         className={slotClass}
         onClick={() => toggleBooking(id)}
-        role="presentation"
+        onKeyPress={() => toggleBooking(id)}
+        role="button"
+        tabIndex={id}
       >
         {booked ? null : (
           <FontAwesomeIcon className="fa-plus slot-info" icon="plus" />
         )}
-        {booked ? <h2 className="slot-info">Booked!</h2> : null}
+        {booked ? <span className="slot-info" /> : null}
       </div>
     );
   }

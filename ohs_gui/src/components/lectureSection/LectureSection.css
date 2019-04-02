@@ -1,0 +1,33 @@
+.section-info {
+  height: 200px;
+  padding: 20px;
+  background-color: rgb(41, 74, 102);
+  color: white;
+}
+
+.section-agenda {
+  position: relative;
+  height: calc(100vh - 230px);
+  padding-top: 20px;
+}
+
+.section-times {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 3px 15px;
+}
+
+.section-times div {
+  flex-grow: 1;
+  margin-right: 4px;
+  margin-left: 4px;
+  background-color: rgb(200, 200, 200);
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

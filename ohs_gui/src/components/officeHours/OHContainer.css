@@ -1,12 +1,15 @@
 .office-hour-cont {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   background-color: gray;
-  width: 80vw;
-  height: 30vh;
+  height: calc(100vh - 330px);
 }
 
-.container {
+.office-hour-cont .container {
   display: flex;
   flex-wrap: nowrap;
   height: 100%;
   width: 100%;
+  max-width: 100%;
 }

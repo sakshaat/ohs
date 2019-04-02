@@ -26,9 +26,11 @@ class OHContainer extends Component {
   toggleBooking(idx) {
     const { bookedSlots } = this.state;
     const lst = bookedSlots.slice(0);
+    console.log(lst);
 
     // negate that index
     lst[idx] = !lst[idx];
+    console.log(lst);
     this.setState({ bookedSlots: lst });
   }
 
