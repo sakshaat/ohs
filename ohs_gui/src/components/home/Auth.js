@@ -10,8 +10,12 @@ import ReactDOM from 'react-dom';
 import { toast } from 'react-toastify';
 
 import './Auth.css';
-import { PROF_BASE_URL, STUDENT_BASE_URL } from '../utils/client';
-import { roles, roleLabels } from '../utils/constants';
+import {
+  PROF_BASE_URL,
+  STUDENT_BASE_URL,
+  roles,
+  roleLabels
+} from '../utils/constants';
 
 class Login extends Component {
   constructor(props) {
@@ -82,8 +86,8 @@ class Login extends Component {
 
     const url =
       userRole === roles.PROFESSOR
-        ? `${PROF_BASE_URL}/get-token`
-        : `${STUDENT_BASE_URL}/get-token`;
+        ? `${PROF_BASE_URL}/create-user`
+        : `${STUDENT_BASE_URL}/create-user`;
 
     const data = {
       id: username,
@@ -103,6 +107,15 @@ class Login extends Component {
         if (res.ok) {
           return res.json();
         }
+
+        if (res.status === 401) {
+          toast('Login Failed - The username or password is incorrect', {
+            type: toast.TYPE.ERROR
+          });
+        } else {
+          toast('An Unknown Error Occured.', { type: toast.TYPE.ERROR });
+        }
+
         throw new Error(
           `'Network response was not ok - ${res.status}: ${res.statusText}`
         );
