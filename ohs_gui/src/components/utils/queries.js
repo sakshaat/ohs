@@ -11,14 +11,7 @@ const GET_COURSES = gql`
   const GET_MEETINGS = gql`
   query getMeeting($meetingId: String!) {
     meeting(meetingId: $meetingId) {
-    meeting_id
-    office_hour_id
-    index
-    instructor
-    student
-    notes
-    comments
-    start_time
+       meeting_id
     }
   }
 `;
