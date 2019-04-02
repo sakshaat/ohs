@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 const GET_COURSES = gql`
-  {
+  query getCourses {
     courses {
       courseCode
     }
@@ -9,7 +9,7 @@ const GET_COURSES = gql`
 `;
 
 const GET_SECTIONS = gql`
-  {
+  query getSections {
     sections {
       course {
         courseCode

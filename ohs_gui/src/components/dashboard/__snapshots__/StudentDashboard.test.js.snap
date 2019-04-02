@@ -24,7 +24,7 @@ exports[`test if it renders with params 1`] = `
         "course": Object {
           "courseCode": "CSC302",
         },
-        "numStudent": 25,
+        "numStudents": 25,
         "sectionCode": "LEC0101",
         "semester": "FALL",
         "year": 2019,
@@ -38,7 +38,7 @@ exports[`test if it renders with params 1`] = `
         "course": Object {
           "courseCode": "CSC304",
         },
-        "numStudent": 25,
+        "numStudents": 25,
         "sectionCode": "LEC0102",
         "semester": "FALL",
         "year": 2019,

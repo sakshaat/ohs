@@ -2,27 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import StudentDashboard from './StudentDashboard';
-
-const SECTIONS = [
-  {
-    course: {
-      courseCode: 'CSC302'
-    },
-    year: 2019,
-    semester: 'FALL',
-    sectionCode: 'LEC0101',
-    numStudent: 25
-  },
-  {
-    course: {
-      courseCode: 'CSC304'
-    },
-    year: 2019,
-    semester: 'FALL',
-    sectionCode: 'LEC0102',
-    numStudent: 25
-  }
-];
+import { SECTIONS } from '../utils/testUtils';
 
 // need this to deal with randomly generated ids
 jest.mock('shortid', () => {

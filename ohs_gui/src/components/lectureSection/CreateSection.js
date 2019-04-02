@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
+import { Mutation } from 'react-apollo';
 
 import { Button, FormGroup, FormControl } from 'react-bootstrap';
 
 import './CreateSection.css';
-import { getProfClient } from '../utils/client';
-
-const client = getProfClient();
 
 const ADD_SECTION = gql`
   mutation addSection($sectionInput: SectionInput!) {
@@ -21,29 +18,32 @@ const ADD_SECTION = gql`
 class CreateSection extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      sectionCreated: false,
+      lsVal: '',
+      yearVal: '',
+      semesterVal: 'WINTER',
+      snumVal: ''
+    };
+  }
+
+  render() {
     const {
+      sectionCreated,
+      pickedCourse,
+      lsVal,
+      yearVal,
+      semesterVal,
+      snumVal
+    } = this.state;
+
+    const {
+      user: { id },
       match: {
         params: { courseCode }
       }
     } = this.props;
-    this.state = {
-      sectionCreated: false,
-      courseCode
-    };
-
-    this.createSection = this.createSection.bind(this);
-  }
-
-  createSection() {
-    const { courseCode } = this.state;
-    const {
-      user: { id }
-    } = this.props;
-
-    const lsVal = ReactDOM.findDOMNode(this.refs.lsInput).value;
-    const yearVal = ReactDOM.findDOMNode(this.refs.yearInput).value;
-    const semesterVal = ReactDOM.findDOMNode(this.refs.semesterSelect).value;
-    const snumVal = ReactDOM.findDOMNode(this.refs.studentInput).value;
 
     // variable
     const sectionInput = {
@@ -54,25 +54,6 @@ class CreateSection extends Component {
       numStudents: snumVal,
       taughtBy: id
     };
-
-    // send request
-    client
-      .mutate({
-        mutation: ADD_SECTION,
-        variables: {
-          sectionInput
-        }
-      })
-      .then(this.setState({ sectionCreated: true }))
-      .catch(
-        toast('Unknown Error - Could not create lecture session', {
-          type: toast.TYPE.ERROR
-        })
-      );
-  }
-
-  render() {
-    const { sectionCreated, courseCode, pickedCourse } = this.state;
 
     if (sectionCreated) {
       return <Redirect to={`/course/${courseCode}`} />;
@@ -87,6 +68,7 @@ class CreateSection extends Component {
             placeholder="Section"
             aria-label="Section"
             aria-describedby="basic-addon2"
+            onChange={e => this.setState({ lsVal: e.target.value })}
           />
 
           <FormControl
@@ -95,6 +77,7 @@ class CreateSection extends Component {
             aria-label="Year"
             aria-describedby="basic-addon2"
             type="number"
+            onChange={e => this.setState({ yearVal: e.target.value })}
           />
 
           <FormControl
@@ -103,9 +86,13 @@ class CreateSection extends Component {
             aria-label="student"
             aria-describedby="basic-addon2"
             type="number"
+            onChange={e => this.setState({ snumVal: e.target.value })}
           />
 
-          <select ref="semesterSelect" onChange={this.coursePicked}>
+          <select
+            ref="semesterSelect"
+            onChange={e => this.setState({ semesterVal: e.target.value })}
+          >
             <option value="WINTER">WINTER</option>
             <option value="FALL">FALL</option>
             <option value="SUMMER">SUMMER</option>
@@ -114,9 +101,37 @@ class CreateSection extends Component {
 
           <br />
 
-          <Button variant="secondary" onClick={this.createSection}>
-            Create a Section
-          </Button>
+          {lsVal && yearVal && semesterVal && snumVal && (
+            <Mutation
+              mutation={ADD_SECTION}
+              variables={{ sectionInput }}
+              options={{
+                refetchQueries: ['getCourses']
+              }}
+              onCompleted={() => {
+                this.setState({ sectionCreated: true });
+                toast('New Section Created', {
+                  type: toast.TYPE.SUCCESS
+                });
+              }}
+              onError={() => {
+                toast('Unknown Error - Could not create new section', {
+                  type: toast.TYPE.ERROR
+                });
+              }}
+            >
+              {(mut, { loading }) => {
+                return (
+                  <div>
+                    {loading && <p>Loading...</p>}
+                    <Button variant="secondary" onClick={mut}>
+                      Create a Section
+                    </Button>
+                  </div>
+                );
+              }}
+            </Mutation>
+          )}
         </FormGroup>
       </div>
     );
