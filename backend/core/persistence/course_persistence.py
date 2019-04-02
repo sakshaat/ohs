@@ -1,15 +1,15 @@
 from typing import Callable, List
+from uuid import UUID
 
 import attr
-from option import Err, Ok, Option, Result, maybe
-from uuid import UUID
+from option import Err, NONE, Ok, Option, Result, maybe
 
 from core.domain.course import (
     Course,
+    OfficeHour,
     Section,
     SectionIdentity,
     Semester,
-    OfficeHour,
     Weekday,
 )
 from core.domain.user import Instructor
@@ -197,22 +197,24 @@ class CoursePersistence:
             )
         return list(sections)
 
-    def delete_section(self, section: Section) -> Result[Section, str]:
-        if not self.get_section(section):
-            return Err(f"Section {section} does not exist")
+    def delete_section(
+        self, section_identity: SectionIdentity
+    ) -> Result[SectionIdentity, str]:
+        if not self.get_section(section_identity):
+            return Err(f"Section {section_identity} does not exist")
         c = self.connection.cursor()
         term = (
-            section.course.course_code,
-            section.year,
-            str(section.semester.value),
-            section.section_code,
+            section_identity.course.course_code,
+            section_identity.year,
+            str(section_identity.semester.value),
+            section_identity.section_code,
         )
         c.execute(
             "DELETE FROM sections WHERE course=%s AND year=%s AND semester=%s AND section_code=%s",
             term,
         )
         self.connection.commit()
-        return Ok(section)
+        return Ok(section_identity)
 
     def enroll_student(self, section: Section, student_number: str) -> Result[str, str]:
         c = self.connection.cursor()
@@ -227,7 +229,7 @@ class CoursePersistence:
         def to_section_identity(id):
             params = id.split(";delimiter;")
             return SectionIdentity(
-                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+                Course(params[0]), int(params[1]), Semester(int(params[2])), params[3]
             )
 
         c = self.connection.cursor()
@@ -244,28 +246,28 @@ class CoursePersistence:
     def create_officehour(
         self, officehour: OfficeHour, mp: MeetingPersistence
     ) -> Result[OfficeHour, str]:
-        if self.get_officehour(officehour.office_hour_id, mp):
+        if self.get_officehour(officehour.officehour_id, mp):
             return Err(f"OfficeHour {officehour} already exists")
         c = self.connection.cursor()
         term = (
-            str(officehour.office_hour_id),
+            str(officehour.officehour_id),
             officehour.section.identity.to_string(),
             officehour.starting_hour,
             officehour.weekday.value,
         )
         c.execute(
-            "INSERT INTO officehours(office_hour_id, section_id, starting_hour, day_of_week"
-            "num_students) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO officehours(office_hour_id, section_id, starting_hour, day_of_week)"
+            " VALUES (%s, %s, %s, %s)",
             term,
         )
         self.connection.commit()
         return Ok(officehour)
 
-    def _res_to_officehour(self, res, mp):
+    def _res_to_officehour(self, res, mp) -> Option[OfficeHour]:
         def to_section_identity(id):
             params = id.split(";delimiter;")
             return SectionIdentity(
-                Course(params[0]), int(params[1]), Semester(int(params[2]), params[3])
+                Course(params[0]), int(params[1]), Semester(int(params[2])), params[3]
             )
 
         def format_meeting_slots(meeting_list):
@@ -273,12 +275,15 @@ class CoursePersistence:
             for meeting in meeting_list:
                 lst[meeting.index] = meeting
 
-        return OfficeHour(
-            UUID(res[0]),
-            self.get_section(to_section_identity(res[1])),
-            int(res[2]),
-            Weekday(int(res[3])),
-            format_meeting_slots(mp.get_meetings_of_officehour(UUID(res[0]))),
+        officehour_id = UUID(res[0])
+        return self.get_section(to_section_identity(res[1])).map(
+            lambda section: OfficeHour(
+                officehour_id,
+                section,
+                int(res[2]),
+                Weekday(int(res[3])),
+                format_meeting_slots(mp.get_meetings_of_officehour(officehour_id)),
+            )
         )
 
     def get_officehour(
@@ -287,11 +292,11 @@ class CoursePersistence:
         c = self.connection.cursor()
         term = (office_hour_id,)
         c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
-        officehour = None
+        officehour = NONE
         res = c.fetchone()
         if res:
             officehour = self._res_to_officehour(res, mp)
-        return maybe(officehour)
+        return officehour
 
     def delete_officehour(
         self, office_hour_id: UUID, mp: MeetingPersistence
@@ -308,9 +313,11 @@ class CoursePersistence:
     ) -> List[OfficeHour]:
         c = self.connection.cursor()
         officehours = []
-        sections = map(
-            lambda x: x.identity().to_string(),
-            self.query_sections({"taught_by": user_name}),
+        sections = list(
+            map(
+                lambda x: x.identity().to_string(),
+                self.query_sections({"taught_by": user_name}),
+            )
         )
         if len(sections) > 0:
             c.execute(
@@ -322,6 +329,12 @@ class CoursePersistence:
             results = c.fetchall()
             if len(results) > 0:
                 officehours = list(
-                    map(lambda res: self._res_to_officehour(res, mp), results)
+                    filter(
+                        None,
+                        (
+                            self._res_to_officehour(res, mp).unwrap_or(None)
+                            for res in results
+                        ),
+                    )
                 )
         return officehours
