@@ -90,11 +90,7 @@ def test_query_courses(
     [
         {},
         {"course_code": fake.pystr()},
-        {
-            "course_code": fake.pystr(),
-            "taught_by": fake.pystr(),
-            "enrolled_in": fake.pystr(),
-        },
+        {"course_code": fake.pystr(), "taught_by": fake.pystr()},
     ],
 )
 def test_query_sections(
@@ -113,6 +109,17 @@ def test_query_sections(
     mock_course_persistence.query_sections.side_effect = assert_called_correctly
     assert course_api.query_sections(**filters) == expected
     mock_course_persistence.query_sections.assert_called_once()
+
+
+def test_query_section_enroll(mock_course_persistence, mock_meeting_persistence):
+    course_api = CourseApi(mock_course_persistence, mock_meeting_persistence)
+    student_number = fake.pystr()
+    expected = list_fakes(fake_section, 10)
+    mock_course_persistence.get_sections_of_student.return_value = expected
+    assert course_api.query_sections(enrolled_in=student_number) == expected
+    mock_course_persistence.get_sections_of_student.assert_called_once_with(
+        student_number
+    )
 
 
 @pytest.mark.parametrize("expected", [NONE, Some(fake_course())])

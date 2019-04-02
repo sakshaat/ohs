@@ -1,15 +1,15 @@
 from typing import List
+from uuid import UUID, uuid4
 
 import attr
 from option import Option, Result
-from uuid import UUID, uuid4
 
 from core.domain.course import (
     Course,
+    OfficeHour,
     Section,
     SectionIdentity,
     Semester,
-    OfficeHour,
     Weekday,
 )
 from core.domain.user import Instructor
@@ -87,16 +87,18 @@ class CourseApi:
         Returns:
             List of sections returned by the query
         """
+        if enrolled_in:
+            result = self.course_persistence.get_sections_of_student(enrolled_in)
+            return [
+                section
+                for section in result
+                if (not taught_by or section.taught_by.user_name == taught_by)
+                and (not course_code or section.course.course_code == course_code)
+            ]
 
-        filters = {
-            "course_code": course_code,
-            "taught_by": taught_by,
-            "enrolled_in": enrolled_in,
-        }
-
+        filters = {"course_code": course_code, "taught_by": taught_by}
         # removing all None values, avoids having to check later
         filters = {k: v for k, v in filters.items() if v is not None}
-
         return self.course_persistence.query_sections(filters)
 
     def get_course(self, course_code: str) -> Option[Course]:
