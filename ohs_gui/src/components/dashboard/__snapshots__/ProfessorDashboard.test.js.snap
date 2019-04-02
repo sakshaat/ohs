@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test if it renders with empty list 1`] = `
+<div
+  id="courses"
+>
+  <h1>
+    Current Courses
+  </h1>
+  <Link
+    replace={false}
+    to="/add-course"
+  >
+    <div
+      className="add-course card-element"
+    >
+      <span
+        className="fa fa-plus"
+      />
+    </div>
+  </Link>
+</div>
+`;
+
+exports[`test if it renders with params 1`] = `
+<div
+  id="courses"
+>
+  <h1>
+    Current Courses
+  </h1>
+  <CourseCard
+    course="CSC302"
+    key="1"
+  />
+  <CourseCard
+    course="CSC202"
+    key="1"
+  />
+  <Link
+    replace={false}
+    to="/add-course"
+  >
+    <div
+      className="add-course card-element"
+    >
+      <span
+        className="fa fa-plus"
+      />
+    </div>
+  </Link>
+</div>
+`;

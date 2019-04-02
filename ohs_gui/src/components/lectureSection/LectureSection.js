@@ -1,57 +1,52 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { toast } from 'react-toastify';
+import { Query } from 'react-apollo';
 
-import { getProfClient } from '../utils/client';
 import { GET_SECTION } from '../utils/queries';
 
-const client = getProfClient();
-
-class LectureSection extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      section: {}
-    };
-
-    this.updateSection = this.updateSection.bind(this);
-  }
-
-  componentDidMount() {
+class LectureSection extends PureComponent {
+  render() {
     const { location } = this.props;
     const params = new URLSearchParams(location.search);
-    client
-      .query({
-        query: GET_SECTION,
-        variables: {
-          course: { courseCode: params.get('course') },
-          year: params.get('year'),
-          semester: params.get('semester'),
-          sectionCode: params.get('sectionCode')
-        }
-      })
-      .then(res => this.setState({ section: res.data.section }))
-      .catch(result => console.log(result));
-  }
 
-  updateSection(section) {
-    this.setState({ section });
-  }
+    const variables = {
+      course: { courseCode: params.get('course') },
+      year: params.get('year'),
+      semester: params.get('semester'),
+      sectionCode: params.get('sectionCode')
+    };
 
-  render() {
-    const { section } = this.state;
-
-    return Object.keys(section).length !== 0 ? (
-      <div>
-        LectureSection for {section.course.courseCode}
-        <div>
-          year: {section.year}
-          <br />
-          semester: {section.semester}
-          <br />
-          section_code: {section.sectionCode}
-          <br /># of students: {section.numStudents}
-        </div>
-      </div>
-    ) : null;
+    return (
+      <Query
+        query={GET_SECTION}
+        variables={variables}
+        onError={() => {
+          toast('Unknown Error - Could not find the section', {
+            type: toast.TYPE.ERROR
+          });
+        }}
+      >
+        {({ data }) => {
+          const { section } = data;
+          if (section) {
+            return (
+              <div>
+                LectureSection for {section.course.courseCode}
+                <div>
+                  year: {section.year}
+                  <br />
+                  semester: {section.semester}
+                  <br />
+                  section_code: {section.sectionCode}
+                  <br /># of students: {section.numStudents}
+                </div>
+              </div>
+            );
+          }
+          return null;
+        }}
+      </Query>
+    );
   }
 }
 

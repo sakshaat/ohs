@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test if it renders with params 1`] = `
+<Link
+  replace={false}
+  to={
+    Object {
+      "pathname": "/section",
+      "search": "?course=CSC302&year=2019&semester=FALL&sectionCode=LEC0101",
+    }
+  }
+>
+  <div
+    className="card-element lecture-section-verbose"
+  >
+    <div>
+      name: 
+      CSC302
+      code: 
+      LEC0101
+      year: 
+      2019
+      semester: 
+      FALL
+      students: 
+    </div>
+  </div>
+</Link>
+`;

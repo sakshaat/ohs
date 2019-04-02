@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import { ApolloProvider, Query } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context';
+
 import MeetingCard from '../dashboard/MeetingCard';
 
 import CreateCourse from '../course/CreateCourse';
@@ -7,7 +15,7 @@ import CreateSection from '../lectureSection/CreateSection';
 import LectureSection from '../lectureSection/LectureSection';
 import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
-import { getProfClient } from '../utils/client';
+
 import { roles } from '../utils/constants';
 
 import { GET_COURSES, GET_SECTIONS } from '../utils/queries';
@@ -16,69 +24,24 @@ import './Home.css';
 import ProfessorDashboard from '../dashboard/ProfessorDashboard';
 import StudentDashboard from '../dashboard/StudentDashboard';
 
-const client = getProfClient();
+const PROF_BASE_URL = `${process.env.REACT_APP_INSTRUCTOR_SERVICE_URL ||
+  'http://localhost:8000'}`;
+
+const STUDENT_BASE_URL = `${process.env.REACT_APP_STUDENT_SERVICE_URL ||
+  'http://localhost:8001'}`;
 
 /* A wrapper which provides the meetings sidebar */
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meetings: [],
-      courses: [],
-      sections: []
+      meetings: []
     };
-
     this.updateMeetingsList = this.updateMeetingsList.bind(this);
-    this.updateCourseList = this.updateCourseList.bind(this);
-    this.updateSectionList = this.updateSectionList.bind(this);
-    this.addCourse = this.addCourse.bind(this);
   }
 
   componentDidMount() {
-    const { user } = this.props;
-    const isProf = user.role === roles.PROFESSOR;
-
-    if (isProf) {
-      this.getCourses();
-    } else {
-      this.getSections();
-    }
     this.updateMeetingsList();
-  }
-
-  getCourses() {
-    // fetch courses
-    client
-      .query({
-        query: GET_COURSES
-      })
-      .then(res => this.updateCourseList(res))
-      .catch(result => console.log(result));
-  }
-
-  getSections() {
-    // fetch sections
-    client
-      .query({
-        query: GET_SECTIONS
-      })
-      .then(res => this.updateSectionList(res))
-      .catch(result => console.log(result));
-  }
-
-  updateSectionList(res) {
-    this.setState({ sections: res.data.sections });
-  }
-
-  addCourse(course) {
-    const { courses } = this.state;
-    this.setState({ courses: [...courses, course] });
-  }
-
-  updateCourseList(res) {
-    const { courses } = res.data;
-    const lst = courses.map(elem => elem.courseCode);
-    this.setState({ courses: lst });
   }
 
   updateMeetingsList() {
@@ -105,66 +68,120 @@ class Home extends Component {
   }
 
   render() {
-    const { meetings, courses, sections } = this.state;
+    const { meetings } = this.state;
     const { user } = this.props;
     const isProf = user && user.role === roles.PROFESSOR;
 
+    const httpLink = createHttpLink({
+      uri: isProf ? `${PROF_BASE_URL}/graphql` : `${STUDENT_BASE_URL}/graphql`
+    });
+
+    const authLink = setContext((_, { headers }) => {
+      // get the authentication token from local storage if it exists
+      const token = window.sessionStorage.getItem('token');
+      // return the headers to the context so httpLink can read them
+      return {
+        headers: {
+          ...headers,
+          Authorization: token ? `Bearer ${token}` : ''
+        }
+      };
+    });
+
+    const client = new ApolloClient({
+      link: authLink.concat(httpLink),
+      cache: new InMemoryCache()
+    });
+
     return (
-      <Router>
-        <div id="dashboard">
-          <div id="meetings">
-            <h2>Upcoming Meetings</h2>
-            {meetings.map(m => (
-              <MeetingCard isProf={isProf} meeting={m} key={m.id} />
-            ))}
+      <ApolloProvider client={client}>
+        <Router>
+          <div id="dashboard">
+            <div id="meetings">
+              <h2>Upcoming Meetings</h2>
+              {meetings.map(m => (
+                <MeetingCard isProf={isProf} meeting={m} key={m.id} />
+              ))}
+            </div>
+            <div id="main">
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return isProf ? (
+                      <Query
+                        query={GET_COURSES}
+                        onError={() => {
+                          toast('Unknown Error - Could not create new course', {
+                            type: toast.TYPE.ERROR
+                          });
+                        }}
+                      >
+                        {({ data }) => {
+                          const { courses } = data;
+                          console.log(courses);
+                          if (courses) {
+                            const lst = courses.map(elem => elem.courseCode);
+                            return <ProfessorDashboard courses={lst} />;
+                          }
+
+                          return null;
+                        }}
+                      </Query>
+                    ) : (
+                      <Query
+                        query={GET_SECTIONS}
+                        onError={() => {
+                          toast('Unknown Error - Could not create new course', {
+                            type: toast.TYPE.ERROR
+                          });
+                        }}
+                      >
+                        {({ data }) =>
+                          data.sections && (
+                            <StudentDashboard sections={data.sections} />
+                          )
+                        }
+                      </Query>
+                    );
+                  }}
+                />
+                <Route
+                  exact
+                  path="/meeting/:id"
+                  render={props => <Meeting user={user} {...props} />}
+                />
+                <Route
+                  exact
+                  path="/course/:courseCode"
+                  render={props => <Course user={user} {...props} />}
+                />
+                <Route
+                  exact
+                  path="/section"
+                  render={props => <LectureSection user={user} {...props} />}
+                />
+                <Route
+                  exact
+                  path="/add-course"
+                  render={() => (
+                    <CreateCourse
+                      user={user}
+                      callback={() => this.courseAdded()}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/course/:courseCode/add-section"
+                  render={props => <CreateSection user={user} {...props} />}
+                />
+              </Switch>
+            </div>
           </div>
-          <div id="main">
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={() =>
-                  isProf ? (
-                    <ProfessorDashboard courses={courses} />
-                  ) : (
-                    <StudentDashboard sections={sections} />
-                  )
-                }
-              />
-              <Route
-                exact
-                path="/meeting/:id"
-                render={props => <Meeting user={user} {...props} />}
-              />
-              <Route
-                exact
-                path="/course/:courseCode"
-                render={props => <Course user={user} {...props} />}
-              />
-              <Route
-                exact
-                path="/section"
-                render={props => <LectureSection user={user} {...props} />}
-              />
-              <Route
-                exact
-                path="/add-course"
-                render={() => (
-                  <CreateCourse
-                    user={user}
-                    callback={course => this.addCourse(course)}
-                  />
-                )}
-              />
-              <Route
-                exact
-                path="/course/:course_code/add-section"
-                render={props => <CreateSection user={user} {...props} />}
-              />
-            </Switch>
-          </div>
-        </div>
-      </Router>
+        </Router>
+      </ApolloProvider>
     );
   }
 }
