@@ -246,11 +246,11 @@ class CoursePersistence:
     def create_officehour(
         self, officehour: OfficeHour, mp: MeetingPersistence
     ) -> Result[OfficeHour, str]:
-        if self.get_officehour(officehour.officehour_id, mp):
+        if self.get_officehour(officehour.office_hour_id, mp):
             return Err(f"OfficeHour {officehour} already exists")
         c = self.connection.cursor()
         term = (
-            str(officehour.officehour_id),
+            str(officehour.office_hour_id),
             officehour.section.identity.to_string(),
             officehour.starting_hour,
             officehour.weekday.value,
@@ -275,14 +275,14 @@ class CoursePersistence:
             for meeting in meeting_list:
                 lst[meeting.index] = meeting
 
-        officehour_id = UUID(res[0])
+        office_hour_id = UUID(res[0])
         return self.get_section(to_section_identity(res[1])).map(
             lambda section: OfficeHour(
-                officehour_id,
+                office_hour_id,
                 section,
                 int(res[2]),
                 Weekday(int(res[3])),
-                format_meeting_slots(mp.get_meetings_of_officehour(officehour_id)),
+                format_meeting_slots(mp.get_meetings_of_officehour(office_hour_id)),
             )
         )
 

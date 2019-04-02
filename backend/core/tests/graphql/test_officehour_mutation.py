@@ -24,7 +24,7 @@ def test_create_officehour(schema, success):
         createOfficeHour(
             sectionInput: $sectionInput, startingHour: $startingHour, weekday: $weekday
         ) {
-            officehourId
+            officeHourId
             section {
                 sectionCode
             }
@@ -54,7 +54,7 @@ def test_create_officehour(schema, success):
     if success:
         assert not result.errors
         create_officehour = result.data["createOfficeHour"]
-        assert create_officehour["officehourId"] == str(officehour.officehour_id)
+        assert create_officehour["officeHourId"] == str(officehour.office_hour_id)
         assert (
             create_officehour["section"]["sectionCode"]
             == officehour.section.section_code
@@ -76,24 +76,24 @@ def test_create_officehour(schema, success):
 @pytest.mark.parametrize("success", [True, False])
 def test_delete_office_hour(schema, success):
     context = MagicMock()
-    officehour_id = uuid4()
+    office_hour_id = uuid4()
     error = Err(fake.pystr())
     context.api.course_api.delete_officehour.return_value = (
-        Ok(officehour_id) if success else error
+        Ok(office_hour_id) if success else error
     )
     query = """
     mutation deleteOfficeHour($id: UUID!) {
-        deleteOfficeHour(officehourId: $id) {
-            officehourId
+        deleteOfficeHour(officeHourId: $id) {
+            officeHourId
         }
     }
     """
     result = schema.execute(
-        query, context=context, variables={"id": str(officehour_id)}
+        query, context=context, variables={"id": str(office_hour_id)}
     )
     if success:
         assert not result.errors
-        assert result.data["deleteOfficeHour"]["officehourId"] == str(officehour_id)
+        assert result.data["deleteOfficeHour"]["officeHourId"] == str(office_hour_id)
     else:
         assert error.unwrap_err() in str(result.errors)
-    context.api.course_api.delete_officehour.assert_called_once_with(officehour_id)
+    context.api.course_api.delete_officehour.assert_called_once_with(office_hour_id)

@@ -18,7 +18,7 @@ class Slot(graphene.ObjectType):
 
 
 class OfficeHour(graphene.ObjectType):
-    officehour_id = graphene.UUID(required=True)
+    office_hour_id = graphene.UUID(required=True)
     section = graphene.Field(Section, required=True)
     starting_hour = graphene.Int(required=True)
     weekday = graphene.Field(Weekday, required=True)
@@ -27,7 +27,7 @@ class OfficeHour(graphene.ObjectType):
     @classmethod
     def from_domain(cls, domain_office_hour):
         return cls(
-            domain_office_hour.officehour_id,
+            domain_office_hour.office_hour_id,
             Section.from_domain(domain_office_hour.section),
             domain_office_hour.starting_hour,
             domain_office_hour.weekday,

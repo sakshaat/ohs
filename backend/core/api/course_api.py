@@ -156,6 +156,11 @@ class CourseApi:
             officehour, self.meeting_persistence
         )
 
+    def get_officehour(self, office_hour_id: UUID) -> Option[OfficeHour]:
+        return self.course_persistence.get_officehour(
+            office_hour_id, self.meeting_persistence
+        )
+
     def get_officehours_for_instructor_on_weekday(
         self, user_name: str, weekday: Weekday
     ) -> List[OfficeHour]:
