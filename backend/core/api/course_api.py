@@ -4,8 +4,6 @@ from uuid import UUID, uuid4
 import attr
 from option import Option, Result
 
-from uuid import UUID, uuid4
-
 from core.domain.course import (
     Course,
     Section,
