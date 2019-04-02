@@ -8,6 +8,21 @@ const GET_COURSES = gql`
   }
 `;
 
+  const GET_MEETINGS = gql`
+  query getMeeting($meetingId: String!) {
+    meeting(meetingId: $meetingId) {
+    meeting_id
+    office_hour_id
+    index
+    instructor
+    student
+    notes
+    comments
+    start_time
+    }
+  }
+`;
+
 const GET_UPCOMING_MEETINGS = gql`
   query getUpcomingMeetings {
     upcomingMeetings {
@@ -100,5 +115,6 @@ export {
   GET_SECTION,
   GET_SECTIONS_FOR_COURSE,
   GET_UPCOMING_MEETINGS,
-  GET_SECTIONS_FOR_STUDENT
+  GET_SECTIONS_FOR_STUDENT,
+  GET_MEETINGS
 };

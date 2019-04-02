@@ -8,6 +8,9 @@ import MeetingInfo from './MeetingInfo';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 import { roles } from '../utils/constants';
+import {
+    GET_MEETINGS
+} from '../utils/queries';
 
 import './Meeting.css';
 
@@ -75,20 +78,7 @@ class Meeting extends Component {
     }
   }
 
-  const GET_MEETINGS = gql`
-  query getMeeting($meetingId: String!) {
-    meeting(meetingId: $meetingId) {
-    meeting_id
-    office_hour_id
-    index
-    instructor
-    student
-    notes
-    comments
-    start_time
-    }
-  }
-`;
+
 
   getMeeting() {
     // TODO: dummy json
@@ -266,14 +256,14 @@ class Meeting extends Component {
     return (
       <>
          <Query
-          query={GET_SECTIONS_FOR_COURSE}
+          query={GET_MEETINGS}
           variables={variables}
           onError={() => {
             toast('Unknown Error - Could not get sections for the course', {
               type: toast.TYPE.ERROR
             });
           }}
-        >
+        />
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
           <MeetingInfo
             meeting={meeting}
