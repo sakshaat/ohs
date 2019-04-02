@@ -173,7 +173,7 @@ class MeetingPersistence:
                 meeting.start_time,
             )
             c.execute(
-                "INSERT INTO meetings(meeting_id, officehour_id, index, instructor, student,"
+                "INSERT INTO meetings(meeting_id, office_hour_id, index, instructor, student,"
                 " start_time) "
                 "VALUES (%s, %s, %s, %s, %s, %s)",
                 term,

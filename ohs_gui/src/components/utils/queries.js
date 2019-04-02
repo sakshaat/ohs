@@ -8,6 +8,27 @@ const GET_COURSES = gql`
   }
 `;
 
+const GET_UPCOMING_MEETINGS = gql`
+  query getUpcomingMeetings {
+    upcomingMeetings {
+      meetingId
+      officeHourId
+      index
+      instructor {
+        firstName
+        lastName
+        userName
+      }
+      student {
+        firstName
+        lastName
+        studentNumber
+      }
+      startTime
+    }
+  }
+`;
+
 const GET_SECTIONS = gql`
   query getSections {
     sections {
@@ -45,7 +66,21 @@ const GET_SECTION = gql`
   }
 `;
 
-const GET_SECTION_FOR_COURSE = gql`
+const GET_SECTIONS_FOR_STUDENT = gql`
+  query getSectionForStudent($studentNum: String!) {
+    sections(enrolledIn: $studentNum) {
+      course {
+        courseCode
+      }
+      year
+      semester
+      sectionCode
+      numStudents
+    }
+  }
+`;
+
+const GET_SECTIONS_FOR_COURSE = gql`
   query getSectionForCourse($courseCode: String!, $taughtBy: String!) {
     sections(courseCode: $courseCode, taughtBy: $taughtBy) {
       course {
@@ -59,4 +94,11 @@ const GET_SECTION_FOR_COURSE = gql`
   }
 `;
 
-export { GET_COURSES, GET_SECTIONS, GET_SECTION, GET_SECTION_FOR_COURSE };
+export {
+  GET_COURSES,
+  GET_SECTIONS,
+  GET_SECTION,
+  GET_SECTIONS_FOR_COURSE,
+  GET_UPCOMING_MEETINGS,
+  GET_SECTIONS_FOR_STUDENT
+};
