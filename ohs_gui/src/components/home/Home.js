@@ -23,7 +23,7 @@ import LectureSection from '../lectureSection/LectureSection';
 import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
 
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 
 import {
   GET_COURSES,
@@ -59,7 +59,7 @@ class Home extends Component {
   render() {
     const { isAuth } = this.state;
     const { user } = this.props;
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
 
     const httpLink = createHttpLink({
       uri: isProf ? `${PROF_BASE_URL}/graphql` : `${STUDENT_BASE_URL}/graphql`

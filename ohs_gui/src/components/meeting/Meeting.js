@@ -5,6 +5,7 @@ import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 import MeetingNote from './MeetingNote';
 import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
+import { userIsProf } from '../utils/helpers';
 
 import './Meeting.css';
 
@@ -38,7 +39,7 @@ class Meeting extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = userIsProf(user);
 
     this.getMeeting();
     this.getComments();
@@ -231,7 +232,7 @@ class Meeting extends Component {
 
   render() {
     const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = userIsProf(user);
     const { meeting, notes, comments, show, showNotes } = this.state;
 
     return (

@@ -8,7 +8,7 @@ import { Query } from 'react-apollo';
 
 import LectureSectionCard from '../dashboard/LectureSectionCard';
 import { GET_SECTION_FOR_COURSE } from '../utils/queries';
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 
 import './Course.css';
 
@@ -21,7 +21,7 @@ class Course extends Component {
       }
     } = this.props;
 
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
     const variables = {
       courseCode,
       taughtBy: user.userName

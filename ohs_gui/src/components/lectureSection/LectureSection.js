@@ -3,24 +3,10 @@ import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 
 import { GET_SECTION } from '../utils/queries';
+import { userIsProf, getSemesterCode } from '../utils/helpers';
 
 import OHContainer from '../officeHours/OHContainer';
 import './LectureSection.css';
-
-function getSemesterCode(sem) {
-  // assumption: summer courses are assumed to be full session
-  switch (sem) {
-    case 'SUMMER':
-    case 'FULL_YEAR':
-      return 'Y';
-    case 'WINTER':
-      return 'S';
-    case 'FALL':
-      return 'F';
-    default:
-      return '';
-  }
-}
 
 class LectureSection extends Component {
   constructor(props) {
@@ -44,7 +30,7 @@ class LectureSection extends Component {
 
   getOH(day) {
     console.log(day);
-    // TODO: dummy json
+    // TODO: dummy json - get office hours
     const bookedSlots = new Array(this.slotNum);
     for (let i = 0; i < bookedSlots.length; i += 1) {
       bookedSlots[i] = false;
@@ -81,7 +67,7 @@ class LectureSection extends Component {
   }
 
   render() {
-    const { location } = this.props;
+    const { location, user } = this.props;
     const { bookedSlots } = this.state;
     const daysOfWeek = [
       'Monday',
@@ -117,6 +103,36 @@ class LectureSection extends Component {
       sectionCode: params.get('sectionCode')
     };
 
+    const isProf = userIsProf(user);
+
+    const profAgenda = (
+      <div className="section-agenda">
+        Select Day:
+        <select
+          className="section-day"
+          ref={this.selectDay}
+          onChange={this.changeDay}
+        >
+          {daysOfWeek.map(d => (
+            <option value={d} key={d}>
+              {d}
+            </option>
+          ))}
+        </select>
+        <div className="section-times">
+          {times.map(t => (
+            <div key={t}>{t}</div>
+          ))}
+        </div>
+        <OHContainer
+          bookedSlots={bookedSlots}
+          toggleBooking={this.toggleBooking}
+        />
+      </div>
+    );
+
+    const studentAgenda = <div className="section-agenda" />;
+
     return (
       <Query
         query={GET_SECTION}
@@ -144,29 +160,7 @@ class LectureSection extends Component {
                     number of students: {section.numStudents}
                   </div>
                 </div>
-                <div className="section-agenda">
-                  Select Day:{' '}
-                  <select
-                    className="section-day"
-                    ref={this.selectDay}
-                    onChange={this.changeDay}
-                  >
-                    {daysOfWeek.map(d => (
-                      <option value={d} key={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="section-times">
-                    {times.map(t => (
-                      <div key={t}>{t}</div>
-                    ))}
-                  </div>
-                  <OHContainer
-                    bookedSlots={bookedSlots}
-                    toggleBooking={this.toggleBooking}
-                  />
-                </div>
+                {isProf ? profAgenda : studentAgenda}
               </>
             );
           }
