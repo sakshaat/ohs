@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 
 import LectureSectionCard from '../dashboard/LectureSectionCard';
-import { GET_SECTION_FOR_COURSE } from '../utils/queries';
+import { GET_SECTIONS_FOR_COURSE } from '../utils/queries';
 import { roles } from '../utils/constants';
 
 import './Course.css';
@@ -38,7 +38,7 @@ class Course extends Component {
         </div>
 
         <Query
-          query={GET_SECTION_FOR_COURSE}
+          query={GET_SECTIONS_FOR_COURSE}
           variables={variables}
           onError={() => {
             toast('Unknown Error - Could not get sections for the course', {
