@@ -170,7 +170,7 @@ class CourseApi:
             List of officehours for instructor on that day.
         """
         return self.course_persistence.get_officehour_for_instructor_by_day(
-            user_name, weekday, MeetingPersistence
+            user_name, weekday, self.meeting_persistence
         )
 
     def get_officehours_for_section_on_weekday(
@@ -197,4 +197,6 @@ class CourseApi:
         Returns:
             office_hour_id on success
         """
-        return self.course_persistence.delete_officehour(office_hour_id)
+        return self.course_persistence.delete_officehour(
+            office_hour_id, self.meeting_persistence
+        )

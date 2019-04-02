@@ -198,7 +198,7 @@ class CoursePersistence:
         return list(sections)
 
     def delete_section(
-            self, section_identity: SectionIdentity
+        self, section_identity: SectionIdentity
     ) -> Result[SectionIdentity, str]:
         if not self.get_section(section_identity):
             return Err(f"Section {section_identity} does not exist")
@@ -244,7 +244,7 @@ class CoursePersistence:
         return list(sections)
 
     def create_officehour(
-            self, officehour: OfficeHour, mp: MeetingPersistence
+        self, officehour: OfficeHour, mp: MeetingPersistence
     ) -> Result[OfficeHour, str]:
         if self.get_officehour(officehour.officehour_id, mp):
             return Err(f"OfficeHour {officehour} already exists")
@@ -287,7 +287,7 @@ class CoursePersistence:
         )
 
     def get_officehour(
-            self, office_hour_id: UUID, mp: MeetingPersistence
+        self, office_hour_id: UUID, mp: MeetingPersistence
     ) -> Option[OfficeHour]:
         c = self.connection.cursor()
         term = (office_hour_id,)
@@ -299,7 +299,7 @@ class CoursePersistence:
         return officehour
 
     def delete_officehour(
-            self, office_hour_id: UUID, mp: MeetingPersistence
+        self, office_hour_id: UUID, mp: MeetingPersistence
     ) -> Result[UUID, str]:
         if not self.get_officehour(office_hour_id, mp):
             return Err(f"OfficeHour {office_hour_id} does not exist")
@@ -309,7 +309,7 @@ class CoursePersistence:
         return Ok(office_hour_id)
 
     def get_officehour_for_instructor_by_day(
-            self, user_name: str, day: Weekday, mp: MeetingPersistence
+        self, user_name: str, day: Weekday, mp: MeetingPersistence
     ) -> List[OfficeHour]:
         c = self.connection.cursor()
         officehours = []

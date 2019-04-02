@@ -69,3 +69,11 @@ class SectionInput(graphene.InputObjectType):
     section_code = graphene.String(required=True)
     taught_by = graphene.String()
     num_students = graphene.Int()
+
+    def to_identity(self):
+        return SectionIdentity(
+            course=self.course.to_domain(),
+            section_code=self.section_code,
+            semester=self.semester,
+            year=self.year,
+        )
