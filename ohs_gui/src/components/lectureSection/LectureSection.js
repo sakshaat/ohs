@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 
 import { GET_SECTION } from '../utils/queries';
-import { userIsProf, getSemesterCode } from '../utils/helpers';
+import { userIsProf, getFormattedSectionName } from '../utils/helpers';
 
 import OHContainer from '../officeHours/OHContainer';
 import './LectureSection.css';
@@ -149,16 +149,8 @@ class LectureSection extends Component {
             return (
               <>
                 <div className="section-info">
-                  <h1>
-                    {`${section.course.courseCode}H1${getSemesterCode(
-                      section.semester
-                    )} - ${section.sectionCode}`}
-                  </h1>
-                  <div>
-                    year: {section.year}
-                    <br />
-                    number of students: {section.numStudents}
-                  </div>
+                  <h1>{getFormattedSectionName(section)}</h1>
+                  <div>number of students: {section.numStudents}</div>
                 </div>
                 {isProf ? profAgenda : studentAgenda}
               </>

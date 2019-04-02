@@ -19,4 +19,10 @@ function getSemesterCode(sem) {
   }
 }
 
-export { userIsProf, getSemesterCode };
+function getFormattedSectionName(section) {
+  return `${section.course.courseCode}H1${getSemesterCode(
+    section.semester
+  )} - ${section.sectionCode} - ${section.year}`;
+}
+
+export { userIsProf, getSemesterCode, getFormattedSectionName };

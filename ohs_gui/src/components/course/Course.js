@@ -30,10 +30,8 @@ class Course extends Component {
     return (
       <div id="sections">
         <div className="container">
-          <div className="row">
-            <div className="header-cont col-10">
-              {courseCode && <h1>{courseCode} Lecture Sections</h1>}
-            </div>
+          <div className="text-center">
+            {courseCode && <h1>{courseCode} Lecture Sections</h1>}
           </div>
         </div>
 
