@@ -133,7 +133,8 @@ class Meeting extends Component {
     this.setState({ comments });
   }
 
-  createComment() {
+  createComment(e) {
+    e.preventDefault();
     // TODO: add comment to backend
     if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
       return;
@@ -254,17 +255,21 @@ class Meeting extends Component {
             />
           </div>
           <div className="new-comment">
-            <FormGroup role="form">
-              <FormControl
-                ref="commentInput"
-                placeholder="New comment"
-                aria-label="Comment"
-                aria-describedby="basic-addon2"
-              />
-              <Button variant="primary" onClick={this.createComment}>
-                Submit
-              </Button>
-            </FormGroup>
+            <form onSubmit={e => this.createComment(e)}>
+              <FormGroup role="form">
+                <FormControl
+                  ref="commentInput"
+                  placeholder="New comment"
+                  aria-label="Comment"
+                  aria-describedby="basic-addon2"
+                />
+                <input
+                  className="btn btn-primary"
+                  type="submit"
+                  value="Submit"
+                />
+              </FormGroup>
+            </form>
           </div>
         </div>
         {isProf && showNotes && (
