@@ -107,6 +107,9 @@ const GET_SECTION = gql`
       semester
       sectionCode
       numStudents
+      taughtBy {
+        userName
+      }
     }
   }
 `;
@@ -177,6 +180,14 @@ const DELETE_NOTE = gql`
         }
     }
 
+const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
+  query getOfficeHours($sectionInput: SectionInput!, $weekday: Weekday!) {
+    officehours(sectionInput: $sectionInput, weekday: $weekday) {
+      officeHourId
+      startingHour
+      weekday
+    }
+  }
 `;
 
 export {
@@ -187,8 +198,10 @@ export {
   GET_UPCOMING_MEETINGS,
   GET_SECTIONS_FOR_STUDENT,
   GET_MEETINGS,
+
   CREATE_COMMENT,
   CREATE_NOTE,
   DELETE_NOTE
+  GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY
 
 };

@@ -276,6 +276,7 @@ class CoursePersistence:
             lst = [None, None, None, None, None, None]
             for meeting in meeting_list:
                 lst[meeting.index] = meeting
+            return lst
 
         office_hour_id = UUID(res[0])
         return self.get_section(to_section_identity(res[1])).map(
@@ -306,7 +307,9 @@ class CoursePersistence:
         if not self.get_officehour(office_hour_id, mp):
             return Err(f"OfficeHour {office_hour_id} does not exist")
         c = self.connection.cursor()
-        c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (office_hour_id,))
+        c.execute(
+            "DELETE FROM officehours WHERE office_hour_id=%s", (str(office_hour_id),)
+        )
         self.connection.commit()
         return Ok(office_hour_id)
 
