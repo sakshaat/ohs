@@ -12,7 +12,8 @@ import { userIsProf } from '../utils/helpers';
 import {
     GET_MEETINGS,
     CREATE_COMMENT,
-    CREATE_NOTE
+    CREATE_NOTE,
+    DELETE_NOTE
 } from '../utils/queries';
 
 import './Meeting.css';
@@ -154,13 +155,19 @@ return (
     this.setState({ show: false });
   }
 
-  removeNote(time) {
+  removeNote(noteId) {
     return () => {
       if (window.confirm('Are you sure you want to delete this note?')) {
-        // TODO: remove note from backend
         let { notes } = this.state;
-        notes = notes.filter(n => n.time !== time);
-        this.setState({ notes });
+        //notes = notes.filter(n => n.time !== time);
+        //this.setState({ notes });
+        return (<Mutation mutation={DELETE_NOTE} variables={{noteId}} >
+        { (deletedNote) => {
+        notes = notes.filter(deletedNote => deletedNote.noteId !== noteId)
+        this.setState({notes});
+        }}
+       </Mutation>
+       );
       }
     };
   }
