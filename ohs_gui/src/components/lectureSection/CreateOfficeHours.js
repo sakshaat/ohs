@@ -132,6 +132,14 @@ class CreateOfficeHours extends Component {
       <Mutation
         mutation={DELETE_OH}
         variables={{"officeHourId": deleteOHId}}
+        update={(cache, response) => {
+          const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables: variables };
+          const data = cache.readQuery(addr);
+          data.officehours = data.officehours.filter(elem => {
+              return elem.officeHourId !== response.data.deleteOfficeHour.officeHourId
+          });
+          cache.writeQuery({...addr, data});
+        }}
         onCompleted={() => {
           toast('Office Hour Deleted', {
             type: toast.TYPE.SUCCESS
@@ -152,6 +160,12 @@ class CreateOfficeHours extends Component {
             <Mutation
               mutation={ADD_OH}
               variables={mutVariables}
+              update={(cache, response) => {
+                const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables: variables };
+                const data = cache.readQuery(addr);
+                data.officehours.push(response.data.createOfficeHour);
+                cache.writeQuery({...addr, data});
+              }}
               onCompleted={() => {
                 toast('New Office Hour Created', {
                   type: toast.TYPE.SUCCESS
