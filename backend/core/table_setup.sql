@@ -1,33 +1,33 @@
 CREATE TABLE users
 (
-  first_name    VARCHAR(50) NOT NULL,
-  last_name     VARCHAR(50) NOT NULL,
+  first_name    VARCHAR(200) NOT NULL,
+  last_name     VARCHAR(200) NOT NULL,
   password_hash TEXT        NOT NULL,
   PRIMARY KEY (first_name, last_name)
 );
 
 CREATE TABLE instructors
 (
-  user_name VARCHAR(50) PRIMARY KEY
+  user_name VARCHAR(200) PRIMARY KEY
 ) INHERITS (users);
 
 CREATE TABLE students
 (
-  student_number VARCHAR(50) PRIMARY KEY
+  student_number VARCHAR(200) PRIMARY KEY
 ) INHERITS (users);
 
 CREATE TABLE courses
 (
-  course_code VARCHAR(50) PRIMARY KEY
+  course_code VARCHAR(200) PRIMARY KEY
 );
 
 CREATE TABLE sections
 (
-  course       VARCHAR(50) NOT NULL,
+  course       VARCHAR(200) NOT NULL,
   year         integer     NOT NULL,
-  semester     VARCHAR(50) NOT NULL,
-  section_code VARCHAR(50) NOT NULL,
-  taught_by    VARCHAR(50) NOT NULL,
+  semester     VARCHAR(200) NOT NULL,
+  section_code VARCHAR(200) NOT NULL,
+  taught_by    VARCHAR(200) NOT NULL,
   num_students integer     NOT NULL,
   PRIMARY KEY (course, year, semester, section_code),
   CONSTRAINT course_fkey FOREIGN KEY (course)
@@ -40,19 +40,19 @@ CREATE TABLE sections
 
 CREATE TABLE officehours
 (
-  office_hour_id        VARCHAR(50) PRIMARY KEY,
-  section_id           VARCHAR(50) NOT NULL,
+  office_hour_id        VARCHAR(200) PRIMARY KEY,
+  section_id           VARCHAR(200) NOT NULL,
   starting_hour        integer NOT NULL,
   day_of_week          integer NOT NULL
 );
 
 CREATE TABLE meetings
 (
-  meeting_id      VARCHAR(50) PRIMARY KEY,
-  office_hour_id  VARCHAR(50) NOT NULL,
+  meeting_id      VARCHAR(200) PRIMARY KEY,
+  office_hour_id  VARCHAR(200) NOT NULL,
   index           integer     NOT NULL,
-  instructor      VARCHAR(50) NOT NULL,
-  student         VARCHAR(50) NOT NULL,
+  instructor      VARCHAR(200) NOT NULL,
+  student         VARCHAR(200) NOT NULL,
   start_time      BIGINT      NOT NULL,
   CONSTRAINT instructor_fkey FOREIGN KEY (instructor)
     REFERENCES instructors (user_name) MATCH SIMPLE
@@ -68,8 +68,8 @@ CREATE TABLE meetings
 
 CREATE TABLE notes
 (
-  note_id      VARCHAR(50) PRIMARY KEY,
-  meeting_id   VARCHAR(50) NOT NULL,
+  note_id      VARCHAR(200) PRIMARY KEY,
+  meeting_id   VARCHAR(200) NOT NULL,
   time_stamp   BIGINT      NOT NULL,
   content_text TEXT,
   CONSTRAINT meeting_fkey FOREIGN KEY (meeting_id)
@@ -79,10 +79,10 @@ CREATE TABLE notes
 
 CREATE TABLE comments
 (
-  comment_id           VARCHAR(50) PRIMARY KEY,
-  meeting_id           VARCHAR(50) NOT NULL,
-  author_if_instructor VARCHAR(50),
-  author_if_student    VARCHAR(50),
+  comment_id           VARCHAR(200) PRIMARY KEY,
+  meeting_id           VARCHAR(200) NOT NULL,
+  author_if_instructor VARCHAR(200),
+  author_if_student    VARCHAR(200),
   time_stamp           BIGINT      NOT NULL,
   content_text         TEXT,
   CONSTRAINT meeting_fkey FOREIGN KEY (meeting_id)
@@ -96,8 +96,8 @@ CREATE TABLE comments
 
 CREATE TABLE enrollment
 (
-  student_number       VARCHAR(50) NOT NULL,
-  section_id           VARCHAR(50) NOT NULL,
+  student_number       VARCHAR(200) NOT NULL,
+  section_id           VARCHAR(200) NOT NULL,
   PRIMARY KEY (student_number, section_id),
   CONSTRAINT student_fkey FOREIGN KEY (student_number)
     REFERENCES students (student_number) MATCH SIMPLE
