@@ -238,6 +238,7 @@ return (
 
               const { meeting } = data;
               if (meeting) {
+              this. setState({meeting: meeting, notes: meeting.notes, comments: meeting.comments})
               const id = meeting.meetingId
               const contentText = ReactDOM.findDOMNode(this.refs.commentInput).value
               const noteText = ReactDOM.findDOMNode(this.refs.noteInput).value
@@ -262,6 +263,7 @@ return (
             />
           </div>
           <div className="new-comment">
+          <form onSubmit={e => this.createComment(e)}>
             <FormGroup role="form">
               <FormControl
                 ref="commentInput"
@@ -269,15 +271,17 @@ return (
                 aria-label="Comment"
                 aria-describedby="basic-addon2"
               />
-              (id=meeting.meetingId, contentText=) =>{
-              <Mutation mutation={CREATE_COMMENT} variables={{id, contentText}}>
-              {createComment => <Button variant="primary" onClick={createComment}>
+              <Mutation mutation={CREATE_COMMENT} variables={{id, contentText}} >
+              {(createComment) => {
+              this.setState({comments: comments.push(createComment)});
+              return (<Button variant="primary" onClick={createComment}>
                 Submit
               </Button>
-              }
+              );
+              }}
               </Mutation>
-              }
             </FormGroup>
+            </form>
           </div>
         </div>
         {isProf && showNotes && (
@@ -315,10 +319,14 @@ return (
               Close
             </Button>
             <Mutation mutation={CREATE_NOTE} variables={{id, noteText}}>
-            {createComment => <Button variant="primary" onClick={createComment}>
+            {(createNote) => {
+            this.setState({notes: notes.push(createNote)});
+            return(
+            <Button variant="primary" onClick={createNote}>
               Save
             </Button>
-            }
+            );
+            }}
             </Mutation>
           </Modal.Footer>
         </Modal>

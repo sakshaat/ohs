@@ -167,7 +167,15 @@ const CREATE_NOTE = gql`
             contentText
         }
     }
+`;
 
+const DELETE_NOTE = gql`
+    mutation deleteNote($noteId: UUID!) {
+        deleteNote(noteId: $noteId,) {
+            noteId
+            meetingId
+        }
+    }
 
 `;
 
@@ -180,6 +188,7 @@ export {
   GET_SECTIONS_FOR_STUDENT,
   GET_MEETINGS,
   CREATE_COMMENT,
-  CREATE_NOTE
+  CREATE_NOTE,
+  DELETE_NOTE
 
 };
