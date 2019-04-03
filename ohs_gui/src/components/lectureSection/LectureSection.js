@@ -5,7 +5,13 @@ import { Redirect } from 'react-router-dom';
 
 import { Button } from 'react-bootstrap';
 
+import CreateOfficeHours from './CreateOfficeHours';
+import BookMeetings from './BookMeetings';
+
 import { GET_SECTION } from '../utils/queries';
+import { userIsProf, getFormattedSectionName } from '../utils/helpers';
+
+import './LectureSection.css';
 
 class LectureSection extends PureComponent {
   constructor(props) {
@@ -16,10 +22,10 @@ class LectureSection extends PureComponent {
   }
 
   render() {
-    const { location } = this.props;
+    const { location, user } = this.props;
     const { redirectToAddStudents } = this.state;
+    
     const params = new URLSearchParams(location.search);
-
     const variables = {
       course: { courseCode: params.get('course') },
       year: params.get('year'),
@@ -30,6 +36,8 @@ class LectureSection extends PureComponent {
     if (redirectToAddStudents) {
       return <Redirect to={`/add-students${location.search}`} />;
     }
+
+    const isProf = userIsProf(user);
 
     return (
       <div>
@@ -43,30 +51,19 @@ class LectureSection extends PureComponent {
           }}
         >
           {({ data }) => {
-            const { section } = data;
-            if (section) {
-              return (
-                <div>
-                  LectureSection for {section.course.courseCode}
-                  <div>
-                    year: {section.year}
-                    <br />
-                    semester: {section.semester}
-                    <br />
-                    section_code: {section.sectionCode}
-                    <br /># of students: {section.numStudents}
-                  </div>
-                  <Button
-                    onClick={() =>
-                      this.setState({ redirectToAddStudents: true })
-                    }
-                  >
-                    Add Students
-                  </Button>
+          const { section } = data;
+          if (section) {
+            return (
+              <>
+                <div className="section-info">
+                  <h1>{getFormattedSectionName(section)}</h1>
+                  <div>number of students: {section.numStudents}</div>
                 </div>
-              );
-            }
-            return null;
+                {isProf ? <CreateOfficeHours /> : <BookMeetings />}
+              </>
+            );
+          }
+          return null;
           }}
         </Query>
       </div>

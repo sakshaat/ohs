@@ -292,7 +292,7 @@ class CoursePersistence:
         self, office_hour_id: UUID, mp: MeetingPersistence
     ) -> Option[OfficeHour]:
         c = self.connection.cursor()
-        term = (office_hour_id,)
+        term = (str(office_hour_id),)
         c.execute("SELECT * FROM officehours WHERE office_hour_id=%s", term)
         officehour = NONE
         res = c.fetchone()

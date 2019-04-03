@@ -8,7 +8,7 @@ import MeetingInfo from './MeetingInfo';
 import { Mutation } from 'react-apollo';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 import {
     GET_MEETINGS,
     CREATE_COMMENT,
@@ -47,7 +47,7 @@ class Meeting extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = userIsProf(user);
 
     this.getMeeting();
     this.getComments();
@@ -80,7 +80,6 @@ class Meeting extends Component {
       }
     }
   }
-
 
   oldCreateComment() {
     // TODO: add comment to backend
@@ -214,13 +213,14 @@ return (
       }
     } = this.props;
 
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
     const variables = {
       meeting: null,
       notes: [],
       comments: [],
       show: false
     };
+
     const { meeting, notes, comments, show, showNotes } = this.state;
 
     return (
@@ -262,6 +262,8 @@ return (
             />
           </div>
           <div className="new-comment">
+
+          <form onSubmit={e => this.createComment(e)}>
             <FormGroup role="form">
               <FormControl
                 ref="commentInput"
@@ -278,6 +280,7 @@ return (
               </Mutation>
               }
             </FormGroup>
+           </form>
           </div>
         </div>
         {isProf && showNotes && (

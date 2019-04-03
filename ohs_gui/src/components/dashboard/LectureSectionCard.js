@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { getFormattedSectionName } from '../utils/helpers';
 
 class LectureSectionCard extends PureComponent {
   render() {
@@ -14,14 +15,8 @@ class LectureSectionCard extends PureComponent {
           }&semester=${section.semester}&sectionCode=${section.sectionCode}`
         }}
       >
-        <div className="card-element lecture-section-verbose">
-          <div>
-            name: {section.course.courseCode}
-            code: {section.sectionCode}
-            year: {section.year}
-            semester: {section.semester}
-            students: {section.numStudents}
-          </div>
+        <div className="card-element lecture-section">
+          <div>{getFormattedSectionName(section)}</div>
         </div>
       </Link>
     );
