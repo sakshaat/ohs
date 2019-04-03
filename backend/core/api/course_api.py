@@ -191,7 +191,7 @@ class CourseApi:
         Returns:
             List of officehours for section on that day.
         """
-        return self.course_persistence.get_officehour_for_instructor_by_day(
+        return self.course_persistence.get_officehours_for_section_on_weekday(
             section_identity, weekday, MeetingPersistence
         )
 
