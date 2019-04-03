@@ -42,7 +42,8 @@ class CreateSection extends Component {
       user: { id },
       match: {
         params: { courseCode }
-      }
+      },
+      callback
     } = this.props;
 
     // variable
@@ -110,6 +111,7 @@ class CreateSection extends Component {
               }}
               onCompleted={() => {
                 this.setState({ sectionCreated: true });
+                callback();
                 toast('New Section Created', {
                   type: toast.TYPE.SUCCESS
                 });

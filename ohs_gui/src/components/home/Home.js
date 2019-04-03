@@ -186,14 +186,20 @@ class Home extends Component {
                   render={() => (
                     <CreateCourse
                       user={user}
-                      callback={() => this.courseAdded()}
+                      callback={() => this.forceUpdate()}
                     />
                   )}
                 />
                 <Route
                   exact
                   path="/course/:courseCode/add-section"
-                  render={props => <CreateSection user={user} {...props} />}
+                  render={props => (
+                    <CreateSection
+                      user={user}
+                      callback={() => this.forceUpdate()}
+                      {...props}
+                    />
+                  )}
                 />
               </Switch>
             </div>
