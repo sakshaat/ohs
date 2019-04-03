@@ -13,6 +13,44 @@ const GET_COURSES = gql`
     meeting(meetingId: $meetingId) {
        meeting_id
     }
+        meetingId
+        officeHourId
+        index
+        instructor {
+            userName
+            firstName
+            lastName
+        }
+        student {
+            studentNumber
+            firstName
+            lastName
+        }
+        notes {
+            noteId
+            meetingId
+            timeStamp
+            contentText
+        }
+        comments {
+            commentId
+            meetingId
+            author {
+                ... on Instructor {
+                    userName
+                    firstName
+                    lastName
+                }
+                ... on Student {
+                    studentNumber
+                    firstName
+                    lastName
+                }
+            }
+            timeStamp
+            contentText
+        }
+        startTime
   }
 `;
 
