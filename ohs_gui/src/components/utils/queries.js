@@ -179,6 +179,7 @@ const DELETE_NOTE = gql`
             meetingId
         }
     }
+`;
 
 const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
   query getOfficeHours($sectionInput: SectionInput!, $weekday: Weekday!) {
