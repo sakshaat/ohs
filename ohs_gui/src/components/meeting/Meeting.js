@@ -263,7 +263,13 @@ class Meeting extends Component {
               type: toast.TYPE.ERROR
             });
           }}
-        />
+        >{({ data }) => {
+           if (data) {
+
+              const { meeting } = data;
+              if (meeting) {
+               return(
+       <>
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
           <MeetingInfo
             meeting={meeting}
@@ -273,7 +279,7 @@ class Meeting extends Component {
           />
           <div className="meeting-comments">
             <h2>Comments</h2>
-            {comments.map(c => (
+            {meeting.comments.map(c => (
               <MeetingComment key={c.time + c.author} comment={c} user={user} />
             ))}
             <div
@@ -304,7 +310,7 @@ class Meeting extends Component {
               onClick={this.minimizeNotes}
               role="presentation"
             />
-            {notes.map(n => (
+            {meeting.notes.map(n => (
               <MeetingNote key={n.time} note={n} removeNote={this.removeNote} />
             ))}
             <Button variant="primary" onClick={this.handleShow}>
@@ -335,6 +341,14 @@ class Meeting extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
+       </>
+       );
+       }
+       }
+         return null;
+        }}
+        </Query>
+        }
       </>
     );
   }
