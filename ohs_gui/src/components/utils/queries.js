@@ -12,8 +12,6 @@ const GET_COURSES = gql`
   query getMeeting($meetingId: String!) {
     meeting(meetingId: $meetingId) {
         meetingId
-    }
-
         officeHourId
         index
         instructor {
@@ -51,6 +49,7 @@ const GET_COURSES = gql`
             contentText
         }
         startTime
+    }
   }
 `;
 
