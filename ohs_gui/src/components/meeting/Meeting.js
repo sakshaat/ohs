@@ -5,11 +5,14 @@ import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 import MeetingNote from './MeetingNote';
 import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
+import { Mutation } from 'react-apollo';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 import { roles } from '../utils/constants';
 import {
-    GET_MEETINGS
+    GET_MEETINGS,
+    CREATE_COMMENT,
+    CREATE_NOTE
 } from '../utils/queries';
 
 import './Meeting.css';
@@ -98,24 +101,34 @@ class Meeting extends Component {
     ReactDOM.findDOMNode(this.refs.commentInput).value = '';
   }
 
-  CreateComment() {
+ /* CreateComment() {
     // TODO: add comment to backend
     if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
       return;
     }
 
     const { user } = this.props;
+    const {comments} = this.state;
+return (
+    <Mutation
+      mutation={CREATE_COMMENT}
+      variables={{commentInput: {meetingId: meetingId, contentText: contentText}}}
+       onCompleted={() => {
+        this.setState({ courseCreated: true });
+        toast('New Course Created', {
+            type: toast.TYPE.SUCCESS
+          });
+        }}
+       onError={() => {
+        toast('Unknown Error - Could not create new course', {
+            type: toast.TYPE.ERROR
+        });
+       }}
+    >
+    </Mutation>
+  );
+};*/
 
-    const comment = {
-      time: new Date().toISOString(),
-      contents: ReactDOM.findDOMNode(this.refs.commentInput).value,
-      author: user.first_name + user.last_name
-    };
-    const { comments } = this.state;
-    comments.push(comment);
-    this.setState({ comments });
-    ReactDOM.findDOMNode(this.refs.commentInput).value = '';
-  }
 
   handleClose() {
     this.setState({ show: false });
@@ -225,6 +238,9 @@ class Meeting extends Component {
 
               const { meeting } = data;
               if (meeting) {
+              const id = meeting.meetingId
+              const contentText = ReactDOM.findDOMNode(this.refs.commentInput).value
+              const noteText = ReactDOM.findDOMNode(this.refs.noteInput).value
                return(
        <>
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
@@ -253,9 +269,14 @@ class Meeting extends Component {
                 aria-label="Comment"
                 aria-describedby="basic-addon2"
               />
-              <Button variant="primary" onClick={this.createComment}>
+              (id=meeting.meetingId, contentText=) =>{
+              <Mutation mutation={CREATE_COMMENT} variables={{id, contentText}}>
+              {createComment => <Button variant="primary" onClick={createComment}>
                 Submit
               </Button>
+              }
+              </Mutation>
+              }
             </FormGroup>
           </div>
         </div>
@@ -293,9 +314,12 @@ class Meeting extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.addNote}>
+            <Mutation mutation={CREATE_NOTE} variables={{id, noteText}}>
+            {createComment => <Button variant="primary" onClick={createComment}>
               Save
             </Button>
+            }
+            </Mutation>
           </Modal.Footer>
         </Modal>
        </>
