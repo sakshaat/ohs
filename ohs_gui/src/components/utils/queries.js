@@ -11,7 +11,7 @@ const GET_COURSES = gql`
   const GET_MEETINGS = gql`
   query getMeeting($meetingId: String!) {
     meeting(meetingId: $meetingId) {
-       meeting_id
+
     }
         meetingId
         officeHourId
