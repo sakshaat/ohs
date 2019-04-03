@@ -1,9 +1,11 @@
 from unittest.mock import MagicMock
+from uuid import UUID, uuid4
 
 import pytest
 from option import Some
 
 from core.domain.user import Instructor
+from core.tests.generation import fake
 from core.tests.generation.fake_meeting import fake_comment, fake_meeting
 from core.tests.generation.fake_user import fake_instructor, fake_student
 
@@ -53,23 +55,23 @@ class TestMeetingQuery:
     """
     query_one = (
         """
-    query getMeeting($meetingId: UUID!) {
-        meeting(meetingId: $meetingId) {
-            ... meetingDetails
-        }
-    }
-    """
+            query getMeeting($meetingId: UUID!) {
+                meeting(meetingId: $meetingId) {
+                    ... meetingDetails
+                }
+            }
+            """
         + meeting_fragment
     )
 
     query_upcoming = (
         """
-    query getUpcoming {
-        upcomingMeetings {
-            ... meetingDetails
-        }
-    }
-    """
+            query getUpcoming {
+                upcomingMeetings {
+                    ... meetingDetails
+                }
+            }
+            """
         + meeting_fragment
     )
 
@@ -106,3 +108,32 @@ class TestMeetingQuery:
         for gql_result, meeting in zip(result.data["upcomingMeetings"], meetings):
             assert gql_result["meetingId"] == str(meeting.meeting_id)
         api_method.assert_called_once_with(user_id)
+
+    @pytest.mark.parametrize("amount", [0, 10])
+    def test_meetings_of_officehour(self, schema, amount):
+        meetings = [meeting for meeting, _ in zip(fake_meeting(), range(amount))]
+        context = MagicMock()
+        context.api.meeting_api.get_meetings_of_officehour_for_date.return_value = (
+            meetings
+        )
+        query = """
+        query meetings($officeHourId: UUID!, $startTime: Int!, $endTime: Int!) {
+            meetings(officeHourId: $officeHourId, startTime: $startTime, endTime: $endTime) {
+                meetingId
+            }
+        }
+        """
+        variables = {
+            "officeHourId": str(uuid4()),
+            "startTime": fake.pyint(),
+            "endTime": fake.pyint(),
+        }
+        result = schema.execute(query, context=context, variables=variables)
+        assert not result.errors
+        for expected_meeting, actual_meeting in zip(meetings, result.data["meetings"]):
+            assert str(expected_meeting.meeting_id) == actual_meeting["meetingId"]
+        context.api.meeting_api.get_meetings_of_officehour_for_date.assert_called_once_with(
+            UUID(variables["officeHourId"]),
+            variables["startTime"],
+            variables["endTime"],
+        )

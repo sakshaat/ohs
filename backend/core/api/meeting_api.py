@@ -154,6 +154,13 @@ class MeetingApi:
         """
         return self.meeting_persistence.get_meetings_of_student(student_number)
 
+    def get_meetings_of_officehour_for_date(
+        self, office_hour_id: UUID, range_start: int, range_end: int
+    ) -> List[Meeting]:
+        return self.meeting_persistence.get_meetings_of_officehour_for_date(
+            office_hour_id, range_start, range_end
+        )
+
     def _check_meeting_user(
         self, meeting_id: UUID, user: User, error_msg: str
     ) -> Result[None, str]:
