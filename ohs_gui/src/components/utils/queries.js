@@ -150,6 +150,52 @@ const GET_SECTIONS_FOR_COURSE = gql`
   }
 `;
 
+const CREATE_COMMENT = gql`
+  mutation createComment($meetingId: meetingId!, $contentText: contentText!) {
+    createComment(meetingId: $meetingId, contentText: $contentText) {
+            commentId
+            meetingId
+            author {
+                ... on Instructor {
+                    userName
+                }
+                ... on Student {
+                    studentNumber
+                }
+            }
+            timeStamp
+            contentText
+        }
+    }
+`;
+
+const CREATE_NOTE = gql`
+    mutation createNote($meetingId: UUID!, $contentText: String!) {
+        createNote(meetingId: $meetingId, contentText: $contentText) {
+            noteId
+            meetingId
+            timeStamp
+            contentText
+        }
+    }
+`;
+
+const DELETE_NOTE = gql`
+    mutation deleteNote($noteId: UUID!) {
+        deleteNote(noteId: $noteId,) {
+            noteId
+        }
+    }
+`;
+
+const DELETE_MEETING = gql`
+    mutation deleteMeeting($meetingId: UUID!) {
+        deleteMeeting(meetingId: $meetingId,) {
+            meetingId
+        }
+    }
+`;
+
 const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
   query getOfficeHours($sectionInput: SectionInput!, $weekday: Weekday!) {
     officehours(sectionInput: $sectionInput, weekday: $weekday) {
@@ -160,6 +206,7 @@ const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
   }
 `;
 
+
 export {
   GET_COURSES,
   GET_SECTIONS,
@@ -169,5 +216,9 @@ export {
   GET_SECTIONS_FOR_STUDENT,
   GET_MEETINGS,
   GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY,
-  ENROLL_STUDENTS
+  ENROLL_STUDENTS,
+  CREATE_COMMENT,
+  CREATE_NOTE,
+  DELETE_NOTE,
+  DELETE_MEETING,
 };

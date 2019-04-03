@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { Query } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
+
 import MeetingNote from './MeetingNote';
 import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
+
 import { userIsProf } from '../utils/helpers';
+
 import {
-    GET_MEETINGS
+    GET_MEETINGS,
+    CREATE_COMMENT,
+    CREATE_NOTE,
+    DELETE_NOTE,
+    DELETE_MEETING
 } from '../utils/queries';
 
 import './Meeting.css';
@@ -78,71 +85,7 @@ class Meeting extends Component {
     }
   }
 
-
-
-  getMeeting() {
-    // TODO: dummy json
-    // fetch meeting using this.props.match.params.id
-    const meeting = {
-      time: '2019-11-17T17:15:00.000Z',
-      room: 'BA1234',
-      courseCode: 'CSC302H1S',
-      student: 'Pika Chu',
-      professor: 'Alec Gibson',
-      id: 11
-    };
-    this.setState({ meeting });
-  }
-
-  getNotes() {
-    // TODO: dummy json
-    const notes = [
-      {
-        time: '2019-11-17T17:15:00.000Z',
-        contents: 'I choose you, Pikachu'
-      },
-      {
-        time: '2019-11-17T17:18:00.000Z',
-        contents: 'haha this student is a fat electric mouse'
-      }
-    ];
-    this.setState({ notes });
-  }
-
-  getComments() {
-    // TODO: dummy json
-    const comments = [
-      {
-        time: '2019-11-17T17:15:00.000Z',
-        contents: 'Hello, Pikachu',
-        author: 'Alec Gibson'
-      },
-      {
-        time: '2019-11-17T17:16:00.000Z',
-        contents: 'PIKA',
-        author: 'Pika Chu'
-      },
-      {
-        time: '2019-11-17T17:16:30.000Z',
-        contents: 'Is that all you can say?',
-        author: 'Alec Gibson'
-      },
-      {
-        time: '2019-11-17T17:18:00.000Z',
-        contents: 'PIKA',
-        author: 'Pika Chu'
-      },
-      {
-        time: '2019-11-17T17:20:00.000Z',
-        contents: 'Well this is gonna be an eventful meeting...',
-        author: 'Alec Gibson'
-      }
-    ];
-    this.setState({ comments });
-  }
-
-  createComment(e) {
-    e.preventDefault();
+  oldCreateComment() {
     // TODO: add comment to backend
     if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
       return;
@@ -160,6 +103,35 @@ class Meeting extends Component {
     this.setState({ comments });
     ReactDOM.findDOMNode(this.refs.commentInput).value = '';
   }
+
+ /* CreateComment() {
+    // TODO: add comment to backend
+    if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
+      return;
+    }
+
+    const { user } = this.props;
+    const {comments} = this.state;
+return (
+    <Mutation
+      mutation={CREATE_COMMENT}
+      variables={{commentInput: {meetingId: meetingId, contentText: contentText}}}
+       onCompleted={() => {
+        this.setState({ courseCreated: true });
+        toast('New Course Created', {
+            type: toast.TYPE.SUCCESS
+          });
+        }}
+       onError={() => {
+        toast('Unknown Error - Could not create new course', {
+            type: toast.TYPE.ERROR
+        });
+       }}
+    >
+    </Mutation>
+  );
+};*/
+
 
   handleClose() {
     this.setState({ show: false });
@@ -188,22 +160,34 @@ class Meeting extends Component {
     this.setState({ show: false });
   }
 
-  removeNote(time) {
+  removeNote(noteId) {
     return () => {
       if (window.confirm('Are you sure you want to delete this note?')) {
-        // TODO: remove note from backend
         let { notes } = this.state;
-        notes = notes.filter(n => n.time !== time);
-        this.setState({ notes });
+        //notes = notes.filter(n => n.time !== time);
+        //this.setState({ notes });
+        return (<Mutation mutation={DELETE_NOTE} variables={{noteId}} >
+        { (deletedNote) => {
+        notes = notes.filter(deletedNote => deletedNote.noteId !== noteId)
+        this.setState({notes: notes});
+        }}
+       </Mutation>
+       );
       }
     };
   }
 
-  cancelMeeting() {
-    const { history } = this.props;
-    // TODO: remove meeting from backend
+  cancelMeeting(meetingId) {
+    const { meeting } = this.state;
     if (window.confirm('Are you sure you want to cancel this meeting?')) {
-      history.push('/');
+       return(<Mutation mutation={DELETE_MEETING} variables={{meetingId}}
+       onCompleted={ () => {
+       this.setState({meeting: null})
+       }}
+       >
+       </Mutation>
+       // TODO: redirect out of meeting into courses page
+       );
     }
   }
 
@@ -272,6 +256,10 @@ class Meeting extends Component {
 
               const { meeting } = data;
               if (meeting) {
+              this. setState({meeting: meeting, notes: meeting.notes, comments: meeting.comments})
+              const id = meeting.meetingId
+              const contentText = ReactDOM.findDOMNode(this.refs.commentInput).value
+              const noteText = ReactDOM.findDOMNode(this.refs.noteInput).value
                return(
        <>
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
@@ -293,21 +281,28 @@ class Meeting extends Component {
             />
           </div>
           <div className="new-comment">
-            <form onSubmit={e => this.createComment(e)}>
-              <FormGroup role="form">
-                <FormControl
-                  ref="commentInput"
-                  placeholder="New comment"
-                  aria-label="Comment"
-                  aria-describedby="basic-addon2"
-                />
-                <input
-                  className="btn btn-primary"
-                  type="submit"
-                  value="Submit"
-                />
-              </FormGroup>
-            </form>
+
+
+          <form onSubmit={e => this.createComment(e)}>
+            <FormGroup role="form">
+              <FormControl
+                ref="commentInput"
+                placeholder="New comment"
+                aria-label="Comment"
+                aria-describedby="basic-addon2"
+              />
+              <Mutation mutation={CREATE_COMMENT} variables={{id, contentText}} >
+              {(createComment) => {
+              this.setState({comments: comments.push(createComment)});
+              return (<Button variant="primary" onClick={createComment}>
+                Submit
+              </Button>
+              );
+              }}
+              </Mutation>
+            </FormGroup>
+
+           </form>
           </div>
         </div>
         {isProf && showNotes && (
@@ -344,9 +339,16 @@ class Meeting extends Component {
             <Button variant="secondary" onClick={this.handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={this.addNote}>
+            <Mutation mutation={CREATE_NOTE} variables={{id, noteText}}>
+            {(createNote) => {
+            this.setState({notes: notes.push(createNote)});
+            return(
+            <Button variant="primary" onClick={createNote}>
               Save
             </Button>
+            );
+            }}
+            </Mutation>
           </Modal.Footer>
         </Modal>
        </>

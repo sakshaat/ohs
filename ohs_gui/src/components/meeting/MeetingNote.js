@@ -10,14 +10,14 @@ class MeetingNote extends PureComponent {
         <span
           className="note-delete"
           role="presentation"
-          onClick={removeNote(note.time)}
+          onClick={removeNote(note.noteId)}
         >
           &#10006;
         </span>
         <p className="note-date">
           {dateFormat(new Date(note.time), 'mmmm dS, yyyy, h:MM TT')}
         </p>
-        <p className="note-content">{note.contents}</p>
+        <p className="note-content">{note.content}</p>
       </div>
     );
   }
