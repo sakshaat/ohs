@@ -139,6 +139,38 @@ const GET_SECTIONS_FOR_COURSE = gql`
   }
 `;
 
+const CREATE_COMMENT = gql`
+  mutation createComment($meetingId: meetingId!, $contentText: contentText!) {
+    createComment(meetingId: $meetingId, contentText: $contentText) {
+            commentId
+            meetingId
+            author {
+                ... on Instructor {
+                    userName
+                }
+                ... on Student {
+                    studentNumber
+                }
+            }
+            timeStamp
+            contentText
+        }
+    }
+`;
+
+const CREATE_NOTE = gql`
+    mutation createNote($meetingId: UUID!, $contentText: String!) {
+        createNote(meetingId: $meetingId, contentText: $contentText) {
+            noteId
+            meetingId
+            timeStamp
+            contentText
+        }
+    }
+
+
+`;
+
 export {
   GET_COURSES,
   GET_SECTIONS,
@@ -146,5 +178,7 @@ export {
   GET_SECTIONS_FOR_COURSE,
   GET_UPCOMING_MEETINGS,
   GET_SECTIONS_FOR_STUDENT,
-  GET_MEETINGS
+  GET_MEETINGS,
+  CREATE_COMMENT,
+  CREATE_NOTE
 };

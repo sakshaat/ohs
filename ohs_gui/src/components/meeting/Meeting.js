@@ -45,6 +45,12 @@ class Meeting extends Component {
   componentDidMount() {
     const { user } = this.props;
     const isProf = user && user.role === 'PROFESSOR';
+
+    this.getMeeting();
+    this.getComments();
+    if (isProf) {
+      this.getNotes();
+    }
     setTimeout(this.scrollToBottom, 0);
   }
 
@@ -73,7 +79,26 @@ class Meeting extends Component {
   }
 
 
-  createComment() {
+  oldCreateComment() {
+    // TODO: add comment to backend
+    if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
+      return;
+    }
+
+    const { user } = this.props;
+
+    const comment = {
+      time: new Date().toISOString(),
+      contents: ReactDOM.findDOMNode(this.refs.commentInput).value,
+      author: user.first_name + user.last_name
+    };
+    const { comments } = this.state;
+    comments.push(comment);
+    this.setState({ comments });
+    ReactDOM.findDOMNode(this.refs.commentInput).value = '';
+  }
+
+  CreateComment() {
     // TODO: add comment to backend
     if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
       return;
