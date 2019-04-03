@@ -9,7 +9,7 @@ const GET_COURSES = gql`
 `;
 
   const GET_MEETINGS = gql`
-  query getMeeting($meetingId: String!) {
+  query getMeeting($meetingId: UUID!) {
     meeting(meetingId: $meetingId) {
         meetingId
         officeHourId
