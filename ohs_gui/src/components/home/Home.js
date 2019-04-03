@@ -109,7 +109,6 @@ class Home extends Component {
                     const lst = upcomingMeetings.map(m => (
                       <MeetingCard isProf={isProf} meeting={m} key={m.id} />
                     ));
-                    console.log('list', lst);
                     return lst;
                   }
 

@@ -57,15 +57,18 @@ class LectureSection extends PureComponent {
                 <div className="section-info">
                   <h1>{getFormattedSectionName(section)}</h1>
                   <div>number of students: {section.numStudents}</div>
+                  {isProf ? 
                   <Button
 
-                    className="add-btn"
-	                    onClick={() =>
-	                      this.setState({ redirectToAddStudents: true })
-	                    }
-	                  >
-	                    Add Students
-	                  </Button>
+                  className="add-btn"
+                    onClick={() =>
+                      this.setState({ redirectToAddStudents: true })
+                    }
+                  >
+                    Add Students
+                  </Button>:
+                null}
+                  
                 </div>
                 {isProf ? <CreateOfficeHours section={section} /> : <BookMeetings section={section} />}
               </>

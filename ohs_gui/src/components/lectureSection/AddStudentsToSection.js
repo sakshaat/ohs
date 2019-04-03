@@ -8,6 +8,7 @@ import {Query, Mutation} from "react-apollo";
 import {toast} from "react-toastify";
 
 import {GET_SECTION, ENROLL_STUDENTS} from "../utils/queries";
+import {userIsProf} from "../utils/helpers"
 
 
 class AddStudentsToSection extends PureComponent {
@@ -25,7 +26,7 @@ class AddStudentsToSection extends PureComponent {
 
   render() {
       
-    const { location } = this.props;
+    const { location, user } = this.props;
     const params = new URLSearchParams(location.search);
 
     const { tags, studentsEnrolled } = this.state;
@@ -37,7 +38,7 @@ class AddStudentsToSection extends PureComponent {
       sectionCode: params.get('sectionCode')
     };
 
-    if(studentsEnrolled) {
+    if(!userIsProf(user) || studentsEnrolled) {
         return <Redirect to="/" />
     }
 
