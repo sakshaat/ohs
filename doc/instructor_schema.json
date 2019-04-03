@@ -1446,6 +1446,51 @@
                 {
                   "defaultValue": null, 
                   "description": null, 
+                  "name": "sectionInput", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "INPUT_OBJECT", 
+                      "name": "SectionInput", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "studentNumbers", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "LIST", 
+                      "name": null, 
+                      "ofType": {
+                        "kind": "SCALAR", 
+                        "name": "String", 
+                        "ofType": null
+                      }
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "enrollStudents", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "EnrollStudents", 
+                "ofType": null
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
                   "name": "contentText", 
                   "type": {
                     "kind": "NON_NULL", 
@@ -1664,6 +1709,37 @@
           "interfaces": [], 
           "kind": "OBJECT", 
           "name": "Mutation", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "studentNumbers", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "LIST", 
+                  "name": null, 
+                  "ofType": {
+                    "kind": "SCALAR", 
+                    "name": "String", 
+                    "ofType": null
+                  }
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "EnrollStudents", 
           "possibleTypes": null
         }, 
         {
