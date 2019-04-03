@@ -11,18 +11,10 @@ exports[`test if it renders with params 1`] = `
   }
 >
   <div
-    className="card-element lecture-section-verbose"
+    className="card-element lecture-section"
   >
     <div>
-      name: 
-      CSC302
-      code: 
-      LEC0101
-      year: 
-      2019
-      semester: 
-      FALL
-      students: 
+      CSC302H1F - LEC0101 - 2019
     </div>
   </div>
 </Link>

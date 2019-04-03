@@ -25,6 +25,7 @@ class CreateCourse extends Component {
 
   render() {
     const { courseCreated, courseText } = this.state;
+    const { callback } = this.props;
     if (courseCreated) {
       return <Redirect to="/" />;
     }
@@ -49,6 +50,7 @@ class CreateCourse extends Component {
               }}
               onCompleted={() => {
                 this.setState({ courseCreated: true });
+                callback();
                 toast('New Course Created', {
                   type: toast.TYPE.SUCCESS
                 });
