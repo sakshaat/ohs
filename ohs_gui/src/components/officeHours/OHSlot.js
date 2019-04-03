@@ -38,8 +38,8 @@ class OHSlot extends Component {
     return (
       <div
         className={slotClass}
-        onClick={() => toggleBooking(id)}
-        onKeyPress={() => toggleBooking(id)}
+        onClick={() => toggleBooking(id, booked)}
+        onKeyPress={() => toggleBooking(id, booked)}
         role="button"
         tabIndex={id}
       >

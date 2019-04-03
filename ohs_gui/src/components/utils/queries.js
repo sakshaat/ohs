@@ -107,6 +107,9 @@ const GET_SECTION = gql`
       semester
       sectionCode
       numStudents
+      taughtBy {
+        userName
+      }
     }
   }
 `;
@@ -187,6 +190,8 @@ const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
       weekday
     }
   }
+`;
+
 
 export {
   GET_COURSES,

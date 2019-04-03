@@ -268,7 +268,7 @@ class MeetingPersistence:
     def get_meetings_of_officehour(self, office_hour_id: uuid.UUID) -> List[Meeting]:
         c = self.connection.cursor()
         c.execute(
-            "SELECT * FROM meetings WHERE office_hour_id=%s", (str(office_hour_id))
+            "SELECT * FROM meetings WHERE office_hour_id=%s", (str(office_hour_id),)
         )
         meetings = c.fetchall()
         if len(meetings) > 0:
