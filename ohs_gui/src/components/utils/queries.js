@@ -179,6 +179,15 @@ const DELETE_NOTE = gql`
 
 `;
 
+const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
+  query getOfficeHours($sectionInput: SectionInput!, $weekday: Weekday!) {
+    officehours(sectionInput: $sectionInput, weekday: $weekday) {
+      officeHourId
+      startingHour
+      weekday
+    }
+  }
+
 export {
   GET_COURSES,
   GET_SECTIONS,
@@ -189,6 +198,7 @@ export {
   GET_MEETINGS,
   CREATE_COMMENT,
   CREATE_NOTE,
-  DELETE_NOTE
+  DELETE_NOTE,
+  GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY
 
 };
