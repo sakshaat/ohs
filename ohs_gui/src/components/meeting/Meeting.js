@@ -45,12 +45,6 @@ class Meeting extends Component {
   componentDidMount() {
     const { user } = this.props;
     const isProf = user && user.role === 'PROFESSOR';
-
-    this.getMeeting();
-    this.getComments();
-    if (isProf) {
-      this.getNotes();
-    }
     setTimeout(this.scrollToBottom, 0);
   }
 
@@ -78,68 +72,6 @@ class Meeting extends Component {
     }
   }
 
-
-
-  getMeeting() {
-    // TODO: dummy json
-    // fetch meeting using this.props.match.params.id
-    const meeting = {
-      time: '2019-11-17T17:15:00.000Z',
-      room: 'BA1234',
-      courseCode: 'CSC302H1S',
-      student: 'Pika Chu',
-      professor: 'Alec Gibson',
-      id: 11
-    };
-    this.setState({ meeting });
-  }
-
-  getNotes() {
-    // TODO: dummy json
-    const notes = [
-      {
-        time: '2019-11-17T17:15:00.000Z',
-        contents: 'I choose you, Pikachu'
-      },
-      {
-        time: '2019-11-17T17:18:00.000Z',
-        contents: 'haha this student is a fat electric mouse'
-      }
-    ];
-    this.setState({ notes });
-  }
-
-  getComments() {
-    // TODO: dummy json
-    const comments = [
-      {
-        time: '2019-11-17T17:15:00.000Z',
-        contents: 'Hello, Pikachu',
-        author: 'Alec Gibson'
-      },
-      {
-        time: '2019-11-17T17:16:00.000Z',
-        contents: 'PIKA',
-        author: 'Pika Chu'
-      },
-      {
-        time: '2019-11-17T17:16:30.000Z',
-        contents: 'Is that all you can say?',
-        author: 'Alec Gibson'
-      },
-      {
-        time: '2019-11-17T17:18:00.000Z',
-        contents: 'PIKA',
-        author: 'Pika Chu'
-      },
-      {
-        time: '2019-11-17T17:20:00.000Z',
-        contents: 'Well this is gonna be an eventful meeting...',
-        author: 'Alec Gibson'
-      }
-    ];
-    this.setState({ comments });
-  }
 
   createComment() {
     // TODO: add comment to backend
