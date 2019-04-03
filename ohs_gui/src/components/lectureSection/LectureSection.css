@@ -31,3 +31,8 @@
   align-items: center;
   width: 100%;
 }
+
+.rdt {
+  display: inline-block;
+  width: 130px;
+}

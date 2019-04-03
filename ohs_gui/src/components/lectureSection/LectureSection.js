@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
+import * as Datetime from 'react-datetime';
 
 import { GET_SECTION } from '../utils/queries';
 import { userIsProf, getFormattedSectionName } from '../utils/helpers';
@@ -19,6 +20,7 @@ class LectureSection extends Component {
     this.toggleBooking = this.toggleBooking.bind(this);
     this.changeDay = this.changeDay.bind(this);
     this.getOH = this.getOH.bind(this);
+    this.dateChange = this.dateChange.bind(this);
 
     this.selectDay = React.createRef();
     this.slotNum = 14; // number of times per day where we can book office hours
@@ -64,6 +66,12 @@ class LectureSection extends Component {
       lst[idx] = !lst[idx];
       this.setState({ bookedSlots: lst });
     }
+  }
+
+  dateChange(date) {
+    // TODO
+    this.forceUpdate();
+    console.log(date);
   }
 
   render() {
@@ -131,7 +139,17 @@ class LectureSection extends Component {
       </div>
     );
 
-    const studentAgenda = <div className="section-agenda" />;
+    const studentAgenda = (
+      <div className="section-agenda">
+        Date:{' '}
+        <Datetime
+          inputProps={{ placeholder: 'Select a date' }}
+          dateFormat="MM-DD-YYYY"
+          timeFormat={false}
+          onChange={this.dateChange}
+        />
+      </div>
+    );
 
     return (
       <Query
