@@ -70,6 +70,78 @@
                 {
                   "defaultValue": null, 
                   "description": null, 
+                  "name": "officeHourId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "officehour", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "OfficeHour", 
+                "ofType": null
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "sectionInput", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "INPUT_OBJECT", 
+                      "name": "SectionInput", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "weekday", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "ENUM", 
+                      "name": "Weekday", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "officehours", 
+              "type": {
+                "kind": "LIST", 
+                "name": null, 
+                "ofType": {
+                  "kind": "OBJECT", 
+                  "name": "OfficeHour", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
                   "name": "meetingId", 
                   "type": {
                     "kind": "NON_NULL", 
@@ -294,6 +366,483 @@
               "deprecationReason": null, 
               "description": null, 
               "isDeprecated": false, 
+              "name": "officeHourId", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "UUID", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "section", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "OBJECT", 
+                  "name": "Section", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "startingHour", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "Int", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "weekday", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "ENUM", 
+                  "name": "Weekday", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "meetings", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "LIST", 
+                  "name": null, 
+                  "ofType": {
+                    "kind": "OBJECT", 
+                    "name": "Slot", 
+                    "ofType": null
+                  }
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "OfficeHour", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": "UUID", 
+          "enumValues": null, 
+          "fields": null, 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "SCALAR", 
+          "name": "UUID", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "course", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "OBJECT", 
+                  "name": "Course", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "year", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "Int", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "semester", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "ENUM", 
+                  "name": "Semester", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "sectionCode", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "taughtBy", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "OBJECT", 
+                  "name": "Instructor", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "numStudents", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "Int", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "Section", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "courseCode", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "Course", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.", 
+          "enumValues": null, 
+          "fields": null, 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "SCALAR", 
+          "name": "String", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31 - 1) and 2^31 - 1 since represented in JSON as double-precision floating point numbers specifiedby [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).", 
+          "enumValues": null, 
+          "fields": null, 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "SCALAR", 
+          "name": "Int", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": [
+            {
+              "deprecationReason": null, 
+              "description": "The winter semester", 
+              "isDeprecated": false, 
+              "name": "WINTER"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "The fall semester", 
+              "isDeprecated": false, 
+              "name": "FALL"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "The summer semester", 
+              "isDeprecated": false, 
+              "name": "SUMMER"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "Full year long course", 
+              "isDeprecated": false, 
+              "name": "FULL_YEAR"
+            }
+          ], 
+          "fields": null, 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "ENUM", 
+          "name": "Semester", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "firstName", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "lastName", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "userName", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [
+            {
+              "kind": "INTERFACE", 
+              "name": "User", 
+              "ofType": null
+            }
+          ], 
+          "kind": "OBJECT", 
+          "name": "Instructor", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "firstName", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "lastName", 
+              "type": {
+                "kind": "NON_NULL", 
+                "name": null, 
+                "ofType": {
+                  "kind": "SCALAR", 
+                  "name": "String", 
+                  "ofType": null
+                }
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "INTERFACE", 
+          "name": "User", 
+          "possibleTypes": [
+            {
+              "kind": "OBJECT", 
+              "name": "Instructor", 
+              "ofType": null
+            }, 
+            {
+              "kind": "OBJECT", 
+              "name": "Student", 
+              "ofType": null
+            }
+          ]
+        }, 
+        {
+          "description": null, 
+          "enumValues": [
+            {
+              "deprecationReason": null, 
+              "description": "Monday", 
+              "isDeprecated": false, 
+              "name": "MONDAY"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "Tuesday", 
+              "isDeprecated": false, 
+              "name": "TUESDAY"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "Wednesday", 
+              "isDeprecated": false, 
+              "name": "WEDNESDAY"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "Thursday", 
+              "isDeprecated": false, 
+              "name": "THURSDAY"
+            }, 
+            {
+              "deprecationReason": null, 
+              "description": "Friday", 
+              "isDeprecated": false, 
+              "name": "FRIDAY"
+            }
+          ], 
+          "fields": null, 
+          "inputFields": null, 
+          "interfaces": null, 
+          "kind": "ENUM", 
+          "name": "Weekday", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "meeting", 
+              "type": {
+                "kind": "OBJECT", 
+                "name": "Meeting", 
+                "ofType": null
+              }
+            }
+          ], 
+          "inputFields": null, 
+          "interfaces": [], 
+          "kind": "OBJECT", 
+          "name": "Slot", 
+          "possibleTypes": null
+        }, 
+        {
+          "description": null, 
+          "enumValues": null, 
+          "fields": [
+            {
+              "args": [], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
               "name": "meetingId", 
               "type": {
                 "kind": "NON_NULL", 
@@ -430,155 +979,6 @@
           "interfaces": [], 
           "kind": "OBJECT", 
           "name": "Meeting", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": "UUID", 
-          "enumValues": null, 
-          "fields": null, 
-          "inputFields": null, 
-          "interfaces": null, 
-          "kind": "SCALAR", 
-          "name": "UUID", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": "The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31 - 1) and 2^31 - 1 since represented in JSON as double-precision floating point numbers specifiedby [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point).", 
-          "enumValues": null, 
-          "fields": null, 
-          "inputFields": null, 
-          "interfaces": null, 
-          "kind": "SCALAR", 
-          "name": "Int", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": [
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "firstName", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "lastName", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "userName", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }
-          ], 
-          "inputFields": null, 
-          "interfaces": [
-            {
-              "kind": "INTERFACE", 
-              "name": "User", 
-              "ofType": null
-            }
-          ], 
-          "kind": "OBJECT", 
-          "name": "Instructor", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": [
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "firstName", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }, 
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "lastName", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }
-          ], 
-          "inputFields": null, 
-          "interfaces": null, 
-          "kind": "INTERFACE", 
-          "name": "User", 
-          "possibleTypes": [
-            {
-              "kind": "OBJECT", 
-              "name": "Instructor", 
-              "ofType": null
-            }, 
-            {
-              "kind": "OBJECT", 
-              "name": "Student", 
-              "ofType": null
-            }
-          ]
-        }, 
-        {
-          "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.", 
-          "enumValues": null, 
-          "fields": null, 
-          "inputFields": null, 
-          "interfaces": null, 
-          "kind": "SCALAR", 
-          "name": "String", 
           "possibleTypes": null
         }, 
         {
@@ -815,28 +1215,25 @@
         {
           "description": null, 
           "enumValues": null, 
-          "fields": [
+          "fields": null, 
+          "inputFields": [
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "course", 
               "type": {
                 "kind": "NON_NULL", 
                 "name": null, 
                 "ofType": {
-                  "kind": "OBJECT", 
-                  "name": "Course", 
+                  "kind": "INPUT_OBJECT", 
+                  "name": "CourseInput", 
                   "ofType": null
                 }
               }
             }, 
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "year", 
               "type": {
                 "kind": "NON_NULL", 
@@ -849,10 +1246,8 @@
               }
             }, 
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "semester", 
               "type": {
                 "kind": "NON_NULL", 
@@ -865,10 +1260,8 @@
               }
             }, 
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "sectionCode", 
               "type": {
                 "kind": "NON_NULL", 
@@ -881,104 +1274,29 @@
               }
             }, 
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "taughtBy", 
               "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "OBJECT", 
-                  "name": "Instructor", 
-                  "ofType": null
-                }
+                "kind": "SCALAR", 
+                "name": "String", 
+                "ofType": null
               }
             }, 
             {
-              "args": [], 
-              "deprecationReason": null, 
+              "defaultValue": null, 
               "description": null, 
-              "isDeprecated": false, 
               "name": "numStudents", 
               "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "Int", 
-                  "ofType": null
-                }
+                "kind": "SCALAR", 
+                "name": "Int", 
+                "ofType": null
               }
             }
           ], 
-          "inputFields": null, 
-          "interfaces": [], 
-          "kind": "OBJECT", 
-          "name": "Section", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": null, 
-          "fields": [
-            {
-              "args": [], 
-              "deprecationReason": null, 
-              "description": null, 
-              "isDeprecated": false, 
-              "name": "courseCode", 
-              "type": {
-                "kind": "NON_NULL", 
-                "name": null, 
-                "ofType": {
-                  "kind": "SCALAR", 
-                  "name": "String", 
-                  "ofType": null
-                }
-              }
-            }
-          ], 
-          "inputFields": null, 
-          "interfaces": [], 
-          "kind": "OBJECT", 
-          "name": "Course", 
-          "possibleTypes": null
-        }, 
-        {
-          "description": null, 
-          "enumValues": [
-            {
-              "deprecationReason": null, 
-              "description": "The winter semester", 
-              "isDeprecated": false, 
-              "name": "WINTER"
-            }, 
-            {
-              "deprecationReason": null, 
-              "description": "The fall semester", 
-              "isDeprecated": false, 
-              "name": "FALL"
-            }, 
-            {
-              "deprecationReason": null, 
-              "description": "The summer semester", 
-              "isDeprecated": false, 
-              "name": "SUMMER"
-            }, 
-            {
-              "deprecationReason": null, 
-              "description": "Full year long course", 
-              "isDeprecated": false, 
-              "name": "FULL_YEAR"
-            }
-          ], 
-          "fields": null, 
-          "inputFields": null, 
           "interfaces": null, 
-          "kind": "ENUM", 
-          "name": "Semester", 
+          "kind": "INPUT_OBJECT", 
+          "name": "SectionInput", 
           "possibleTypes": null
         }, 
         {
