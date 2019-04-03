@@ -176,6 +176,13 @@ const DELETE_NOTE = gql`
     mutation deleteNote($noteId: UUID!) {
         deleteNote(noteId: $noteId,) {
             noteId
+        }
+    }
+`;
+
+const DELETE_MEETING = gql`
+    mutation deleteMeeting($meetingId: UUID!) {
+        deleteMeeting(meetingId: $meetingId,) {
             meetingId
         }
     }
@@ -203,6 +210,7 @@ export {
   CREATE_COMMENT,
   CREATE_NOTE,
   DELETE_NOTE,
+  DELETE_MEETING,
   GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY
 
 };

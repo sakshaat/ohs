@@ -13,7 +13,8 @@ import {
     GET_MEETINGS,
     CREATE_COMMENT,
     CREATE_NOTE,
-    DELETE_NOTE
+    DELETE_NOTE,
+    DELETE_MEETING
 } from '../utils/queries';
 
 import './Meeting.css';
@@ -164,7 +165,7 @@ return (
         return (<Mutation mutation={DELETE_NOTE} variables={{noteId}} >
         { (deletedNote) => {
         notes = notes.filter(deletedNote => deletedNote.noteId !== noteId)
-        this.setState({notes});
+        this.setState({notes: notes});
         }}
        </Mutation>
        );
@@ -172,11 +173,17 @@ return (
     };
   }
 
-  cancelMeeting() {
-    const { history } = this.props;
-    // TODO: remove meeting from backend
+  cancelMeeting(meetingId) {
+    const { meeting } = this.state;
     if (window.confirm('Are you sure you want to cancel this meeting?')) {
-      history.push('/');
+       return(<Mutation mutation={DELETE_MEETING} variables={{meetingId}}
+       onCompleted={ () => {
+       this.setState({meeting: null})
+       }}
+       >
+       </Mutation>
+       // TODO: redirect out of meeting into courses page
+       );
     }
   }
 

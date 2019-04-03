@@ -28,7 +28,7 @@ class MeetingInfo extends PureComponent {
             <Button
               className="cancel-meeting"
               variant="danger"
-              onClick={cancelMeeting}
+              onClick={cancelMeeting(meeting.meetingId)}
             >
               Cancel Meeting
             </Button>
