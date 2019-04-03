@@ -1,14 +1,14 @@
 #dashboard {
   position: relative;
+  display: table;
+  width: 100%;
+  height: 100%;
 }
 
 #main {
   box-sizing: border-box;
   width: calc(100% - 400px);
-  min-height: calc(100vh - 30px);
-  position: absolute;
-  top: 0;
-  left: 400px;
+  display: table-cell;
 }
 
 #main h1 {
@@ -18,14 +18,12 @@
 #meetings {
   box-sizing: border-box;
   width: 400px;
-  height: calc(100vh - 30px);
   overflow-y: scroll;
   padding: 20px;
   background-color: #282c34;
   color: white;
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: table-cell;
+  vertical-align: top;
 }
 
 #meetings h2 {

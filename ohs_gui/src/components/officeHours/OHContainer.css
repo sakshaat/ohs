@@ -1,9 +1,6 @@
 .office-hour-cont {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   background-color: gray;
-  height: calc(100vh - 330px);
 }
 
 .office-hour-cont .container {

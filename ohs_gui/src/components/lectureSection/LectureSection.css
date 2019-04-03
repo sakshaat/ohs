@@ -7,7 +7,7 @@
 
 .section-agenda {
   position: relative;
-  height: calc(100vh - 230px);
+  min-height: calc(100vh - 230px);
   padding-top: 20px;
 }
 
@@ -32,7 +32,72 @@
   width: 100%;
 }
 
+.create-office-hours .office-hour-cont {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: gray;
+  height: calc(100vh - 330px);
+}
+
+.create-office-hours .office-hour-cont .container {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+
 .rdt {
   display: inline-block;
   width: 130px;
+}
+
+.office-hours {
+  box-sizing: border-box;
+  width: 740px;
+  margin: auto;
+}
+
+.office-hour {
+  text-align: left;
+  margin: 20px 0px;
+  padding: 10px 20px 20px 20px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.office-hour .start-time {
+  font-size: 25px;
+  color: rgb(70, 70, 70);
+  font-weight: bold;
+}
+
+.slots {
+  width: 600px;
+  margin-left: 100px;
+}
+
+.slots .office-hour-cont {
+  width: auto;
+}
+
+.slots .office-hour-cont .container {
+  flex-direction: column;
+}
+
+.slots .book-button {
+  height: 50px;
+  margin: 10px 0 0 0;
+  width: auto;
+}
+
+.slots .book-button:last-child {
+  height: 50px;
+  margin: 10px 0 10px 0;
+  width: auto;
+}
+
+.slots .book-button:hover .fa-plus {
+  font-size: 35pt;
 }

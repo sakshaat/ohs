@@ -23,8 +23,18 @@ class OHSlot extends Component {
 
   render() {
     const { booked } = this.state;
-    const { toggleBooking, id } = this.props;
+    const { toggleBooking, id, showBooked } = this.props;
     const slotClass = booked ? 'book-button booked' : 'book-button';
+
+    let slotLabel = null;
+    if (booked) {
+      slotLabel = showBooked ? (
+        <h2 className="slot-info">Booked!</h2>
+      ) : (
+        <span className="slot-info" />
+      );
+    }
+
     return (
       <div
         className={slotClass}
@@ -36,7 +46,7 @@ class OHSlot extends Component {
         {booked ? null : (
           <FontAwesomeIcon className="fa-plus slot-info" icon="plus" />
         )}
-        {booked ? <span className="slot-info" /> : null}
+        {slotLabel}
       </div>
     );
   }

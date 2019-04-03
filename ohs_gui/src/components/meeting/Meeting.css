@@ -1,6 +1,5 @@
 .meeting-notes {
   position: relative;
-  display: inline-block;
   vertical-align: top;
   width: 400px;
   height: calc(100vh - 30px);
@@ -8,6 +7,7 @@
   padding: 20px;
   background-color: #282c34;
   color: white;
+  float: left;
 }
 
 .meeting-notes .minimize-notes {
@@ -68,7 +68,7 @@
 
 .meeting-main {
   position: relative;
-  display: inline-block;
+  float: left;
   vertical-align: top;
   width: calc(100% - 400px);
 }
