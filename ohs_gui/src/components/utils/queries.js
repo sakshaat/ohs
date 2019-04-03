@@ -8,6 +8,14 @@ const GET_COURSES = gql`
   }
 `;
 
+const ENROLL_STUDENTS = gql`
+  mutation enrollStudents($sectionInput: SectionInput!, $studentNumbers: [String]!) {
+    enrollStudents(sectionInput: $sectionInput, studentNumbers: $studentNumbers) {
+      studentNumbers
+    }
+  }
+`;
+
   const GET_MEETINGS = gql`
   query getMeeting($meetingId: String!) {
     meeting(meetingId: $meetingId) {
@@ -160,5 +168,6 @@ export {
   GET_UPCOMING_MEETINGS,
   GET_SECTIONS_FOR_STUDENT,
   GET_MEETINGS,
-  GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY
+  GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY,
+  ENROLL_STUDENTS
 };

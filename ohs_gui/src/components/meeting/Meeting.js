@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import { Button, FormGroup, FormControl, Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { Query } from 'react-apollo';
 import MeetingNote from './MeetingNote';
 import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
-import { toast } from 'react-toastify';
-import { Query } from 'react-apollo';
 import { userIsProf } from '../utils/helpers';
 import {
     GET_MEETINGS

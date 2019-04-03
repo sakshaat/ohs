@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 import CreateOfficeHours from './CreateOfficeHours';
 import BookMeetings from './BookMeetings';
@@ -56,6 +57,15 @@ class LectureSection extends PureComponent {
                 <div className="section-info">
                   <h1>{getFormattedSectionName(section)}</h1>
                   <div>number of students: {section.numStudents}</div>
+                  <Button
+
+                    className="add-btn"
+	                    onClick={() =>
+	                      this.setState({ redirectToAddStudents: true })
+	                    }
+	                  >
+	                    Add Students
+	                  </Button>
                 </div>
                 {isProf ? <CreateOfficeHours section={section} /> : <BookMeetings section={section} />}
               </>

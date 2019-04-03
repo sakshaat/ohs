@@ -1,20 +1,22 @@
 import React, { PureComponent } from 'react';
 import TagsInput from 'react-tagsinput';
 import { Button } from 'react-bootstrap';
+import {Redirect} from 'react-router-dom';
 
 import 'react-tagsinput/react-tagsinput.css';
+import {Query, Mutation} from "react-apollo";
+import {toast} from "react-toastify";
+
+import {GET_SECTION, ENROLL_STUDENTS} from "../utils/queries";
+
 
 class AddStudentsToSection extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { tags: [] };
+    this.state = { tags: [], studentsEnrolled : false };
 
     this.tagChange = this.tagChange.bind(this);
-    this.addBtnClicked = this.addBtnClicked.bind(this);
-  }
 
-  addBtnClicked() {
-    console.log(this.state);
   }
 
   tagChange(tags) {
@@ -22,10 +24,11 @@ class AddStudentsToSection extends PureComponent {
   }
 
   render() {
+      
     const { location } = this.props;
     const params = new URLSearchParams(location.search);
 
-    const { tags } = this.state;
+    const { tags, studentsEnrolled } = this.state;
 
     const variables = {
       course: { courseCode: params.get('course') },
@@ -33,6 +36,10 @@ class AddStudentsToSection extends PureComponent {
       semester: params.get('semester'),
       sectionCode: params.get('sectionCode')
     };
+
+    if(studentsEnrolled) {
+        return <Redirect to="/" />
+    }
 
     return (
       <div>
@@ -42,7 +49,62 @@ class AddStudentsToSection extends PureComponent {
         } ${variables.year})`}</h3>
         <TagsInput value={tags} onChange={this.tagChange} />
 
-        <Button onClick={this.addBtnClicked}>Add Students</Button>
+        <Query
+          query={GET_SECTION}
+          variables={variables}
+          onError={() => {
+            toast('Unknown Error - Could not find the section', {
+              type: toast.TYPE.ERROR
+            });
+          }}
+        >
+          {({ data }) => {
+          const { section } = data;
+          if (section) {
+            // variables
+            const sectionInput = {
+                course: { courseCode: section.course.courseCode },
+                year: section.year,
+                semester: section.semester,
+                sectionCode: section.sectionCode,
+                numStudents: section.numStudents,
+                taughtBy: section.taughtBy
+              };
+            
+            return (
+
+            <Mutation
+                mutation={ENROLL_STUDENTS}
+                variables={{ sectionInput, studentNumbers: tags}}
+                onCompleted={() => {
+                    this.setState({ studentsEnrolled: true });
+                    toast('Students Enrolled', {
+                        type: toast.TYPE.SUCCESS
+                    });
+                }}
+                onError={() => {
+                    toast('Unknown Error - Could not add students', {
+                        type: toast.TYPE.ERROR
+                    });
+                }}
+                >
+                {(mut, { loading }) => {
+                    return (
+                    <div>
+                        {loading && <p>Loading...</p>}
+                        <Button onClick={mut}>Add Students</Button>
+                    </div>
+                    );
+                }}
+            </Mutation>
+                
+            );
+          }
+          return null;
+          }}
+        </Query>
+
+        
       </div>
     );
   }

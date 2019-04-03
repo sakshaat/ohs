@@ -5,6 +5,10 @@
   color: white;
 }
 
+.add-btn {
+  margin: 10px;
+}
+
 .section-agenda {
   position: relative;
   min-height: calc(100vh - 230px);
