@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="./styles/graphidocs.css" />
-    <title>Meeting</title>
+    <title>Weekday</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet"><link type="text/css" rel="stylesheet" href="./assets/code.css" /><script src="./assets/line-link.js"></script><link type="text/css" rel="stylesheet" href="./assets/require-by.css" />
 </head>
 <body class="slds-scrollable--y">
@@ -70,7 +70,7 @@
                 Semester
             </a>
         </li>
-        <li  title="Weekday">
+        <li class="slds-is-active" title="Weekday">
             <a href="weekday.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 Weekday
             </a>
@@ -115,22 +115,12 @@
                 DeleteMeeting
             </a>
         </li>
-        <li  title="DeleteNote">
-            <a href="deletenote.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
-                DeleteNote
-            </a>
-        </li>
-        <li  title="DeleteOfficeHour">
-            <a href="deleteofficehour.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
-                DeleteOfficeHour
-            </a>
-        </li>
         <li  title="Instructor">
             <a href="instructor.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 Instructor
             </a>
         </li>
-        <li class="slds-is-active" title="Meeting">
+        <li  title="Meeting">
             <a href="meeting.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 Meeting
             </a>
@@ -235,8 +225,8 @@
         </div>
     </div>
     <div class="container">
-        <p class="slds-text-title--caps slds-text-color--weak">OBJECT</p>
-        <h1 class="slds-text-heading--large">Meeting</h1>
+        <p class="slds-text-title--caps slds-text-color--weak">ENUM</p>
+        <h1 class="slds-text-heading--large">Weekday</h1>
         <div class="slds-text-body--regular"></div>
     </div>
 </section>
@@ -248,7 +238,7 @@
             </a>
             GraphQL Schema definition
         </h2>
-        <code class="highlight"><table class="code"><tbody><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="keyword operator ts">type</span> <span class="identifier">Meeting</span> {</td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">meetingId</span>: <a class="support type" href="uuid.doc.html">UUID</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">officeHourId</span>: <a class="support type" href="uuid.doc.html">UUID</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">index</span>: <a class="support type" href="int.doc.html">Int</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">instructor</span>: <a class="support type" href="instructor.doc.html">Instructor</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">student</span>: <a class="support type" href="student.doc.html">Student</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">notes</span>: [<a class="support type" href="note.doc.html">Note</a>]! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">comments</span>: [<a class="support type" href="comment.doc.html">Comment</a>]! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">startTime</span>: <a class="support type" href="int.doc.html">Int</a>! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code">}</td></tr></tbody></table></code>
+        <code class="highlight"><table class="code"><tbody><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="keyword operator ts">enum</span> <span class="identifier">Weekday</span> {</td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   Monday</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">MONDAY</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   Tuesday</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">TUESDAY</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   Wednesday</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">WEDNESDAY</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   Thursday</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">THURSDAY</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   Friday</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">FRIDAY</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code">}</td></tr></tbody></table></code>
     </div>
 </section>
 <section>
@@ -261,16 +251,16 @@
         </h2>
         <ul class="require-by">
           <li>
+      <a href="officehour.doc.html" title="
+        OfficeHour - 
+      ">
+        OfficeHour<em>null</em>
+      </a>
+    <li><li>
       <a href="query.doc.html" title="
         Query - 
       ">
         Query<em>null</em>
-      </a>
-    <li><li>
-      <a href="slot.doc.html" title="
-        Slot - 
-      ">
-        Slot<em>null</em>
       </a>
     <li>
           </ul>

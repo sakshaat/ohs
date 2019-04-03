@@ -4,7 +4,7 @@ from core.domain.course import (
     Course as DomainCourse,
     Section as DomainSection,
     SectionIdentity,
-    Semester,
+    Semester as DomainSemester,
 )
 from core.gql.schema.user_schema import Instructor
 
@@ -16,7 +16,7 @@ def semester_description(value):
         return f"The {value.name.lower()} semester"
 
 
-Semester = graphene.Enum.from_enum(Semester, description=semester_description)
+Semester = graphene.Enum.from_enum(DomainSemester, description=semester_description)
 
 
 class Course(graphene.ObjectType):
@@ -69,3 +69,11 @@ class SectionInput(graphene.InputObjectType):
     section_code = graphene.String(required=True)
     taught_by = graphene.String()
     num_students = graphene.Int()
+
+    def to_identity(self):
+        return SectionIdentity(
+            course=self.course.to_domain(),
+            section_code=self.section_code,
+            semester=DomainSemester(self.semester),
+            year=self.year,
+        )

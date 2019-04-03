@@ -94,7 +94,7 @@ class OfficeHour:
         meetings: [Meeting]
     """
 
-    officehour_id: UUID
+    office_hour_id: UUID
     section: Section
     starting_hour: int
     weekday: Weekday
