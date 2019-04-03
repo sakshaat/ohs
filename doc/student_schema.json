@@ -205,6 +205,65 @@
                 {
                   "defaultValue": null, 
                   "description": null, 
+                  "name": "officeHourId", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "UUID", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "startTime", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "Int", 
+                      "ofType": null
+                    }
+                  }
+                }, 
+                {
+                  "defaultValue": null, 
+                  "description": null, 
+                  "name": "endTime", 
+                  "type": {
+                    "kind": "NON_NULL", 
+                    "name": null, 
+                    "ofType": {
+                      "kind": "SCALAR", 
+                      "name": "Int", 
+                      "ofType": null
+                    }
+                  }
+                }
+              ], 
+              "deprecationReason": null, 
+              "description": null, 
+              "isDeprecated": false, 
+              "name": "meetings", 
+              "type": {
+                "kind": "LIST", 
+                "name": null, 
+                "ofType": {
+                  "kind": "OBJECT", 
+                  "name": "Meeting", 
+                  "ofType": null
+                }
+              }
+            }, 
+            {
+              "args": [
+                {
+                  "defaultValue": null, 
+                  "description": null, 
                   "name": "course", 
                   "type": {
                     "kind": "NON_NULL", 
