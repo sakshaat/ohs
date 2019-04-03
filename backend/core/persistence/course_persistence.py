@@ -276,7 +276,8 @@ class CoursePersistence:
             lst = [None, None, None, None, None, None]
             for meeting in meeting_list:
                 lst[meeting.index] = meeting
-
+            return lst
+        
         office_hour_id = UUID(res[0])
         return self.get_section(to_section_identity(res[1])).map(
             lambda section: OfficeHour(

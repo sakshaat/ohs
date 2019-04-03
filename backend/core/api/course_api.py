@@ -191,8 +191,8 @@ class CourseApi:
         Returns:
             List of officehours for section on that day.
         """
-        return self.course_persistence.get_officehours_for_section_on_weekday(
-            section_identity, weekday, MeetingPersistence
+        return self.course_persistence.get_officehour_for_section_by_day(
+            section_identity, weekday, self.meeting_persistence
         )
 
     def delete_officehour(self, office_hour_id: UUID) -> Result[UUID, str]:
