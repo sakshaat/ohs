@@ -1,0 +1,22 @@
+FROM python:3.7-alpine
+
+LABEL name="student_service"
+
+ENV PYTHONBUFFERED 1
+
+ADD backend /app
+
+WORKDIR /app
+
+RUN pip install -U pip setuptools poetry
+
+RUN \
+ apk add --no-cache postgresql-libs && \
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev libffi-dev openssl-dev && \
+ poetry install -n --no-dev && \
+ apk --purge del .build-deps
+
+EXPOSE 8001
+
+CMD ["poetry", "run", "gunicorn", "student_service.run:flask_app", "-b", "0.0.0.0:8001"]
+
