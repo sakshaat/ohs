@@ -150,3 +150,25 @@ def test_create_section_fail(schema, mock_context, create_section_query):
         section.taught_by,
         section.num_students,
     )
+
+
+@pytest.mark.parametrize("student_numbers", [[], [fake.pystr() for _ in range(10)]])
+def test_enroll_students(schema, mock_context, student_numbers):
+    context, course_api, instructor_api = mock_context
+    section = fake_section()
+    course_api.enroll_students.return_value = student_numbers
+    query = """
+    mutation enroll($sectionInput: SectionInput!, $students: [String]!) {
+        enrollStudents(sectionInput: $sectionInput, studentNumbers: $students) {
+            studentNumbers
+        }
+    }
+    """
+    variables = section_input(section)
+    variables["students"] = student_numbers
+    result = schema.execute(query, context=context, variables=variables)
+    assert not result.errors
+    assert result.data["enrollStudents"]["studentNumbers"] == student_numbers
+    course_api.enroll_students.assert_called_once_with(
+        section.identity, student_numbers
+    )

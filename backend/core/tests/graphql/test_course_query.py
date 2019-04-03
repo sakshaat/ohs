@@ -8,6 +8,7 @@ from core.api.course_api import CourseApi
 from core.gql.context import Context
 from core.tests.generation import fake, list_fakes
 from core.tests.generation.fake_course import fake_course, fake_section
+from core.tests.generation.fake_user import fake_student
 
 
 class CourseQueryBehavious:
@@ -255,3 +256,22 @@ query querySections($taughtBy: String, $enrolledIn: String, $courseCode: String)
             assert not result.errors
             assert result.data == self.to_graphql_list(fake_domains)
             self.mock_query_method().assert_called_once()
+
+
+@pytest.mark.parametrize("expected", [[], list_fakes(fake_section, 10)])
+def test_enrolled_in(schema, expected):
+    context = MagicMock()
+    user = fake_student()
+    context.user = user
+    context.api.course_api.get_sections_of_student.return_value = expected
+    query = """
+    query enroll {
+        enrolledIn {
+            sectionCode
+        }
+    }
+    """
+    result = schema.execute(query, context=context)
+    assert not result.errors
+    for expected_section, actual_section in zip(expected, result.data["enrolledIn"]):
+        assert expected_section.section_code == actual_section["sectionCode"]

@@ -6,10 +6,10 @@ from option import Option, Result
 
 from core.domain.course import (
     Course,
+    OfficeHour,
     Section,
     SectionIdentity,
     Semester,
-    OfficeHour,
     Weekday,
 )
 from core.domain.user import Instructor
@@ -205,3 +205,14 @@ class CourseApi:
         return self.course_persistence.delete_officehour(
             office_hour_id, self.meeting_persistence
         )
+
+    def enroll_students(
+        self, section_identity: SectionIdentity, student_numbers: [str]
+    ) -> [str]:
+        result = [
+            self.course_persistence.enroll_student(section_identity, student_number)
+            for student_number in student_numbers
+        ]
+        return [
+            student_number.unwrap() for student_number in result if student_number.is_ok
+        ]

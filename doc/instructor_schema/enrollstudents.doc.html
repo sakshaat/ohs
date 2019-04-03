@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="./styles/graphidocs.css" />
-    <title>Mutation</title>
+    <title>EnrollStudents</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700" rel="stylesheet"><link type="text/css" rel="stylesheet" href="./assets/code.css" /><script src="./assets/line-link.js"></script><link type="text/css" rel="stylesheet" href="./assets/require-by.css" />
 </head>
 <body class="slds-scrollable--y">
@@ -30,7 +30,7 @@
                 Query
             </a>
         </li>
-        <li class="slds-is-active" title="Mutation">
+        <li  title="Mutation">
             <a href="mutation.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 Mutation
             </a>
@@ -125,7 +125,7 @@
                 DeleteOfficeHour
             </a>
         </li>
-        <li  title="EnrollStudents">
+        <li class="slds-is-active" title="EnrollStudents">
             <a href="enrollstudents.doc.html" class="slds-navigation-list--vertical__action slds-text-link--reset slds-truncate">
                 EnrollStudents
             </a>
@@ -241,7 +241,7 @@
     </div>
     <div class="container">
         <p class="slds-text-title--caps slds-text-color--weak">OBJECT</p>
-        <h1 class="slds-text-heading--large">Mutation</h1>
+        <h1 class="slds-text-heading--large">EnrollStudents</h1>
         <div class="slds-text-body--regular"></div>
     </div>
 </section>
@@ -253,18 +253,26 @@
             </a>
             GraphQL Schema definition
         </h2>
-        <code class="highlight"><table class="code"><tbody><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="keyword operator ts">type</span> <span class="identifier">Mutation</span> {</td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>courseInput</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">createCourse</span>(<span class="meta">courseInput</span>: <a class="support type" href="courseinput.doc.html">CourseInput</a>!): <a class="support type" href="course.doc.html">Course</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>sectionInput</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">createSection</span>(<span class="meta">sectionInput</span>: <a class="support type" href="sectioninput.doc.html">SectionInput</a>!): <a class="support type" href="section.doc.html">Section</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>sectionInput</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>studentNumbers</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">enrollStudents</span>(</span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="tab"><span class="meta">sectionInput</span>: <a class="support type" href="sectioninput.doc.html">SectionInput</a>!,</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="tab"><span class="meta">studentNumbers</span>: [<a class="support type" href="string.doc.html">String</a>]!</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab">): <a class="support type" href="enrollstudents.doc.html">EnrollStudents</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>contentText</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>meetingId</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">createNote</span>(<span class="meta">contentText</span>: <a class="support type" href="string.doc.html">String</a>!, <span class="meta">meetingId</span>: <a class="support type" href="uuid.doc.html">UUID</a>!): <a class="support type" href="note.doc.html">Note</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>noteId</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">deleteNote</span>(<span class="meta">noteId</span>: <a class="support type" href="uuid.doc.html">UUID</a>!): <a class="support type" href="deletenote.doc.html">DeleteNote</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>sectionInput</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>startingHour</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>weekday</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">createOfficeHour</span>(</span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="tab"><span class="meta">sectionInput</span>: <a class="support type" href="sectioninput.doc.html">SectionInput</a>!,</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="tab"><span class="meta">startingHour</span>: <a class="support type" href="int.doc.html">Int</a>!,</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="tab"><span class="meta">weekday</span>: <a class="support type" href="weekday.doc.html">Weekday</a>!</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab">): <a class="support type" href="officehour.doc.html">OfficeHour</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>officeHourId</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">deleteOfficeHour</span>(<span class="meta">officeHourId</span>: <a class="support type" href="uuid.doc.html">UUID</a>!): <a class="support type" href="deleteofficehour.doc.html">DeleteOfficeHour</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>meetingId</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">deleteMeeting</span>(<span class="meta">meetingId</span>: <a class="support type" href="uuid.doc.html">UUID</a>!): <a class="support type" href="deletemeeting.doc.html">DeleteMeeting</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line"># Arguments</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>contentText</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="comment line">#   <strong>meetingId</strong>: [<strong>Not documented</strong>]</span></span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">createComment</span>(<span class="meta">contentText</span>: <a class="support type" href="string.doc.html">String</a>!, <span class="meta">meetingId</span>: <a class="support type" href="uuid.doc.html">UUID</a>!): <a class="support type" href="comment.doc.html">Comment</a> </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code">}</td></tr></tbody></table></code>
+        <code class="highlight"><table class="code"><tbody><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="keyword operator ts">type</span> <span class="identifier">EnrollStudents</span> {</td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"><span class="tab"><span class="meta">studentNumbers</span>: [<a class="support type" href="string.doc.html">String</a>]! </span></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code"></td></tr><tr class="row"><td id="L2" class="td-index">2</td><td id="LC2" class="td-code">}</td></tr></tbody></table></code>
     </div>
 </section>
 <section>
     <div class="container">
-        <h2 id="require-by" class="graphidocs-section__title slds-text-heading--medium slds-m-top--small">
-            <a href="#require-by">
+        <h2 id="required-by" class="graphidocs-section__title slds-text-heading--medium slds-m-top--small">
+            <a href="#required-by">
                 <i class="material-icons">link</i>
             </a>
-            Require by
+            Required by
         </h2>
-        <div class="require-by anyone">This element is not required by anyone</div>
+        <ul class="require-by">
+          <li>
+      <a href="mutation.doc.html" title="
+        Mutation - 
+      ">
+        Mutation<em>null</em>
+      </a>
+    <li>
+          </ul>
     </div>
 </section>
 <footer>

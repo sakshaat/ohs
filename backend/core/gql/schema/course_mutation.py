@@ -53,3 +53,19 @@ class CreateSection(graphene.Mutation):
             .map(Section.from_domain)
             .unwrap()
         )
+
+
+@register_mutation(allow=SchemaRestriction.INSTRUCTOR)
+class EnrollStudents(graphene.Mutation):
+    class Arguments:
+        section_input = SectionInput(required=True)
+        student_numbers = graphene.List(graphene.String, required=True)
+
+    student_numbers = graphene.List(graphene.String, required=True)
+
+    def mutate(self, info, section_input, student_numbers):
+        return EnrollStudents(
+            course_api(info).enroll_students(
+                section_input.to_identity(), student_numbers
+            )
+        )

@@ -216,9 +216,11 @@ class CoursePersistence:
         self.connection.commit()
         return Ok(section_identity)
 
-    def enroll_student(self, section: Section, student_number: str) -> Result[str, str]:
+    def enroll_student(
+        self, section: SectionIdentity, student_number: str
+    ) -> Result[str, str]:
         c = self.connection.cursor()
-        term = (student_number, section.identity().to_string())
+        term = (student_number, section.to_string())
         c.execute(
             "INSERT INTO enrollment(student_number, section_id) VALUES (%s, %s)", term
         )

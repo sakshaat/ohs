@@ -63,3 +63,16 @@ class SectionQuery(graphene.ObjectType):
                 taught_by=taught_by, enrolled_in=enrolled_in, course_code=course_code
             )
         ]
+
+
+@register_query(allow=SchemaRestriction.STUDENT)
+class EnrollQuery(graphene.ObjectType):
+    enrolled_in = graphene.List(Section, required=True)
+
+    def resolve_enrolled_in(self, info):
+        return [
+            Section.from_domain(section)
+            for section in course_api(info).get_sections_of_student(
+                info.context.user.student_number
+            )
+        ]
