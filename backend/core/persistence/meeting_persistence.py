@@ -82,7 +82,7 @@ class MeetingPersistence:
                 term = (
                     str(comment.comment_id),
                     str(comment.meeting_id),
-                    comment.author,
+                    comment.author.user_name,
                     None,
                     comment.time_stamp,
                     comment.content_text,
@@ -92,7 +92,7 @@ class MeetingPersistence:
                     str(comment.comment_id),
                     str(comment.meeting_id),
                     None,
-                    comment.author,
+                    comment.author.student_number,
                     comment.time_stamp,
                     comment.content_text,
                 )
