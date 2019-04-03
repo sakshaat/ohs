@@ -1,5 +1,6 @@
 import graphene
 
+from core.domain.course import Weekday as DomainWeekday
 from core.gql.context import course_api
 from core.gql.schema.course_schema import SectionInput
 from core.gql.schema.officehour_schema import OfficeHour, Weekday
@@ -19,4 +20,9 @@ class OfficeHourQuery(graphene.ObjectType):
         return course_api(info).get_officehour(office_hour_id).unwrap_or(None)
 
     def resolve_officehours(self, info, section_input, weekday):
-        pass
+        return [
+            OfficeHour.from_domain(officehour)
+            for officehour in course_api(info).get_officehours_for_section_on_weekday(
+                section_input.to_identity(), DomainWeekday(weekday)
+            )
+        ]
