@@ -170,7 +170,9 @@ class Meeting extends Component {
   }
 
   scrollToBottom() {
-    this.bottom.scrollIntoView({ behavior: 'smooth' });
+    if (this.bottom) {
+      this.bottom.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   addNote() {
@@ -261,7 +263,7 @@ class Meeting extends Component {
           query={GET_MEETINGS}
           variables={variables}
           onError={() => {
-            toast('Unknown Error - Could not get sections for the course', {
+            toast('Unknown Error - Could not get meeting', {
               type: toast.TYPE.ERROR
             });
           }}
