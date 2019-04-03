@@ -3,8 +3,6 @@ import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
 import { Redirect } from 'react-router-dom';
 
-import { Button } from 'react-bootstrap';
-
 import CreateOfficeHours from './CreateOfficeHours';
 import BookMeetings from './BookMeetings';
 
@@ -59,7 +57,7 @@ class LectureSection extends PureComponent {
                   <h1>{getFormattedSectionName(section)}</h1>
                   <div>number of students: {section.numStudents}</div>
                 </div>
-                {isProf ? <CreateOfficeHours /> : <BookMeetings />}
+                {isProf ? <CreateOfficeHours section={section} /> : <BookMeetings section={section} />}
               </>
             );
           }

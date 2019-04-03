@@ -307,7 +307,7 @@ class CoursePersistence:
         if not self.get_officehour(office_hour_id, mp):
             return Err(f"OfficeHour {office_hour_id} does not exist")
         c = self.connection.cursor()
-        c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (office_hour_id,))
+        c.execute("DELETE FROM officehours WHERE office_hour_id=%s", (str(office_hour_id),))
         self.connection.commit()
         return Ok(office_hour_id)
 
