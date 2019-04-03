@@ -180,8 +180,6 @@ const DELETE_NOTE = gql`
         }
     }
 
-`;
-
 const GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY = gql`
   query getOfficeHours($sectionInput: SectionInput!, $weekday: Weekday!) {
     officehours(sectionInput: $sectionInput, weekday: $weekday) {
