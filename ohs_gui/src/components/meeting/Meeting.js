@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/aria-role */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom';
@@ -14,9 +17,7 @@ import { userIsProf } from '../utils/helpers';
 import {
     GET_MEETING,
     CREATE_COMMENT,
-    CREATE_NOTE,
-    DELETE_NOTE,
-    DELETE_MEETING
+    CREATE_NOTE
 } from '../utils/queries';
 
 import './Meeting.css';
@@ -99,7 +100,7 @@ return (
     >
     </Mutation>
   );
-};*/
+}; */
 
 
   handleClose() {
@@ -129,35 +130,20 @@ return (
     this.setState({ show: false });
   }
 
-  removeNote(noteId) {
-    return () => {
-      if (window.confirm('Are you sure you want to delete this note?')) {
-        let { notes } = this.state;
-        //notes = notes.filter(n => n.time !== time);
-        //this.setState({ notes });
-        return (<Mutation mutation={DELETE_NOTE} variables={{noteId}} >
-        { (deletedNote) => {
-        notes = notes.filter(deletedNote => deletedNote.noteId !== noteId)
-        this.setState({notes: notes});
-        }}
-       </Mutation>
-       );
-      }
-    };
-  }
 
   cancelMeeting(meetingId) {
-    const { meeting } = this.state;
-    if (window.confirm('Are you sure you want to cancel this meeting?')) {
-       return(<Mutation mutation={DELETE_MEETING} variables={{meetingId}}
-       onCompleted={ () => {
-       this.setState({meeting: null})
-       }}
-       >
-       </Mutation>
-       // TODO: redirect out of meeting into courses page
-       );
-    }
+    console.log(meetingId, this);
+
+    // if (window.confirm('Are you sure you want to cancel this meeting?')) {
+    //    return(<Mutation mutation={DELETE_MEETING} variables={{meetingId}}
+    //    onCompleted={ () => {
+
+    //    }}
+    //    >
+    //    </Mutation>
+    //    // TODO: redirect out of meeting into courses page
+    //    );
+    // }
   }
 
   postponeMeeting() {
@@ -189,7 +175,7 @@ return (
   }
 
   expandNotes() {
-    this.setState({ showNotes: true, expandingNotes: true });
+    this.setState({ showNotes: true });
   }
 
   render() {

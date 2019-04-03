@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import OHContainer from '../officeHours/OHContainer';
 import gql from 'graphql-tag';
 import { toast } from 'react-toastify';
 import { Query, Mutation } from 'react-apollo';
+import OHContainer from '../officeHours/OHContainer';
 import { GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY } from '../utils/queries';
 
 
@@ -67,13 +67,11 @@ class CreateOfficeHours extends Component {
         }
         this.setState({deleteOHId: id});
       }
-    } else {
-      if (window.confirm(
+    } else if (window.confirm(
         'Are you sure you want to create an office hour in this timeslot?'
       )) {
         this.setState({newOHTime: idx + 8})
       }
-    }
   }
 
   render() {
@@ -106,23 +104,23 @@ class CreateOfficeHours extends Component {
     ];
     const variables = {
       "sectionInput": {
-        "course": {"courseCode": section["course"]["courseCode"]},
-        "year": section["year"],
-        "semester": section["semester"],
-        "sectionCode": section["sectionCode"],
-        "numStudents": section["numStudents"],
-        "taughtBy": section["taughtBy"]["userName"]
+        "course": {"courseCode": section.course.courseCode},
+        "year": section.year,
+        "semester": section.semester,
+        "sectionCode": section.sectionCode,
+        "numStudents": section.numStudents,
+        "taughtBy": section.taughtBy.userName
       },
 	    "weekday": day
     }
     const mutVariables = {
       "sectionInput": {
-        "course": {"courseCode": section["course"]["courseCode"]},
-        "year": section["year"],
-        "semester": section["semester"],
-        "sectionCode": section["sectionCode"],
-        "numStudents": section["numStudents"],
-        "taughtBy": section["taughtBy"]["userName"]
+        "course": {"courseCode": section.course.courseCode},
+        "year": section.year,
+        "semester": section.semester,
+        "sectionCode": section.sectionCode,
+        "numStudents": section.numStudents,
+        "taughtBy": section.taughtBy.userName
       },
 	    "weekday": day,
       "startingHour": newOHTime
@@ -133,7 +131,7 @@ class CreateOfficeHours extends Component {
         mutation={DELETE_OH}
         variables={{"officeHourId": deleteOHId}}
         update={(cache, response) => {
-          const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables: variables };
+          const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables };
           const data = cache.readQuery(addr);
           data.officehours = data.officehours.filter(elem => {
               return elem.officeHourId !== response.data.deleteOfficeHour.officeHourId
@@ -151,7 +149,7 @@ class CreateOfficeHours extends Component {
           });
         }}
       >
-        {(mut, { loading }) => {
+        {(mut) => {
           if(deleteOHId){
             this.setState({ deleteOHId: null });
             mut();
@@ -161,7 +159,7 @@ class CreateOfficeHours extends Component {
               mutation={ADD_OH}
               variables={mutVariables}
               update={(cache, response) => {
-                const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables: variables };
+                const addr = { query: GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY, variables };
                 const data = cache.readQuery(addr);
                 data.officehours.push(response.data.createOfficeHour);
                 cache.writeQuery({...addr, data});
@@ -177,10 +175,10 @@ class CreateOfficeHours extends Component {
                 });
               }}
             >
-              {(mut, { loading }) => {
+              {(newMut) => {
                 if(newOHTime){
                   this.setState({ newOHTime: null });
-                  mut();
+                  newMut();
                 }
                 return (
                   <div className="section-agenda">
@@ -219,7 +217,7 @@ class CreateOfficeHours extends Component {
                           for (let i = 0; i < bookedSlots.length; i += 1) {
                             bookedSlots[i] = false;
                           }
-                          officehours.forEach((elem, i) => {
+                          officehours.forEach((elem) => {
                             bookedSlots[elem.startingHour - 8] = true;
                           });
                           return (
