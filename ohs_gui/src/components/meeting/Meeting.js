@@ -12,7 +12,7 @@ import MeetingInfo from './MeetingInfo';
 import { userIsProf } from '../utils/helpers';
 
 import {
-    GET_MEETINGS,
+    GET_MEETING,
     CREATE_COMMENT,
     CREATE_NOTE,
     DELETE_NOTE,
@@ -27,18 +27,15 @@ class Meeting extends Component {
     const { user } = this.props;
 
     this.state = {
-      meeting: null,
       notes: [],
       comments: [],
       show: false,
-      showNotes: user && user.role === 'PROFESSOR'
-    };
+      showNotes: user && user.role === 'PROFESSOR',
+      contentText: "",
+      noteText: ""
+    };    
 
-    this.getMeeting = this.getMeeting.bind(this);
-    this.getNotes = this.getNotes.bind(this);
-    this.getComments = this.getComments.bind(this);
-    this.createComment = this.createComment.bind(this);
-    this.scrollToBottom = this.scrollToBottom.bind(this);
+
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.addNote = this.addNote.bind(this);
@@ -49,40 +46,12 @@ class Meeting extends Component {
     this.expandNotes = this.expandNotes.bind(this);
   }
 
-  componentDidMount() {
-    const { user } = this.props;
-    const isProf = userIsProf(user);
-
-    this.getMeeting();
-    this.getComments();
-    if (isProf) {
-      this.getNotes();
-    }
-    setTimeout(this.scrollToBottom, 0);
+  contentChanged = (e) => {
+    this.setState({contentText: e.target.value});
   }
 
-  componentDidUpdate() {
-    const { expandingNotes } = this.state;
-    this.scrollToBottom();
-    if (expandingNotes) {
-      const elem = this.refs.notes;
-      if (elem) {
-        let pos = 400;
-        elem.style.left = '400px';
-        const id = setInterval(
-          function() {
-            if (pos === 0) {
-              clearInterval(id);
-              this.setState({ expandingNotes: false });
-            } else {
-              pos -= 20;
-              elem.style.left = `${pos}px`;
-            }
-          }.bind(this),
-          5
-        );
-      }
-    }
+  noteTextChange = (e) => {
+    this.setState({noteText: e.target.value});
   }
 
   oldCreateComment() {
@@ -202,8 +171,8 @@ return (
     }
   }
 
-  minimizeNotes() {
-    const elem = this.refs.notes;
+  minimizeNotes(e) {
+    const elem = e.target;
     let pos = 0;
     const id = setInterval(
       function() {
@@ -227,25 +196,21 @@ return (
     const {
       user,
       match: {
-        params: { courseCode }
+        params: { id }
       }
     } = this.props;
 
-    const isProf = userIsProf(user);
-    const variables = {
-      meeting: null,
-      notes: [],
-      comments: [],
-      show: false
-    };
+    console.log(id);
 
-    const { meeting, notes, comments, show, showNotes } = this.state;
+    const isProf = userIsProf(user);
+
+    const { notes, show, showNotes, contentText, noteText } = this.state;
 
     return (
       <>
          <Query
-          query={GET_MEETINGS}
-          variables={variables}
+          query={GET_MEETING}
+          variables={{meetingId: id}}
           onError={() => {
             toast('Unknown Error - Could not get meeting', {
               type: toast.TYPE.ERROR
@@ -253,13 +218,8 @@ return (
           }}
         >{({ data }) => {
            if (data) {
-
               const { meeting } = data;
               if (meeting) {
-              this. setState({meeting: meeting, notes: meeting.notes, comments: meeting.comments})
-              const id = meeting.meetingId
-              const contentText = ReactDOM.findDOMNode(this.refs.commentInput).value
-              const noteText = ReactDOM.findDOMNode(this.refs.noteInput).value
                return(
        <>
         <div className={showNotes ? 'meeting-main' : 'meeting-main-full'}>
@@ -290,10 +250,11 @@ return (
                 placeholder="New comment"
                 aria-label="Comment"
                 aria-describedby="basic-addon2"
+                onChange={this.contentChanged}
               />
-              <Mutation mutation={CREATE_COMMENT} variables={{id, contentText}} >
+              <Mutation mutation={CREATE_COMMENT} variables={{meetingId:id, contentText}} >
               {(createComment) => {
-              this.setState({comments: comments.push(createComment)});
+
               return (<Button variant="primary" onClick={createComment}>
                 Submit
               </Button>
@@ -306,11 +267,10 @@ return (
           </div>
         </div>
         {isProf && showNotes && (
-          <div className="meeting-notes" ref="notes">
+          <div className="meeting-notes" ref="notes" role="presenation" onClick={this.minimizeNotes}>
             <h2>Notes</h2>
             <span
               className="minimize-notes fa fa-chevron-right"
-              onClick={this.minimizeNotes}
               role="presentation"
             />
             {meeting.notes.map(n => (
@@ -333,7 +293,7 @@ return (
             <Modal.Title>Add Note</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <textarea className="note-input" ref="noteInput" />
+            <textarea onChange={this.noteTextChange} className="note-input" ref="noteInput" />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
@@ -358,7 +318,7 @@ return (
          return null;
         }}
         </Query>
-        }
+        
       </>
     );
   }

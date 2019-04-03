@@ -6,29 +6,26 @@ const dateFormat = require('dateformat');
 
 class MeetingInfo extends PureComponent {
   render() {
+    console.log(this.props);
     const { meeting, isProf, postponeMeeting, cancelMeeting } = this.props;
 
     return (
       <div className="meeting-info">
         {meeting && (
           <>
-            <h2>Meeting With {isProf ? meeting.student : meeting.professor}</h2>
-            Course: {meeting.courseCode}
-            <br />
-            {dateFormat(new Date(meeting.time), 'mmmm dS, yyyy, h:MM TT')}
-            <br />
-            {meeting.room}
+            <h2>Meeting with {isProf ? `${meeting.instructor.firstName} ${meeting.instructor.lastName}` : `${meeting.student.firstName} ${meeting.student.lastName}`}</h2>
+            {dateFormat(new Date(meeting.startTime), 'mmmm dS, yyyy, h:MM TT')}
             <Button
               className="postpone-meeting"
               variant="warning"
-              onClick={postponeMeeting}
+              onClick={()=>postponeMeeting}
             >
               I&apos;m Running Late
             </Button>
             <Button
               className="cancel-meeting"
               variant="danger"
-              onClick={cancelMeeting(meeting.meetingId)}
+              onClick={()=>cancelMeeting(meeting.meetingId)}
             >
               Cancel Meeting
             </Button>

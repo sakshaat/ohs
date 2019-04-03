@@ -45,7 +45,7 @@ class MeetingPersistence:
 
     def get_note(self, note_id: uuid.UUID) -> Option[Note]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM notes WHERE note_id=%s", (str(note_id)))
+        c.execute("SELECT * FROM notes WHERE note_id=%s", (str(note_id),))
         note = None
         res = c.fetchone()
         if res:
@@ -54,7 +54,7 @@ class MeetingPersistence:
 
     def get_notes_of_meeting(self, meeting_id: uuid.UUID) -> List[Note]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM notes WHERE meeting_id=%s", (str(meeting_id)))
+        c.execute("SELECT * FROM notes WHERE meeting_id=%s", (str(meeting_id),))
         notes = c.fetchall()
         if len(notes) > 0:
             notes = map(
@@ -67,7 +67,7 @@ class MeetingPersistence:
         if not self.get_note(note_id):
             return Err(f"Note {note_id} does not exist")
         c = self.connection.cursor()
-        c.execute("DELETE FROM notes WHERE note_id=%s", (str(note_id)))
+        c.execute("DELETE FROM notes WHERE note_id=%s", (str(note_id),))
         self.connection.commit()
         return Ok(note_id)
 
@@ -136,7 +136,7 @@ class MeetingPersistence:
 
     def get_comment(self, comment_id: uuid.UUID) -> Option[Comment]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM comments WHERE comment_id=%s", (str(comment_id)))
+        c.execute("SELECT * FROM comments WHERE comment_id=%s", (str(comment_id),))
         comment = None
         res = c.fetchone()
         if res:
@@ -145,7 +145,7 @@ class MeetingPersistence:
 
     def get_comments_of_meeting(self, meeting_id: uuid.UUID) -> List[Comment]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM comments WHERE meeting_id=%s", (str(meeting_id)))
+        c.execute("SELECT * FROM comments WHERE meeting_id=%s", (str(meeting_id),))
         comments = c.fetchall()
         if len(comments) > 0:
             comments = map(lambda x: self._res_to_comment(x), comments)
@@ -155,7 +155,7 @@ class MeetingPersistence:
         if not self.get_comment(comment_id):
             return Err(f"Comment {comment_id} does not exist")
         c = self.connection.cursor()
-        c.execute("DELETE FROM comments WHERE comment_id=%s", (str(comment_id)))
+        c.execute("DELETE FROM comments WHERE comment_id=%s", (str(comment_id),))
         self.connection.commit()
         return Ok(comment_id)
 
@@ -166,7 +166,7 @@ class MeetingPersistence:
             c = self.connection.cursor()
             term = (
                 str(meeting.meeting_id),
-                meeting.office_hour_id,
+                str(meeting.office_hour_id),
                 meeting.index,
                 meeting.instructor.user_name,
                 meeting.student.student_number,
@@ -213,7 +213,7 @@ class MeetingPersistence:
 
     def get_meeting(self, meeting_id: uuid.UUID) -> Option[Meeting]:
         c = self.connection.cursor()
-        c.execute("SELECT * FROM meetings WHERE meeting_id=%s", (str(meeting_id)))
+        c.execute("SELECT * FROM meetings WHERE meeting_id=%s", (str(meeting_id),))
         meeting = None
         res = c.fetchone()
         if res:
@@ -261,7 +261,7 @@ class MeetingPersistence:
         if not self.get_meeting(meeting_id):
             return Err(f"Meeting {meeting_id} does not exist")
         c = self.connection.cursor()
-        c.execute("DELETE FROM meetings WHERE meeting_id=%s", (str(meeting_id)))
+        c.execute("DELETE FROM meetings WHERE meeting_id=%s", (str(meeting_id),))
         self.connection.commit()
         return Ok(meeting_id)
 

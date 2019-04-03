@@ -16,49 +16,50 @@ const ENROLL_STUDENTS = gql`
   }
 `;
 
-  const GET_MEETINGS = gql`
-  query getMeeting($meetingId: String!) {
+  const GET_MEETING = gql`
+  query getMeeting($meetingId: UUID!) {
     meeting(meetingId: $meetingId) {
+      meetingId
+      officeHourId
+      index
+      instructor {
+        firstName
+        lastName
+        userName
+      }
+      student {
+        firstName
+        lastName
+        studentNumber
+      }
+      notes {
+        noteId
         meetingId
-        officeHourId
-        index
-        instructor {
-            userName
-            firstName
-            lastName
-        }
-        student {
+        timeStamp
+        contentText
+      }
+      comments {
+        commentId
+        meetingId
+        author {
+          ... on Student {
             studentNumber
             firstName
             lastName
+          }
+          ... on Instructor {
+            userName
+            firstName
+            lastName
+          }
         }
-        notes {
-            noteId
-            meetingId
-            timeStamp
-            contentText
-        }
-        comments {
-            commentId
-            meetingId
-            author {
-                ... on Instructor {
-                    userName
-                    firstName
-                    lastName
-                }
-                ... on Student {
-                    studentNumber
-                    firstName
-                    lastName
-                }
-            }
-            timeStamp
-            contentText
-        }
-        startTime
+        timeStamp
+        contentText
+      }
+      startTime
     }
   }
+  
 `;
 
 const GET_UPCOMING_MEETINGS = gql`
@@ -76,6 +77,30 @@ const GET_UPCOMING_MEETINGS = gql`
         firstName
         lastName
         studentNumber
+      }
+      notes {
+        noteId
+        meetingId
+        timeStamp
+        contentText
+      }
+      comments {
+        commentId
+        meetingId
+        author {
+          ... on Student {
+            studentNumber
+            firstName
+            lastName
+          }
+          ... on Instructor {
+            userName
+            firstName
+            lastName
+          }
+        }
+        timeStamp
+        contentText
       }
       startTime
     }
@@ -151,7 +176,7 @@ const GET_SECTIONS_FOR_COURSE = gql`
 `;
 
 const CREATE_COMMENT = gql`
-  mutation createComment($meetingId: meetingId!, $contentText: contentText!) {
+  mutation createComment($meetingId: UUID!, $contentText: String!) {
     createComment(meetingId: $meetingId, contentText: $contentText) {
             commentId
             meetingId
@@ -214,7 +239,7 @@ export {
   GET_SECTIONS_FOR_COURSE,
   GET_UPCOMING_MEETINGS,
   GET_SECTIONS_FOR_STUDENT,
-  GET_MEETINGS,
+  GET_MEETING,
   GET_OFFICE_HOURS_BY_SECTION_AND_WEEKDAY,
   ENROLL_STUDENTS,
   CREATE_COMMENT,

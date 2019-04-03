@@ -7,16 +7,13 @@ const dateFormat = require('dateformat');
 class MeetingCard extends PureComponent {
   render() {
     const { meeting, isProf } = this.props;
+    
     return (
-      <Link to={`/meeting/${meeting.id}`}>
+      <Link to={`/meeting/${meeting.meetingId}`} state={{meeting}}>
         <div className="meeting card-element">
-          {meeting.courseCode}
+          {dateFormat(new Date(meeting.startTime), 'mmmm dS, yyyy, h:MM TT')}
           <br />
-          {dateFormat(new Date(meeting.time), 'mmmm dS, yyyy, h:MM TT')}
-          <br />
-          {meeting.room}
-          <br />
-          {isProf ? meeting.student : meeting.professor}
+          <div>Meeting with </div>{isProf ? `${meeting.instructor.firstName} ${meeting.instructor.lastName}` : `${meeting.student.firstName} ${meeting.student.lastName}`}
         </div>
       </Link>
     );
