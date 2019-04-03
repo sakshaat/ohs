@@ -241,7 +241,8 @@ class CoursePersistence:
         sections = c.fetchall()
         if len(sections) > 0:
             sections = map(
-                lambda x: self.get_section(to_section_identity(x[1])), sections
+                lambda x: self.get_section(to_section_identity(x[1])).unwrap_or(None),
+                sections,
             )
         return list(sections)
 
