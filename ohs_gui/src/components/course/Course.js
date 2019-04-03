@@ -8,7 +8,7 @@ import { Query } from 'react-apollo';
 
 import LectureSectionCard from '../dashboard/LectureSectionCard';
 import { GET_SECTIONS_FOR_COURSE } from '../utils/queries';
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 
 import './Course.css';
 
@@ -21,7 +21,7 @@ class Course extends Component {
       }
     } = this.props;
 
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
     const variables = {
       courseCode,
       taughtBy: user.userName
@@ -30,10 +30,8 @@ class Course extends Component {
     return (
       <div id="sections">
         <div className="container">
-          <div className="row">
-            <div className="header-cont col-10">
-              {courseCode && <h1>{courseCode} Lecture Sections</h1>}
-            </div>
+          <div className="text-center">
+            {courseCode && <h1>{courseCode} Lecture Sections</h1>}
           </div>
         </div>
 

@@ -7,7 +7,7 @@ import MeetingComment from './MeetingComment';
 import MeetingInfo from './MeetingInfo';
 import { toast } from 'react-toastify';
 import { Query } from 'react-apollo';
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 import {
     GET_MEETINGS
 } from '../utils/queries';
@@ -44,7 +44,7 @@ class Meeting extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    const isProf = user && user.role === 'PROFESSOR';
+    const isProf = userIsProf(user);
 
     this.getMeeting();
     this.getComments();
@@ -141,7 +141,8 @@ class Meeting extends Component {
     this.setState({ comments });
   }
 
-  createComment() {
+  createComment(e) {
+    e.preventDefault();
     // TODO: add comment to backend
     if (ReactDOM.findDOMNode(this.refs.commentInput).value === '') {
       return;
@@ -244,13 +245,14 @@ class Meeting extends Component {
       }
     } = this.props;
 
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
     const variables = {
       meeting: null,
       notes: [],
       comments: [],
       show: false
     };
+
     const { meeting, notes, comments, show, showNotes } = this.state;
 
     return (
@@ -289,17 +291,21 @@ class Meeting extends Component {
             />
           </div>
           <div className="new-comment">
-            <FormGroup role="form">
-              <FormControl
-                ref="commentInput"
-                placeholder="New comment"
-                aria-label="Comment"
-                aria-describedby="basic-addon2"
-              />
-              <Button variant="primary" onClick={this.createComment}>
-                Submit
-              </Button>
-            </FormGroup>
+            <form onSubmit={e => this.createComment(e)}>
+              <FormGroup role="form">
+                <FormControl
+                  ref="commentInput"
+                  placeholder="New comment"
+                  aria-label="Comment"
+                  aria-describedby="basic-addon2"
+                />
+                <input
+                  className="btn btn-primary"
+                  type="submit"
+                  value="Submit"
+                />
+              </FormGroup>
+            </form>
           </div>
         </div>
         {isProf && showNotes && (

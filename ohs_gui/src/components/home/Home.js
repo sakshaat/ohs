@@ -24,7 +24,7 @@ import Meeting from '../meeting/Meeting';
 import Course from '../course/Course';
 import AddStudentsToSection from '../lectureSection/AddStudentsToSection';
 
-import { roles } from '../utils/constants';
+import { userIsProf } from '../utils/helpers';
 
 import {
   GET_COURSES,
@@ -60,7 +60,7 @@ class Home extends Component {
   render() {
     const { isAuth } = this.state;
     const { user } = this.props;
-    const isProf = user && user.role === roles.PROFESSOR;
+    const isProf = userIsProf(user);
 
     const httpLink = createHttpLink({
       uri: isProf ? `${PROF_BASE_URL}/graphql` : `${STUDENT_BASE_URL}/graphql`
@@ -195,14 +195,20 @@ class Home extends Component {
                   render={() => (
                     <CreateCourse
                       user={user}
-                      callback={() => this.courseAdded()}
+                      callback={() => this.forceUpdate()}
                     />
                   )}
                 />
                 <Route
                   exact
                   path="/course/:courseCode/add-section"
-                  render={props => <CreateSection user={user} {...props} />}
+                  render={props => (
+                    <CreateSection
+                      user={user}
+                      callback={() => this.forceUpdate()}
+                      {...props}
+                    />
+                  )}
                 />
               </Switch>
             </div>
